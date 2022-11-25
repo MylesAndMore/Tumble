@@ -8,18 +8,20 @@ java {
     }
 }
 
+group 'tumble'
+version '0.0.1-SNAPSHOT'
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
-    // Paper dependancy
+    // Spigot repo resolve
     maven {
-        name = 'papermc'
-        url = 'https://repo.papermc.io/repository/maven-public/'
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+        url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
     }
 }
 
 dependencies {
-    // Paper dependancies
-    compileOnly 'com.velocitypowered:velocity-api:3.1.1'
-    annotationProcessor 'com.velocitypowered:velocity-api:3.1.1'
+    // Spigot 1.19.2 version dependency
+    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
 }
