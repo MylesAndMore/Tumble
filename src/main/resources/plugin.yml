@@ -1,0 +1,10 @@
+main: com.MylesAndMore.tumble.Main
+name: tumble
+version: 0.0.1-SNAPSHOT
+description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft: Xbox 360 Edition.'
+api-version: 1.19
+load: STARTUP
+author: MylesAndMore
+website: https://github.com/MylesAndMore/tumble
+depend:
+  - Multiverse-Core
