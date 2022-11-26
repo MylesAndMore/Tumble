@@ -9,16 +9,14 @@ public class Main extends JavaPlugin{
     public void onEnable() {
         // Register our event listener
         getServer().getPluginManager().registerEvents(new EventListener(), this);
-
+        // Register commands
+        this.getCommand("reload").setExecutor(new ReloadCommand());
         // Register our config file
         this.saveDefaultConfig();
 
         // Register bStats
         int pluginId = 16940;
         Metrics metrics = new Metrics(this, 16940);
-
-        // Register commands
-        this.getCommand("reload").setExecutor(new ReloadCommand());
     }
 
     public void onDisable() {
