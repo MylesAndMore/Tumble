@@ -17,9 +17,13 @@ repositories {
     // Spigot repo resolve
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    // Multiverse repo resolve
+    maven { url = "https://repo.onarandombox.com/content/groups/public/" }
 }
 
 dependencies {
     // Spigot 1.19.2 version dependency
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
+    // Multiverse dependency
+    compileOnly 'com.onarandombox.multiversecore:Multiverse-Core:4.3.1'
 }
