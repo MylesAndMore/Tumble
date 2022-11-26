@@ -2,6 +2,7 @@ package com.MylesAndMore.tumble;
 
 import com.MylesAndMore.tumble.commands.ReloadCommand;
 import com.MylesAndMore.tumble.api.Metrics;
+import com.MylesAndMore.tumble.commands.SetWorldConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin{
@@ -11,6 +12,7 @@ public class Main extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         // Register commands
         this.getCommand("reload").setExecutor(new ReloadCommand());
+        this.getCommand("setworld").setExecutor(new SetWorldConfig());
         // Save the default config file (packaged in the JAR)
         this.saveDefaultConfig();
 

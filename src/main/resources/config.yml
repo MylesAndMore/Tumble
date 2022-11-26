@@ -4,3 +4,8 @@ hideJoinLeaveMessages: true
 
 # Customize the message that displays when the player does not have permission to execute a command from this plugin
 permissionMessage: You do not have permission to perform this command!
+
+# This tells the plugin which worlds it should use as the lobby/game worlds
+# Do NOT change unless you know what you're doing!!
+lobbyWorld:
+gameWorld:

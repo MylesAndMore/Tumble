@@ -10,10 +10,18 @@ depend:
   - Multiverse-Core
 commands:
   reload:
-    description: Base constructor for /tumble commands
-    usage: /tumble <command>
-    permission: tumble
+    description: Reloads the plugin's config.
+    usage: /tumble:reload
+    permission: reload
+  setworld:
+    description: Sets a world on the server as a lobby/game world.
+    usage: /tumble:setworld <world> lobby|game
+    permission: setworld
+    aliases: [set-world]
 permissions:
   reload:
     description: Allows you to reload the plugin's config.
-    default: false
+    default: op
+  setworld:
+    description: Allows you to set a world on the server as a lobby/game world.
+    default: op
