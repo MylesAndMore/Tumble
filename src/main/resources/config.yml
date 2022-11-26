@@ -1,0 +1,3 @@
+# Hides join/leave messages in public chat
+# Default is true
+hideJoinLeaveMessages: true
