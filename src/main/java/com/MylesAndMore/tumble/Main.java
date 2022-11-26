@@ -1,6 +1,7 @@
 package com.MylesAndMore.tumble;
 
-import org.bstats.bukkit.Metrics;
+import com.MylesAndMore.tumble.commands.ReloadCommand;
+import com.MylesAndMore.tumble.api.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin{
@@ -8,11 +9,19 @@ public class Main extends JavaPlugin{
     public void onEnable() {
         // Register our event listener
         getServer().getPluginManager().registerEvents(new EventListener(), this);
+
         // Register our config file
         this.saveDefaultConfig();
+
         // Register bStats
         int pluginId = 16940;
         Metrics metrics = new Metrics(this, 16940);
+
+        // Register commands
+        this.getCommand("reload").setExecutor(new ReloadCommand());
     }
 
+    public void onDisable() {
+
+    }
 }
