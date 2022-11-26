@@ -8,3 +8,12 @@ author: MylesAndMore
 website: https://github.com/MylesAndMore/tumble
 depend:
   - Multiverse-Core
+commands:
+  reload:
+    description: Base constructor for /tumble commands
+    usage: /tumble <command>
+    permission: tumble
+permissions:
+  reload:
+    description: Allows you to reload the plugin's config.
+    default: false
