@@ -11,7 +11,7 @@ public class Main extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         // Register commands
         this.getCommand("reload").setExecutor(new ReloadCommand());
-        // Register our config file
+        // Save the default config file (packaged in the JAR)
         this.saveDefaultConfig();
 
         // Register bStats
