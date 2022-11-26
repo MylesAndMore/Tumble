@@ -18,10 +18,18 @@ commands:
     usage: /tumble:setworld <world> lobby|game
     permission: setworld
     aliases: [set-world]
+  startgame:
+    description: Force starts a Tumble match.
+    usage: /tumble:startgame
+    permission: startgame
+    aliases: [start-game]
 permissions:
   reload:
     description: Allows you to reload the plugin's config.
     default: op
   setworld:
     description: Allows you to set a world on the server as a lobby/game world.
+    default: op
+  startgame:
+    description: Allows you to start a Tumble match.
     default: op
