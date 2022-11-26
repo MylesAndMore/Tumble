@@ -7,5 +7,7 @@ permissionMessage: You do not have permission to perform this command!
 
 # This tells the plugin which worlds it should use as the lobby/game worlds
 # Do NOT change unless you know what you're doing!!
+# Will be blank by default
 lobbyWorld:
+# Game world
 gameWorld:
