@@ -10,11 +10,11 @@ public class ReloadCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
          if (!sender.hasPermission("tumble.reload")) {
-             sender.sendMessage(ChatColor.RED + "You do not have permission to execute this command!");
+             sender.sendMessage(ChatColor.RED + Bukkit.getServer().getPluginManager().getPlugin("tumble").getConfig().getString("permissionMessage"));
             }
          else {
              Bukkit.getServer().getPluginManager().getPlugin("tumble").reloadConfig();
-             sender.sendMessage(ChatColor.GREEN + "Tumble configuration reloaded.");
+             sender.sendMessage(ChatColor.GREEN + "Tumble configuration reloaded successfully.");
             }
         return true;
     }
