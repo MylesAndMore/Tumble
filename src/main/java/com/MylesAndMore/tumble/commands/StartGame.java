@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class StartGame implements CommandExecutor {
+    // Define game and lobby world vars because they get used often in this class
     String gameWorld = PluginManager.getPlugin().getConfig().getString("gameWorld");
     String lobbyWorld = PluginManager.getPlugin().getConfig().getString("lobbyWorld");
 
