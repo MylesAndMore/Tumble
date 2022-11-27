@@ -1,22 +1,14 @@
 package com.MylesAndMore.tumble.commands;
 
-import com.onarandombox.MultiverseCore.MultiverseCore;
-import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import com.MylesAndMore.tumble.PluginManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.Plugin;
 
 public class StartGame implements CommandExecutor {
-    // Define tumble instances
-    Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("tumble");
-    String gameWorld = plugin.getConfig().getString("gameWorld");
-
-    // Define multiverse instances
-    MultiverseCore mv = (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core");
-    MVWorldManager mvWorldManager = mv.getMVWorldManager();
+    String gameWorld = PluginManager.getPlugin().getConfig().getString("gameWorld");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -27,9 +19,9 @@ public class StartGame implements CommandExecutor {
                 sender.sendMessage("Starting game...");
                 // Use multiverse to load game world
                 boolean includeLoaded = false;
-                boolean worldLoaded = (mvWorldManager.hasUnloadedWorld(gameWorld, includeLoaded));
+                boolean worldLoaded = (PluginManager.getWorldManager().hasUnloadedWorld(gameWorld, includeLoaded));
                 if (worldLoaded) {
-                    mvWorldManager.loadWorld(gameWorld);
+                    PluginManager.getWorldManager().loadWorld(gameWorld);
                 }
                 else {
                     sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + gameWorld);
@@ -49,7 +41,7 @@ public class StartGame implements CommandExecutor {
         }
         // Feedback for if the sender has no perms
         else {
-            sender.sendMessage(ChatColor.RED + plugin.getConfig().getString("permissionMessage"));
+            sender.sendMessage(ChatColor.RED + PluginManager.getPlugin().getConfig().getString("permissionMessage"));
         }
         return true;
     }
