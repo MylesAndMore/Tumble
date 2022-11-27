@@ -15,7 +15,7 @@ public class SetWorldConfig implements CommandExecutor {
         // Catch for null arguments
         if (args.length == 2) {
             // Check if sender has perms to run command
-            if (sender.hasPermission("tumble.setworld")){
+            if (sender.hasPermission("tumble.link")){
                 // Initialize vars for their respective command arguments
                 String world = args[0];
                 String worldType = args[1];
@@ -31,7 +31,7 @@ public class SetWorldConfig implements CommandExecutor {
                             TumbleManager.getPlugin().saveConfig();
                             // Feedback
                             sender.sendMessage(ChatColor.GREEN + "Lobby world successfully linked: " + ChatColor.GRAY + world);
-                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading the plugin is insufficient!");
+                            sender.sendMessage(ChatColor.GREEN + "Please restart your server for the changes to take effect; " + ChatColor.RED + "reloading the plugin is insufficient!");
                         }
                         // Feedback for duplicate world configuration
                         else {
@@ -50,7 +50,7 @@ public class SetWorldConfig implements CommandExecutor {
                             TumbleManager.getPlugin().getConfig().set("gameWorld", world);
                             TumbleManager.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
-                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading the plugin is insufficient!");
+                            sender.sendMessage(ChatColor.GREEN + "Please restart your server for the changes to take effect; " + ChatColor.RED + "reloading the plugin is insufficient!");
                         }
                         else {
                             sender.sendMessage(ChatColor.RED + "That world has already been linked, please choose/create another world!");
