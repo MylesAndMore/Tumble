@@ -14,5 +14,5 @@ public class PluginManager {
     // Multiverse plugin
     public static MultiverseCore getMV() { return (MultiverseCore) Bukkit.getServer().getPluginManager().getPlugin("Multiverse-Core"); }
     // Multiverse worldManager
-    public static MVWorldManager getWorldManager() { return getMV().getMVWorldManager(); }
+    public static MVWorldManager getMVWorldManager() { return getMV().getMVWorldManager(); }
 }
