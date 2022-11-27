@@ -1,6 +1,6 @@
 package com.MylesAndMore.tumble.commands;
 
-import com.MylesAndMore.tumble.PluginManager;
+import com.MylesAndMore.tumble.TumbleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,11 +24,11 @@ public class SetWorldConfig implements CommandExecutor {
                     // Check if the world is actually a world on the server
                     if (Bukkit.getWorld(world) != null) {
                         // Check if the world has already been configured
-                        if (!Objects.equals(PluginManager.getPlugin().getConfig().getString("gameWorld"), world)) {
+                        if (!Objects.equals(TumbleManager.getPlugin().getConfig().getString("gameWorld"), world)) {
                             // Set the specified value of the world in the config under lobbyWorld
-                            PluginManager.getPlugin().getConfig().set("lobbyWorld", world);
+                            TumbleManager.getPlugin().getConfig().set("lobbyWorld", world);
                             // Save said config
-                            PluginManager.getPlugin().saveConfig();
+                            TumbleManager.getPlugin().saveConfig();
                             // Feedback
                             sender.sendMessage(ChatColor.GREEN + "Lobby world successfully linked: " + ChatColor.GRAY + world);
                             sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading the plugin is insufficient!");
@@ -46,9 +46,9 @@ public class SetWorldConfig implements CommandExecutor {
                 // Check if the world type is game
                 else if (Objects.equals(args[1], "game")) {
                     if (Bukkit.getWorld(world) != null) {
-                        if (!Objects.equals(PluginManager.getPlugin().getConfig().getString("lobbyWorld"), world)) {
-                            PluginManager.getPlugin().getConfig().set("gameWorld", world);
-                            PluginManager.getPlugin().saveConfig();
+                        if (!Objects.equals(TumbleManager.getPlugin().getConfig().getString("lobbyWorld"), world)) {
+                            TumbleManager.getPlugin().getConfig().set("gameWorld", world);
+                            TumbleManager.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
                             sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading the plugin is insufficient!");
                         }
@@ -67,7 +67,7 @@ public class SetWorldConfig implements CommandExecutor {
             }
             // Feedback for if sender has no perms
             else {
-                sender.sendMessage(ChatColor.RED + PluginManager.getPermissionMessage());
+                sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
             }
         }
         // Feedback for if no args were entered

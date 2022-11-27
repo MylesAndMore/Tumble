@@ -1,6 +1,6 @@
 package com.MylesAndMore.tumble.commands;
 
-import com.MylesAndMore.tumble.PluginManager;
+import com.MylesAndMore.tumble.TumbleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,15 +16,15 @@ public class StartGame implements CommandExecutor {
         // Check if sender has perms to run command
         if (sender.hasPermission("tumble.startgame")) {
             // Check if there is a lobbyWorld specified in config
-            if (PluginManager.getLobbyWorld() != null) {
+            if (TumbleManager.getLobbyWorld() != null) {
                 // Check if there is more than one person in lobby
-                if (PluginManager.getPlayersInLobby().size() > 0) {
+                if (TumbleManager.getPlayersInLobby().size() > 1) {
                     // Check if there is a gameWorld specified in config
-                    if (PluginManager.getGameWorld() != null) {
+                    if (TumbleManager.getGameWorld() != null) {
                         sender.sendMessage("Checking world, this could take a few moments...");
                         // Use multiverse to load game world
                         // If the load was successful, start game
-                        if (PluginManager.getMVWorldManager().loadWorld(PluginManager.getGameWorld())) {
+                        if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
                             sender.sendMessage("Starting game, please wait.");
 
                             // Generate the blocks in game world
@@ -32,11 +32,11 @@ public class StartGame implements CommandExecutor {
 
                             // While there are still players in the lobby, send them to the gameWorld
                             // This is just a way of sending everybody in the lobby to the game
-                            for (List<Player> playersInLobby = PluginManager.getPlayersInLobby(); playersInLobby.size() > 0; playersInLobby = PluginManager.getPlayersInLobby()) {
+                            for (List<Player> playersInLobby = TumbleManager.getPlayersInLobby(); playersInLobby.size() > 0; playersInLobby = TumbleManager.getPlayersInLobby()) {
                                 // Get a singular player from the player list
                                 Player aPlayer = playersInLobby.get(0);
                                 // Teleport that player to the spawn of the gameWorld
-                                aPlayer.teleport(Bukkit.getWorld(PluginManager.getGameWorld()).getSpawnLocation());
+                                aPlayer.teleport(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation());
                             }
 
                             // Give players game item (shovels/snowballs/etc.)
@@ -48,7 +48,7 @@ public class StartGame implements CommandExecutor {
                         // Note: this should not occur unless the config file was edited externally,
                         // because the plugin prevents adding "worlds" that are not actually present to the config.
                         else {
-                            sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + PluginManager.getGameWorld());
+                            sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + TumbleManager.getGameWorld());
                             sender.sendMessage(ChatColor.RED + "Is the configuration file correct?");
                         }
                     }
@@ -68,7 +68,7 @@ public class StartGame implements CommandExecutor {
         }
         // Feedback for if the sender has no perms
         else {
-            sender.sendMessage(ChatColor.RED + PluginManager.getPermissionMessage());
+            sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
         }
         return true;
     }

@@ -12,15 +12,15 @@ public class EventListener implements Listener{
         // On a PlayerJoinEvent, check if the config is set to hide the join/leave messages
         // If true, null out the join message (which just makes it so that there is no message)
         // If false, nothing will happen, and the default message will display
-        if (PluginManager.getPlugin().getConfig().getBoolean("hideJoinLeaveMessages")) {
+        if (TumbleManager.getPlugin().getConfig().getBoolean("hideJoinLeaveMessages")) {
             event.setJoinMessage(null);
         }
         // If the gameWorld and lobbyWorld is not null, then check
-        if (PluginManager.getPlugin().getConfig().getString("gameWorld") != null && PluginManager.getPlugin().getConfig().getString("lobbyWorld") != null) {
+        if (TumbleManager.getPlugin().getConfig().getString("gameWorld") != null && TumbleManager.getPlugin().getConfig().getString("lobbyWorld") != null) {
             // if the player joining is in the game world, then
-            if (event.getPlayer().getWorld() == Bukkit.getWorld(PluginManager.getPlugin().getConfig().getString("gameWorld"))) {
+            if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getPlugin().getConfig().getString("gameWorld"))) {
                 // send them back to the lobby.
-                event.getPlayer().teleport(Bukkit.getWorld(PluginManager.getPlugin().getConfig().getString("lobbyWorld")).getSpawnLocation());
+                event.getPlayer().teleport(Bukkit.getWorld(TumbleManager.getPlugin().getConfig().getString("lobbyWorld")).getSpawnLocation());
             }
         }
     }
@@ -30,7 +30,7 @@ public class EventListener implements Listener{
         // On a PlayerQuitEvent, check if the config is set to hide the join/leave messages
         // If true, null out the quit message (which just makes it so that there is no message)
         // If false, nothing will happen, and the default message will display
-        if (PluginManager.getPlugin().getConfig().getBoolean("hideJoinLeaveMessages")) {
+        if (TumbleManager.getPlugin().getConfig().getBoolean("hideJoinLeaveMessages")) {
             event.setQuitMessage(null);
         }
     }
