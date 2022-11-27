@@ -11,10 +11,10 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class StartGame implements CommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    // Define the startGame method so that other classes can refrence it
+    public void startGame(CommandSender sender, String[] args) {
         // Check if sender has perms to run command
-        if (sender.hasPermission("tumble.startgame")) {
+        if (sender.hasPermission("tumble.start")) {
             // Check if there is a lobbyWorld specified in config
             if (TumbleManager.getLobbyWorld() != null) {
                 // Check if there is more than one person in lobby
@@ -70,6 +70,11 @@ public class StartGame implements CommandExecutor {
         else {
             sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
         }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        startGame(sender, args);
         return true;
     }
 }
