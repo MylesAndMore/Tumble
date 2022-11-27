@@ -14,6 +14,8 @@ public class StartGame implements CommandExecutor {
     // Define game and lobby world vars because they get used often in this class
     String gameWorld = PluginManager.getPlugin().getConfig().getString("gameWorld");
     String lobbyWorld = PluginManager.getPlugin().getConfig().getString("lobbyWorld");
+    // Define a method for getting players in the lobby because that also gets used a lot here
+    public List<Player> getPlayersInLobby() { return Bukkit.getServer().getWorld(lobbyWorld).getPlayers(); }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -21,10 +23,8 @@ public class StartGame implements CommandExecutor {
         if (sender.hasPermission("tumble.startgame")) {
             // Check if there is a lobbyWorld specified in config
             if (lobbyWorld != null) {
-                // Initialize a list keeping the amount of players in the config-specified lobby world
-                List<Player> playersInLobby = Bukkit.getServer().getWorld(lobbyWorld).getPlayers();
                 // Check if there is more than one person in lobby
-                if (playersInLobby.size() > 1) {
+                if (getPlayersInLobby().size() > 0) {
                     // Check if there is a gameWorld specified in config
                     if (gameWorld != null) {
                         sender.sendMessage("Checking world, this could take a few moments...");
@@ -38,19 +38,17 @@ public class StartGame implements CommandExecutor {
 
                             // While there are still players in the lobby, send them to the gameWorld
                             // This is just a way of sending everybody in the lobby to the game
-                            while (playersInLobby.size() > 0) {
+                            for (List<Player> playersInLobby = getPlayersInLobby(); playersInLobby.size() > 0; playersInLobby = getPlayersInLobby()) {
                                 // Get a singular player from the player list
                                 Player aPlayer = playersInLobby.get(0);
                                 // Teleport that player to the spawn of the gameWorld
-                                aPlayer.teleport(Bukkit.getWorld(lobbyWorld).getSpawnLocation());
-                                // Update the list of players still in the lobby
-                                playersInLobby = Bukkit.getServer().getWorld(lobbyWorld).getPlayers();
+                                aPlayer.teleport(Bukkit.getWorld(gameWorld).getSpawnLocation());
                             }
 
-                            // Make sure there is a pause here, as it can take the clients a bit to load into the world
                             // Give players game item (shovels/snowballs/etc.)
 
-
+                            // Add a little break because it can take the clients a bit to load into the new world
+                            // Then, transition to another method because this one is getting really long
                         }
                         // If load was unsuccessful, give feedback
                         // Note: this should not occur unless the config file was edited externally,
