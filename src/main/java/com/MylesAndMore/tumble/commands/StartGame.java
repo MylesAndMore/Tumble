@@ -15,24 +15,32 @@ public class StartGame implements CommandExecutor {
         // Check if sender has perms to run command
         if (sender.hasPermission("tumble.startgame")) {
             // Check if there is more than one person online
-            if (Bukkit.getOnlinePlayers().size() > 1) {
-                sender.sendMessage("Starting game...");
-                // Use multiverse to load game world
-                boolean includeLoaded = false;
-                boolean worldLoaded = (PluginManager.getWorldManager().hasUnloadedWorld(gameWorld, includeLoaded));
-                if (worldLoaded) {
-                    PluginManager.getWorldManager().loadWorld(gameWorld);
+            if (Bukkit.getOnlinePlayers().size() > 0) {
+                // Check if there is a gameWorld specified in config
+                if (gameWorld != null) {
+                    sender.sendMessage("Checking world, this could take a few moments...");
+                    // Use multiverse to load game world
+                    // If the load was successful, start game
+                    if (PluginManager.getMVWorldManager().loadWorld(gameWorld)) {
+                        sender.sendMessage("Starting game, please wait.");
+                        // Generate the blocks in game world
+
+                        // Move all players in lobby to the game world
+
+                        // Give players game item (shovels/snowballs/etc.)
+                    }
+                    // If load was unsuccessful, give feedback
+                    // Note: this should not occur unless the config file was edited externally,
+                    // because the plugin prevents adding "worlds" that are not actually present to the config.
+                    else {
+                        sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + gameWorld);
+                        sender.sendMessage(ChatColor.RED + "Is the configuration file correct?");
+                    }
                 }
+                // Feedback for if there is no gameWorld in the config
                 else {
-                    sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + gameWorld);
-                    sender.sendMessage(ChatColor.RED + "Is the configuration file correct?");
+                    sender.sendMessage(ChatColor.RED + "Please link a game world first!");
                 }
-                // Generate the blocks in game world
-
-                // Move all players in lobby to the game world
-
-                // Give players game item (shovels/snowballs/etc.)
-
             }
             // Feedback for if there is only one person online
             else {
