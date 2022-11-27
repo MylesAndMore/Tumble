@@ -33,8 +33,4 @@ public class Main extends JavaPlugin{
             Bukkit.getServer().getLogger().info("If this is your first time running the plugin, you may disregard this message.");
         }
     }
-
-    public void onDisable() {
-
-    }
 }
