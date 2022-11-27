@@ -41,7 +41,7 @@ public class StartGame implements CommandExecutor {
                                 // Get a singular player from the player list
                                 Player aPlayer = playersInLobby.get(0);
                                 // Teleport that player to the spawn of the gameWorld
-                                aPlayer.teleport(Bukkit.getWorld(PluginManager.getPlugin().getConfig().getString("gameWorld")).getSpawnLocation());
+                                aPlayer.teleport(Bukkit.getWorld(lobbyWorld).getSpawnLocation());
                                 // Update the list of players still in the lobby
                                 playersInLobby = Bukkit.getServer().getWorld(lobbyWorld).getPlayers();
                             }
