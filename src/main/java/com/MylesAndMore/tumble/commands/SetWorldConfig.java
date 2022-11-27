@@ -31,7 +31,7 @@ public class SetWorldConfig implements CommandExecutor {
                             PluginManager.getPlugin().saveConfig();
                             // Feedback
                             sender.sendMessage(ChatColor.GREEN + "Lobby world successfully linked: " + ChatColor.GRAY + world);
-                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading is NOT enough!");
+                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading the plugin is insufficient!");
                         }
                         // Feedback for duplicate world configuration
                         else {
@@ -50,7 +50,7 @@ public class SetWorldConfig implements CommandExecutor {
                             PluginManager.getPlugin().getConfig().set("gameWorld", world);
                             PluginManager.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
-                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading is NOT enough!");
+                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading the plugin is insufficient!");
                         }
                         else {
                             sender.sendMessage(ChatColor.RED + "That world has already been linked, please choose/create another world!");
