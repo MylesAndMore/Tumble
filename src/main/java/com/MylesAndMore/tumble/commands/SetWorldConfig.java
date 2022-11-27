@@ -72,7 +72,7 @@ public class SetWorldConfig implements CommandExecutor {
         }
         // Feedback for if no args were entered
         else {
-            sender.sendMessage(ChatColor.RED + "Usage: " + ChatColor.GRAY + "/tumble:setworld <world> lobby|game");
+            return false;
         }
         return true;
     }
