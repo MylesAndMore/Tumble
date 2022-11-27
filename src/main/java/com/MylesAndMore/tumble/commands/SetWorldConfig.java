@@ -3,8 +3,6 @@ package com.MylesAndMore.tumble.commands;
 import com.MylesAndMore.tumble.PluginManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,15 +23,20 @@ public class SetWorldConfig implements CommandExecutor {
                 if (Objects.equals(worldType, "lobby")) {
                     // Check if the world is actually a world on the server
                     if (Bukkit.getWorld(world) != null) {
-                        // Set the specified value of the world in the config under lobbyWorld
-                        PluginManager.getPlugin().getConfig().set("lobbyWorld", world);
-                        // Save said config
-                        PluginManager.getPlugin().saveConfig();
-                        // Add the world to the multiverse world manager
-                        PluginManager.getWorldManager().addWorld(world, World.Environment.NORMAL, null, WorldType.FLAT, false, null);
-                        // Feedback
-                        sender.sendMessage(ChatColor.GREEN + "Lobby world successfully linked: " + ChatColor.GRAY + world);
-                        sender.sendMessage(ChatColor.GREEN + "Run /tumble:reload for the changes to take effect.");
+                        // Check if the world has already been configured
+                        if (!Objects.equals(PluginManager.getPlugin().getConfig().getString("gameWorld"), world)) {
+                            // Set the specified value of the world in the config under lobbyWorld
+                            PluginManager.getPlugin().getConfig().set("lobbyWorld", world);
+                            // Save said config
+                            PluginManager.getPlugin().saveConfig();
+                            // Feedback
+                            sender.sendMessage(ChatColor.GREEN + "Lobby world successfully linked: " + ChatColor.GRAY + world);
+                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading is NOT enough!");
+                        }
+                        // Feedback for duplicate world configuration
+                        else {
+                            sender.sendMessage(ChatColor.RED + "That world has already been linked, please choose/create another world!");
+                        }
                     }
                     // Feedback for if the world doesn't exist
                     else {
@@ -43,11 +46,15 @@ public class SetWorldConfig implements CommandExecutor {
                 // Check if the world type is game
                 else if (Objects.equals(args[1], "game")) {
                     if (Bukkit.getWorld(world) != null) {
-                        PluginManager.getPlugin().getConfig().set("gameWorld", world);
-                        PluginManager.getPlugin().saveConfig();
-                        PluginManager.getWorldManager().addWorld(world, World.Environment.NORMAL, null, WorldType.FLAT, false, null);
-                        sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
-                        sender.sendMessage(ChatColor.GREEN + "Run /tumble:reload for the changes to take effect.");
+                        if (!Objects.equals(PluginManager.getPlugin().getConfig().getString("lobbyWorld"), world)) {
+                            PluginManager.getPlugin().getConfig().set("gameWorld", world);
+                            PluginManager.getPlugin().saveConfig();
+                            sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
+                            sender.sendMessage(ChatColor.RED + "Please restart your server for the changes to take effect; reloading is NOT enough!");
+                        }
+                        else {
+                            sender.sendMessage(ChatColor.RED + "That world has already been linked, please choose/create another world!");
+                        }
                     }
                     else {
                         sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + world);
