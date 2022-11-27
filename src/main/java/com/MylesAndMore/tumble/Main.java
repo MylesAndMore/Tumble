@@ -14,7 +14,7 @@ public class Main extends JavaPlugin{
         // Register commands
         this.getCommand("reload").setExecutor(new ReloadCommand());
         this.getCommand("setworld").setExecutor(new SetWorldConfig());
-        this.getCommand("startgame").setExecutor(new StartGame());
+        this.getCommand("start").setExecutor(new StartGame());
         // Save the default config file (packaged in the JAR)
         this.saveDefaultConfig();
 
