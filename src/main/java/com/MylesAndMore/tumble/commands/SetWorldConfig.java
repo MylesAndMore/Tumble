@@ -67,7 +67,7 @@ public class SetWorldConfig implements CommandExecutor {
             }
             // Feedback for if sender has no perms
             else {
-                sender.sendMessage(ChatColor.RED + PluginManager.getPlugin().getConfig().getString("permissionMessage"));
+                sender.sendMessage(ChatColor.RED + PluginManager.getPermissionMessage());
             }
         }
         // Feedback for if no args were entered
