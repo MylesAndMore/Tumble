@@ -22,7 +22,6 @@ commands:
     description: Force starts a Tumble match.
     usage: /tumble:startgame
     permission: startgame
-    aliases: [start-game]
 permissions:
   reload:
     description: Allows you to reload the plugin's config.
