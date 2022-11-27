@@ -16,11 +16,11 @@ public class EventListener implements Listener{
             event.setJoinMessage(null);
         }
         // If the gameWorld and lobbyWorld is not null, then check
-        if (TumbleManager.getPlugin().getConfig().getString("gameWorld") != null && TumbleManager.getPlugin().getConfig().getString("lobbyWorld") != null) {
+        if (TumbleManager.getGameWorld() != null && TumbleManager.getLobbyWorld() != null) {
             // if the player joining is in the game world, then
-            if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getPlugin().getConfig().getString("gameWorld"))) {
+            if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
                 // send them back to the lobby.
-                event.getPlayer().teleport(Bukkit.getWorld(TumbleManager.getPlugin().getConfig().getString("lobbyWorld")).getSpawnLocation());
+                event.getPlayer().teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
             }
         }
     }

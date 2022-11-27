@@ -24,7 +24,7 @@ public class SetWorldConfig implements CommandExecutor {
                     // Check if the world is actually a world on the server
                     if (Bukkit.getWorld(world) != null) {
                         // Check if the world has already been configured
-                        if (!Objects.equals(TumbleManager.getPlugin().getConfig().getString("gameWorld"), world)) {
+                        if (!Objects.equals(TumbleManager.getGameWorld(), world)) {
                             // Set the specified value of the world in the config under lobbyWorld
                             TumbleManager.getPlugin().getConfig().set("lobbyWorld", world);
                             // Save said config
@@ -46,7 +46,7 @@ public class SetWorldConfig implements CommandExecutor {
                 // Check if the world type is game
                 else if (Objects.equals(args[1], "game")) {
                     if (Bukkit.getWorld(world) != null) {
-                        if (!Objects.equals(TumbleManager.getPlugin().getConfig().getString("lobbyWorld"), world)) {
+                        if (!Objects.equals(TumbleManager.getLobbyWorld(), world)) {
                             TumbleManager.getPlugin().getConfig().set("gameWorld", world);
                             TumbleManager.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
