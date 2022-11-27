@@ -1,5 +1,6 @@
 package com.MylesAndMore.tumble;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -13,6 +14,14 @@ public class EventListener implements Listener{
         // If false, nothing will happen, and the default message will display
         if (PluginManager.getPlugin().getConfig().getBoolean("hideJoinLeaveMessages")) {
             event.setJoinMessage(null);
+        }
+        // If the gameWorld and lobbyWorld is not null, then check
+        if (PluginManager.getPlugin().getConfig().getString("gameWorld") != null && PluginManager.getPlugin().getConfig().getString("lobbyWorld") != null) {
+            // if the player joining is in the game world, then
+            if (event.getPlayer().getWorld() == Bukkit.getWorld(PluginManager.getPlugin().getConfig().getString("gameWorld"))) {
+                // send them back to the lobby.
+                event.getPlayer().teleport(Bukkit.getWorld(PluginManager.getPlugin().getConfig().getString("lobbyWorld")).getSpawnLocation());
+            }
         }
     }
 
