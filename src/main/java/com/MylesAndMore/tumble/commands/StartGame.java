@@ -3,7 +3,6 @@ package com.MylesAndMore.tumble.commands;
 import com.MylesAndMore.tumble.PluginManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -41,8 +40,8 @@ public class StartGame implements CommandExecutor {
                             while (playersInLobby.size() > 0) {
                                 // Get a singular player from the player list
                                 Player aPlayer = playersInLobby.get(0);
-                                // Teleport that player to the coordinates 0, 80, 0 in the gameWorld
-                                aPlayer.teleport(new Location(Bukkit.getWorld(gameWorld), 0, 60, 0));
+                                // Teleport that player to the spawn of the gameWorld
+                                aPlayer.teleport(Bukkit.getWorld(PluginManager.getPlugin().getConfig().getString("gameWorld")).getSpawnLocation());
                                 // Update the list of players still in the lobby
                                 playersInLobby = Bukkit.getServer().getWorld(lobbyWorld).getPlayers();
                             }
