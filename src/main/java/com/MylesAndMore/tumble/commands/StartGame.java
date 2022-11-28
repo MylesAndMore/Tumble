@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Objects;
 
 public class StartGame implements CommandExecutor {
     // Define the startGame method so that other classes can refrence it

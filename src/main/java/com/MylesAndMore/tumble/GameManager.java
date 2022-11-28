@@ -1,5 +1,8 @@
 package com.MylesAndMore.tumble;
 
+import com.MylesAndMore.tumble.api.Generator;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -11,7 +14,9 @@ public class GameManager {
     public static boolean createGame(String gameType) {
         if (Objects.equals(gameType, "shovels")) {
             // Generate a single layer
-
+            Location layer = Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation();
+            layer.setY(layer.getY() - 1);
+            Generator.generateLayer(layer, 20, Material.DIRT);
             // Give players diamond shovels
             giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
             // Pass on the game type
