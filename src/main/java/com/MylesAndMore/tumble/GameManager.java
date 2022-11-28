@@ -13,10 +13,17 @@ import java.util.Objects;
 public class GameManager {
     public static boolean createGame(String gameType) {
         if (Objects.equals(gameType, "shovels")) {
-            // Generate a single layer
+            // Generate layers
             Location layer = Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation();
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 20, Material.DIRT);
+            Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK);
+            Generator.generateLayer(layer, 13, 1, Material.AIR);
+            layer.setY(layer.getY() - 1);
+            Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK);
+            layer.setY(layer.getY() - 1);
+            Generator.generateLayer(layer, 4, 1, Material.PODZOL);
+            layer.setY(layer.getY() + 1);
+            Generator.generateLayer(layer, 4, 2, Material.GRASS);
             // Give players diamond shovels
             giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
             // Pass on the game type
