@@ -11,6 +11,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class GameManager {
+    public boolean TumbleGame(String gameType) {
+        // Run createGame to distribute items 
+        // Make a method to generate random layers (so we can reuse it later)
+        // Run sendWorld (move from startGame)
+        // Start blocking new games and start keeping score/rounds
+    }
+
     public static boolean createGame(String gameType) {
         if (Objects.equals(gameType, "shovels")) {
             // Generate layers
