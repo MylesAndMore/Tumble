@@ -29,8 +29,11 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 - [ ] add some example layer generation and layer material types, from actual game @MylesAndMore  
 
+## configuration/customization
+
 - [ ] add two configs where you can:
   - [ ] set if you want the game to auto-start
-  - [ ] set the amt of players you want the game to auto-start at  
+  - [ ] set the amt of players you want the game to auto-start at
+  - [ ] program the auto-start (just add an if statement on the PlayerJoin listener to run the StartGame method on a certain amt of players in the config)  
 
 - [ ] add game music? but probably only for us; I feel like the og music must be copyrighted
