@@ -16,6 +16,7 @@ public class GameManager {
         // Make a method to generate random layers (so we can reuse it later)
         // Run sendWorld (move from startGame)
         // Start blocking new games and start keeping score/rounds
+        return true;
     }
 
     public static boolean createGame(String gameType) {
