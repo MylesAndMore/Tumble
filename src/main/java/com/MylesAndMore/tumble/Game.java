@@ -50,9 +50,9 @@ public final class Game {
         // Define the game world's spawnpoint as a new Location
         Location gameSpawn = new Location(gameWorld.getSpawnLocation());
         // Get the X, Y, and Z coords of that location
-        Location x = gameSpawn.getX();
-        Location y = gameSpawn.getY();
-        Location z = gameSpawn.getZ();
+        int x = gameSpawn.getX();
+        int y = gameSpawn.getY();
+        int z = gameSpawn.getZ();
         // Create Locations to scatter players around the first layer
         // These are just edited off the original spawn location;
         // they assume that the first layer has a radius of 17 blocks (it always will w/ the current generator code)
