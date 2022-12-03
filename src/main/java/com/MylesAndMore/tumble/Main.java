@@ -32,5 +32,8 @@ public class Main extends JavaPlugin{
             Bukkit.getServer().getLogger().warning("It appears you have not configured a lobby world for Tumble.");
             Bukkit.getServer().getLogger().info("If this is your first time running the plugin, you may disregard this message.");
         }
+
+        // Init message
+        Bukkit.getServer().getLogger().info("[tumble] tumble initialization complete!");
     }
 }
