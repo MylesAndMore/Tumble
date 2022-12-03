@@ -1,6 +1,6 @@
 package com.MylesAndMore.tumble.commands;
 
-import com.MylesAndMore.tumble.GameManager;
+import com.MylesAndMore.tumble.Game;
 import com.MylesAndMore.tumble.TumbleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,7 +19,7 @@ public class StartGame implements CommandExecutor {
             // Check if there is a lobbyWorld specified in config
             if (TumbleManager.getLobbyWorld() != null) {
                 // Check if there is more than one person in lobby
-                if (TumbleManager.getPlayersInLobby().size() > 1) {
+                if (TumbleManager.getPlayersInLobby().size() > 0) {
                     // Check if there is a gameWorld specified in config
                     if (TumbleManager.getGameWorld() != null) {
                         sender.sendMessage("Checking world, this could take a few moments...");
@@ -28,12 +28,7 @@ public class StartGame implements CommandExecutor {
                         if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
                             sender.sendMessage("Generating layers...");
                             // Check which gamemode to initiate from the config file
-                            if (GameManager.createGame(TumbleManager.getPlugin().getConfig().getString("gameMode"))) {
-                                // If game type exists, send players to the world
-                                // At this point, layers have been generated, and items have been allotted from the createGame method
-                                sendWorld();
-                            }
-                            else {
+                            if (!Game.getGame().startGame()) {
                                 // If game type does not exist, give sender feedback
                                 sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
                             }
