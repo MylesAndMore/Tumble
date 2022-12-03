@@ -1,6 +1,5 @@
 package com.MylesAndMore.tumble;
 
-import com.MylesAndMore.tumble.TumbleManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.Location;
@@ -18,7 +17,7 @@ public final class Game {
     // Private Game() constructor for singleton instance
     private Game() { }
 
-    // Other priate methods for getters and setters go here
+    // Other private methods for getters and setters go here
     
     // Define local game vars
     // The gameType keeps the current game type (shocker)
@@ -80,7 +79,6 @@ public final class Game {
         // In that method: set a flag to monitor the playerDeathEvent so we know when all the players have died
         // Also start music
     }
-
 
 
     // Public method to get the game instance (singleton logic)
