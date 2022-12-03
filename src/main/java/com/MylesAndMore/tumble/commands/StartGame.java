@@ -22,11 +22,10 @@ public class StartGame implements CommandExecutor {
                 if (TumbleManager.getPlayersInLobby().size() > 0) {
                     // Check if there is a gameWorld specified in config
                     if (TumbleManager.getGameWorld() != null) {
-                        sender.sendMessage("Checking world, this could take a few moments...");
+                        sender.sendMessage("Starting game, please wait.");
                         // Use multiverse to load game world
                         // If the load was successful, start game
                         if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
-                            sender.sendMessage("Generating layers...");
                             // Check which gamemode to initiate from the config file
                             if (!Game.getGame().startGame()) {
                                 // If game type does not exist, give sender feedback
