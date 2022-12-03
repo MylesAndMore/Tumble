@@ -1,9 +1,7 @@
 package com.MylesAndMore.tumble;
 
-import com.MylesAndMore.tumble.commands.ReloadCommand;
+import com.MylesAndMore.tumble.commands.*;
 import com.MylesAndMore.tumble.api.Metrics;
-import com.MylesAndMore.tumble.commands.SetWorldConfig;
-import com.MylesAndMore.tumble.commands.StartGame;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -34,6 +32,6 @@ public class Main extends JavaPlugin{
         }
 
         // Init message
-        Bukkit.getServer().getLogger().info("[tumble] tumble initialization complete!");
+        Bukkit.getServer().getLogger().info("[tumble] Tumble initialization complete!");
     }
 }

@@ -153,9 +153,6 @@ public class Game {
         // While there are still players in the lobby, send them to the gameWorld
         // This is just a way of sending everybody in the lobby to the game
         for (Player aPlayer : TumbleManager.getPlayersInLobby()) {
-            //for (List<Player> playersInLobby = TumbleManager.getPlayersInLobby(); playersInLobby.size() > 0; playersInLobby = TumbleManager.getPlayersInLobby()) {
-            // Get a singular player from the player list
-            //Player aPlayer = playersInLobby.get(0);
             // Get a singular location from the scatter list
             Location aLocation = scatterLocations.get(0);
             // Teleport that player to that scatter location
@@ -175,6 +172,7 @@ public class Game {
         // otherwise, the game must have two people left (and one just died), meaning it is over
         // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
         else {
+            gamePlayers.remove(player);
             // End the game, passing the winner to the gameEnd method
             gameEnd(gamePlayers.get(0));
         }
@@ -198,6 +196,6 @@ public class Game {
     // Methods to get the game type and game state for other classes outside the Game
     private String getGameType() { return gameType; }
 
-    private String getGameState() { return gameState; }
+    public String getGameState() { return gameState; }
 
 }

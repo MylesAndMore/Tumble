@@ -12,7 +12,6 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class StartGame implements CommandExecutor {
-    // Define the startGame method so that other classes can refrence it
     public void startGame(CommandSender sender, String[] args) {
         // Check if sender has perms to run command
         if (sender.hasPermission("tumble.start")) {
@@ -58,24 +57,6 @@ public class StartGame implements CommandExecutor {
         else {
             sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
         }
-    }
-
-    public void sendWorld() {
-        // Create Locations to scatter players around the first layer
-
-        // While there are still players in the lobby, send them to the gameWorld
-        // This is just a way of sending everybody in the lobby to the game
-        for (List<Player> playersInLobby = TumbleManager.getPlayersInLobby(); playersInLobby.size() > 0; playersInLobby = TumbleManager.getPlayersInLobby()) {
-            // Get a singular player from the player list
-            Player aPlayer = playersInLobby.get(0);
-            // Teleport that player to the spawn of the gameWorld
-            aPlayer.teleport(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation());
-        }
-
-        // Add a little break because it can take the clients a bit to load into the new world
-        // Then, transition to another method because this one is getting really long
-        // In that method: set a flag to monitor the playerDeathEvent so we know when all the players have died
-        // Also start music
     }
 
     @Override

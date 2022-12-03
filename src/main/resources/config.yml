@@ -7,8 +7,8 @@ permissionMessage: You do not have permission to perform this command!
 
 # Customize the game mode of Tumble
 # Acceptable options include: shovels, snowballs, mixed
-# Default is shovels
-gameMode: shovels
+# Default is mixed
+gameMode: mixed
 
 # This tells the plugin which worlds it should use as the lobby/game worlds
 # Do NOT change unless you know what you're doing!!
