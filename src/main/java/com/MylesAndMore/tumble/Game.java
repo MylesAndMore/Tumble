@@ -14,7 +14,10 @@ public class Game {
     private static Game gameInstance;
 
     // Private Game() constructor for singleton instance
-    private Game() { }
+    private Game() {
+        gameWorld = Bukkit.getWorld(TumbleManager.getGameWorld());
+        gameSpawn = gameWorld.getSpawnLocation();
+    }
 
     // ONLY Public method to get the game instance
     public static Game getGame() {
@@ -24,19 +27,17 @@ public class Game {
         return gameInstance;
     }
 
-
-
     // Define local game vars
     // The gameType keeps the current game type (shocker)
-    private String gameType = null;
+    private String gameType;
     // The gameState keeps the current state of the game (I'm so creative, I know)
-    private String gameState = null;
+    private String gameState;
 
     // Initialize a new instance of the Random class for use later
-    private Random Random = new Random();
+    private final Random Random = new Random();
     // Define the game world and its spawnpoint as a new Location for use later
-    private World gameWorld = Bukkit.getWorld(TumbleManager.getGameWorld());
-    private Location gameSpawn = gameWorld.getSpawnLocation();
+    private final World gameWorld;
+    private final Location gameSpawn;
 
     // Make a list of the game's players for later
     private List<Player> gamePlayers = null;
@@ -98,7 +99,8 @@ public class Game {
     }
 
     private boolean generateLayers(String gameType) {
-        Location layer = gameSpawn;
+        // Location layer = gameSpawn;
+        Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
         if (Objects.equals(gameType, "shovels")) {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK);
@@ -107,7 +109,7 @@ public class Game {
             Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
-            layer.setY(layer.getY() + 1);
+            layer.setY(layer.getY() + 2);
             Generator.generateLayer(layer, 4, 2, Material.GRASS);
         }
         else if (Objects.equals(gameType, "snowballs")) {
@@ -123,6 +125,7 @@ public class Game {
         else {
             return false;
         }
+        layer = null;
         return true;
     }
 
@@ -178,6 +181,7 @@ public class Game {
     }
 
     private void gameEnd(@NotNull Player winner) {
+        gameState = "complete";
         Bukkit.getServer().broadcastMessage(ChatColor.GREEN + winner.getName() + " has won!");
     }
 
