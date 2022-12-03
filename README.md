@@ -12,10 +12,12 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 ## game realism  
 
 - [ ] make the shovel in shovels mode not lose any durabilty
-- [ ] make the game blocks instant-breakable
+- [ ] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
 - [ ] add infinite snowballs in the gamemanager for tumble mode  
 - [ ] make it so that you can't remove any of the game items from your inventory
+- [ ] make snowballs actually break blocks (duh)
 - [ ] make the randomized mode logic
+- [ ] set some limits on the spectator mode in-game; make it so they can't fly outside of the map
 
 ## game logic (fyi: very object-oriented)  
 
