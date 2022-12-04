@@ -3,7 +3,11 @@ package com.MylesAndMore.tumble;
 import com.MylesAndMore.tumble.api.Generator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -29,7 +33,7 @@ public class Game {
 
     // Define local game vars
     // The gameType keeps the current game type (shocker)
-    private String gameType;
+    private static String gameType;
     // The gameState keeps the current state of the game (I'm so creative, I know)
     private String gameState;
 
@@ -61,6 +65,8 @@ public class Game {
                 giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
                 // Send players to the game
                 sendPlayers();
+
+
                 // Keep in mind that after this runs, this command will complete and return true
             }
             else {
@@ -118,6 +124,7 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
             layer.setY(layer.getY() + 2);
             Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
+            roundType = "shovels";
         }
         else if (Objects.equals(gameType, "snowballs")) {
             layer.setY(layer.getY() - 1);
@@ -128,6 +135,7 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA);
+            roundType = "snowballs";
         }
         else if (Objects.equals(gameType, "mixed")) {
             if (Random.nextInt(2) == 0) {
@@ -173,6 +181,14 @@ public class Game {
             aPlayer.teleport(aLocation);
             // Remove that location from the list so that it cannot be used again
             scatterLocations.remove(0);
+        }
+    }
+
+    public void itemDamage(PlayerItemDamageEvent event) {
+        // If the game type is shovels,
+        if (Objects.equals(roundType, "shovels")) {
+            // Cancel the event
+            event.setCancelled(true);
         }
     }
 

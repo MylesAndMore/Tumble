@@ -3,9 +3,13 @@ package com.MylesAndMore.tumble;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.Objects;
 
 public class EventListener implements Listener{
     @EventHandler
@@ -47,4 +51,19 @@ public class EventListener implements Listener{
             }
         }
     }
+
+    @EventHandler
+    public void ItemDamageEvent(PlayerItemDamageEvent event) {
+        // On a BlockBreakEvent, check to make sure there is a defined gameWorld
+        if (TumbleManager.getGameWorld() != null) {
+            // Then check to see if the block was broken in the gameWorld,
+            if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+                // If it was in the gameWorld, pass this event to the Game
+                Game.getGame().itemDamage(event);
+            }
+        }
+    }
 }
+
+
+
