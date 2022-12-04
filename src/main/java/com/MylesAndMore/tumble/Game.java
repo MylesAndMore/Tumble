@@ -40,7 +40,11 @@ public class Game {
     private final Location gameSpawn;
 
     // Make a list of the game's players for later
-    private List<Player> gamePlayers = null;
+    private List<Player> gamePlayers;
+    // Make a list of the round's players
+    private List<Player> roundPlayers;
+    // Initialize a list to keep track of wins between rounds
+    private List<Integer> gameWins;
 
     // Creates a new Game
     // This will return true if the game succeeds creation, and false if not
@@ -94,6 +98,9 @@ public class Game {
         }
         // Update the game's players for later
         gamePlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+        roundPlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+        gameWins = new ArrayList<>();
+        gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
         gameState = "running";
         return true;
     }
@@ -110,7 +117,7 @@ public class Game {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
             layer.setY(layer.getY() + 2);
-            Generator.generateLayer(layer, 4, 2, Material.GRASS);
+            Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
         }
         else if (Objects.equals(gameType, "snowballs")) {
             layer.setY(layer.getY() - 1);
@@ -122,10 +129,17 @@ public class Game {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA);
         }
+        else if (Objects.equals(gameType, "mixed")) {
+            if (Random.nextInt(2) == 0) {
+                generateLayers("shovels");
+            } else {
+                generateLayers("snowballs");
+            }
+        }
         else {
             return false;
         }
-        layer = null;
+        // layer = null;
         return true;
     }
 
@@ -172,15 +186,43 @@ public class Game {
         // otherwise, the game must have two people left (and one just died), meaning it is over
         // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
         else {
-            gamePlayers.remove(player);
+            // roundPlayers.remove(player);
             // End the game, passing the winner to the gameEnd method
-            gameEnd(gamePlayers.get(0));
+            roundEnd(roundPlayers.get(0));
+        }
+    }
+
+    private void roundEnd(@NotNull Player winner) {
+        // Set the wins of the player to their current # of wins + 1
+        gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
+        Bukkit.getServer().broadcastMessage(ChatColor.GREEN + winner.getName() + " has won the round!");
+        if (gameWins.get(gamePlayers.indexOf(winner)) == 3)  {
+            gameEnd(winner);
+        }
+        else {
+            // Clear old layers
+            Location firstPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20);
+            Location secondPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20);
+            Generator.generateCuboid(firstPos, secondPos, Material.AIR);
+            // Generate layers
+            // Debug
+            Bukkit.getServer().broadcastMessage(gameType);
+            generateLayers(gameType);
+            // Teleport players
+            // A new method will need to be written for this; current one only supports lobby
+
+            // Set their gamemodes to survival
+
         }
     }
 
     private void gameEnd(@NotNull Player winner) {
-        gameState = "complete";
-        Bukkit.getServer().broadcastMessage(ChatColor.GREEN + winner.getName() + " has won!");
+        Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
+        // Clear layers
+        Location firstPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20);
+        Location secondPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20);
+        Generator.generateCuboid(firstPos, secondPos, Material.AIR);
+        // Send players back to lobby
     }
 
     private void giveItems(ItemStack itemStack) {
