@@ -36,6 +36,8 @@ public class Game {
     private static String gameType;
     // The gameState keeps the current state of the game (I'm so creative, I know)
     private String gameState;
+    // Define a variable for the roundType
+    private String roundType;
 
     // Initialize a new instance of the Random class for use later
     private final Random Random = new Random();
@@ -140,8 +142,10 @@ public class Game {
         else if (Objects.equals(gameType, "mixed")) {
             if (Random.nextInt(2) == 0) {
                 generateLayers("shovels");
+                roundType = "shovels";
             } else {
                 generateLayers("snowballs");
+                roundType = "snowballs";
             }
         }
         else {
