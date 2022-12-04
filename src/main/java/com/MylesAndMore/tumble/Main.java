@@ -23,12 +23,12 @@ public class Main extends JavaPlugin{
 
         // Check if worlds are null in config
         if (TumbleManager.getGameWorld() == null) {
-            Bukkit.getServer().getLogger().warning("It appears you have not configured a game world for Tumble.");
-            Bukkit.getServer().getLogger().info("If this is your first time running the plugin, you may disregard this message.");
+            Bukkit.getServer().getLogger().warning("[tumble] It appears you have not configured a game world for Tumble.");
+            Bukkit.getServer().getLogger().info("[tumble] If this is your first time running the plugin, you may disregard this message.");
         }
         if (TumbleManager.getLobbyWorld() == null) {
-            Bukkit.getServer().getLogger().warning("It appears you have not configured a lobby world for Tumble.");
-            Bukkit.getServer().getLogger().info("If this is your first time running the plugin, you may disregard this message.");
+            Bukkit.getServer().getLogger().warning("[tumble] It appears you have not configured a lobby world for Tumble.");
+            Bukkit.getServer().getLogger().info("[tumble] If this is your first time running the plugin, you may disregard this message.");
         }
 
         // Init message
