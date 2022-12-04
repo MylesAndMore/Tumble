@@ -165,9 +165,9 @@ public class Game {
     public void playerDeath(@NotNull Player player) {
         player.setGameMode(GameMode.SPECTATOR);
         // If there are more than 2 players in the game,
-        if (gamePlayers.size() > 2) {
-            // remove that player (who just died) from the gamePlayersArray, effectively eliminating them,
-            gamePlayers.remove(player);
+        if (roundPlayers.size() > 2) {
+            // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
+            roundPlayers.remove(player);
         }
         // otherwise, the game must have two people left (and one just died), meaning it is over
         // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
