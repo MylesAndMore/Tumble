@@ -24,4 +24,22 @@ public class Generator {
             }
         }
     }
+
+    public static void generateCuboid(Location firstPos, Location secondPos, Material material) {
+        World world = firstPos.getWorld();
+        int fX = firstPos.getBlockX();
+        int fY = firstPos.getBlockY();
+        int fZ = firstPos.getBlockZ();
+        int sX = secondPos.getBlockX();
+        int sY = secondPos.getBlockY();
+        int sZ = secondPos.getBlockZ();
+
+        for (int x = fX; x <= sX; x++) {
+            for (int y = fY; y <= sY; y++) {
+                for (int z = fZ; z <= sZ; z++) {
+                    world.getBlockAt(x, y, z).setType(material);
+                }
+            }
+        }
+    }
 }
