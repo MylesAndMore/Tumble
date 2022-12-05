@@ -17,7 +17,6 @@ public class Generator {
             for (int x = Cx - radius; x <= Cx + radius; x++) {
                 for (int z = Cz - radius; z <= Cz + radius; z++) {
                     if ((Cx - x) * (Cx - x) + (Cz - z) * (Cz - z) <= rSq) {
-                        Location block = new Location(world, x, y, z);
                         world.getBlockAt(x, y, z).setType(material);
                     }
                 }
