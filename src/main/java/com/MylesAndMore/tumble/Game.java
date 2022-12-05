@@ -49,8 +49,10 @@ public class Game {
     // Initialize a list to keep track of wins between rounds
     private List<Integer> gameWins;
 
-    // Creates a new Game
-    // This will return true if the game succeeds creation, and false if not
+    /**
+     * Creates a new Game
+     * @return true if the game succeeds creation, and false if not
+     */
     public boolean startGame() {
         gameState = "starting";
         if (Objects.equals(TumbleManager.getGameType(), "shovels")) {
@@ -108,7 +110,6 @@ public class Game {
     }
 
     private boolean generateLayers(String gameType) {
-        // Location layer = gameSpawn;
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
         if (Objects.equals(gameType, "shovels")) {
             layer.setY(layer.getY() - 1);
@@ -145,7 +146,6 @@ public class Game {
         else {
             return false;
         }
-        // layer = null;
         return true;
     }
 
