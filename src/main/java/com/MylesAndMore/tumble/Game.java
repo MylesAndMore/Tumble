@@ -182,6 +182,15 @@ public class Game {
         }
     }
 
+    private void setSurvival() {
+        for (List<Player> spectators = gamePlayers; spectators.size() > 0; spectators.remove(0)) {
+            // Get a singular player from the player list
+            Player spectatorPlayer = spectators.get(0);
+            // Set that player's gamemode to survival
+            spectatorPlayer.setGameMode(GameMode.SURVIVAL);
+        }
+    }
+
     public void itemDamage(PlayerItemDamageEvent event) {
         // If the game type is shovels,
         if (Objects.equals(roundType, "shovels")) {
@@ -224,7 +233,7 @@ public class Game {
             // A new method will need to be written for this; current one only supports lobby
 
             // Set their gamemodes to survival
-
+            setSurvival();
         }
     }
 
