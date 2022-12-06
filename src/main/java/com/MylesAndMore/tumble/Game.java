@@ -4,7 +4,6 @@ import com.MylesAndMore.tumble.api.Generator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -69,7 +68,7 @@ public class Game {
                 // If the layer generation succeeds, give players diamond shovels
                 giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
                 // Send all players from lobby to the game
-                teleportPlayers(lobbyPlayers);
+                scatterPlayers(lobbyPlayers);
                 // Keep in mind that after this runs, this command will complete and return true
             }
             else {
@@ -80,7 +79,7 @@ public class Game {
             roundType = gameType;
             if (generateLayers(gameType)) {
                 giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
-                teleportPlayers(lobbyPlayers);
+                scatterPlayers(lobbyPlayers);
             }
             else {
                 return false;
@@ -92,13 +91,13 @@ public class Game {
                 roundType = "shovels";
                 generateLayers("shovels");
                 giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
-                teleportPlayers(lobbyPlayers);
+                scatterPlayers(lobbyPlayers);
             }
             else {
                 roundType = "snowballs";
                 generateLayers("snowballs");
                 giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
-                teleportPlayers(lobbyPlayers);
+                scatterPlayers(lobbyPlayers);
             }
         }
         else {
@@ -121,7 +120,7 @@ public class Game {
      * This method should be called on the death of one of the Game's players
      * @param player The player who died
      */
-    public void playerDeath(@NotNull Player player) {
+    public void playerDeath(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
         // If there are more than 2 players in the game,
         if (roundPlayers.size() > 2) {
@@ -198,10 +197,27 @@ public class Game {
         return true;
     }
 
+    /**
+     * Distributes items to a provided list of players
+     * @param players The player list for which to distribute the items to
+     * @param itemStack The ItemStack to be distributed
+     */
     private void giveItems(List<Player> players, ItemStack itemStack) {
         for (Player aPlayer : players) {
             // Get a singular player from the player list and give that player the specified item
             aPlayer.getInventory().addItem(itemStack);
+        }
+    }
+
+    /**
+     * Sets the gamemodes of a provided list of players
+     * @param players The player list for which to set the gamemodes of
+     * @param gameMode The GameMode to set
+     */
+    private void setGamemode(List<Player> players, GameMode gameMode) {
+        for (Player aPlayer : players) {
+            // Get a singular player from the player list and set their gamemode to the specified gamemode
+            aPlayer.setGameMode(gameMode);
         }
     }
 
@@ -246,7 +262,7 @@ public class Game {
      * Teleports a list of players to the specified scatter locations in the gameWorld
      * @param players a List of Players to teleport
      */
-    private void teleportPlayers(List<Player> players) {
+    private void scatterPlayers(List<Player> players) {
         // Get the coords of the game's spawn location
         double x = gameSpawn.getX();
         double y = gameSpawn.getY();
@@ -274,16 +290,7 @@ public class Game {
         }
     }
 
-    private void setSurvival() {
-        for (List<Player> spectators = gamePlayers; spectators.size() > 0; spectators.remove(0)) {
-            // Get a singular player from the player list
-            Player spectatorPlayer = spectators.get(0);
-            // Set that player's gamemode to survival
-            spectatorPlayer.setGameMode(GameMode.SURVIVAL);
-        }
-    }
-
-    private void roundEnd(@NotNull Player winner) {
+    private void roundEnd(Player winner) {
         // Set the wins of the player to their current # of wins + 1
         gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
         Bukkit.getServer().broadcastMessage(ChatColor.GREEN + winner.getName() + " has won the round!");
@@ -298,16 +305,16 @@ public class Game {
             // Re-generate layers
             generateLayers(gameType);
             // Re-scatter players
-            teleportPlayers(gamePlayers);
+            scatterPlayers(gamePlayers);
             // Set their gamemodes to survival
-            setSurvival();
+            setGamemode(gamePlayers, GameMode.SURVIVAL);
         }
     }
 
-    private void gameEnd(@NotNull Player winner) {
+    private void gameEnd(Player winner) {
         Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
         // Send players back to lobby
-
+        
     }
 
 }
