@@ -30,7 +30,7 @@ public class Game {
 
     // Define local game vars
     // The gameType keeps the current game type (shocker)
-    private static String gameType;
+    private static String gameType = TumbleManager.getGameType();
     // The gameState keeps the current state of the game (I'm so creative, I know)
     private String gameState;
     // Define a variable for the roundType
@@ -56,16 +56,15 @@ public class Game {
     public boolean startGame() {
         gameState = "starting";
         if (Objects.equals(TumbleManager.getGameType(), "shovels")) {
-            // Set the correct gameType for the game we're playing, for later
-            gameType = "shovels";
+            // Set the roundType to gameType since it won't change for this mode
+            roundType = gameType;
             // Generate the correct layers for a Shovels game
             // The else statement is just in case the generator fails; this command will fail
             if (generateLayers(gameType)) {
                 // If the layer generation succeeds, give players diamond shovels
-                // Reminder: we need a way for blocks to break instantly and for these to not lose durability!
                 giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
-                // Send players to the game
-                sendPlayers();
+                // Send all players from lobby to the game
+                teleportPlayers(TumbleManager.getPlayersInLobby());
                 // Keep in mind that after this runs, this command will complete and return true
             }
             else {
@@ -73,45 +72,51 @@ public class Game {
             }
         }
         else if (Objects.equals(TumbleManager.getGameType(), "snowballs")) {
-            gameType = "snowballs";
+            roundType = gameType;
             if (generateLayers(gameType)) {
                 giveItems(new ItemStack(Material.SNOWBALL));
-                sendPlayers();
+                teleportPlayers(TumbleManager.getPlayersInLobby());
             }
             else {
                 return false;
             }
         }
         else if (Objects.equals(TumbleManager.getGameType(), "mixed")) {
-            gameType = "mixed";
-            // Mixed gamemode (choose random shovels or snowballs)
+            // Mixed gamemode (choose random shovels/0 or snowballs/1)
             if (Random.nextInt(2) == 0) {
                 roundType = "shovels";
                 generateLayers("shovels");
                 giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
-                sendPlayers();
+                teleportPlayers(TumbleManager.getPlayersInLobby());
             }
             else {
                 roundType = "snowballs";
                 generateLayers("snowballs");
                 giveItems(new ItemStack(Material.SNOWBALL));
-                sendPlayers();
-
+                teleportPlayers(TumbleManager.getPlayersInLobby());
             }
         }
         else {
             // The game type in the config did not match a specified game type; return false to signify that
             return false;
         }
+        // If a game creation succeeded, then,
         // Update the game's players for later
         gamePlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+        // Update the round's players for later
         roundPlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+        // Create a list that will later keep track of each player's wins
         gameWins = new ArrayList<>();
         gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
         gameState = "running";
         return true;
     }
 
+    /**
+     * Generates the layers in the gameWorld for a certain gameType
+     * @param gameType can be either "shovels", "snowballs", or "mixed", anything else will fail generation
+     * @return true if gameType was recognized and layers were (hopefully) generated, false if unrecognized
+     */
     private boolean generateLayers(String gameType) {
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
         if (Objects.equals(roundType, "shovels")) {
@@ -150,6 +155,9 @@ public class Game {
         return true;
     }
 
+    // THIS METHOD IS DEPRECATED!!
+    // It has been replaced by teleportPlayers(), I'm just leaving this just in case teleportPlayers() doesn't work out
+    /**
     private void sendPlayers() {
         // Get the X, Y, and Z coords of that location
         double x = gameSpawn.getX();
@@ -179,6 +187,39 @@ public class Game {
             // Teleport that player to that scatter location
             aPlayer.teleport(aLocation);
             // Remove that location from the list so that it cannot be used again
+            scatterLocations.remove(0);
+        }
+    }
+    */
+
+    /**
+     * Teleports a list of players to the specified scatter locations in the gameWorld
+     * @param players a List of Players to teleport
+     */
+    private void teleportPlayers(List<Player> players) {
+        // Get the coords of the game's spawn location
+        double x = gameSpawn.getX();
+        double y = gameSpawn.getY();
+        double z = gameSpawn.getZ();
+        // Create the scatter locations based off the game's spawn
+        List<Location> scatterLocations = new ArrayList<>();
+        scatterLocations.addAll(List.of(
+                new Location(gameWorld, (x - 14.5), y, (z + 0.5) , -90, 0),
+                new Location(gameWorld, (x + 0.5), y, (z - 14.5), 0, 0),
+                new Location(gameWorld, (x + 15.5), y, (z + 0.5), 90, 0),
+                new Location(gameWorld, (x + 0.5), y, (z + 15.5), 180, 0 ),
+                new Location(gameWorld, (x - 10.5), y, (z - 10.5), -45, 0),
+                new Location(gameWorld, (x - 10.5), y, (z + 11.5), -135, 0),
+                new Location(gameWorld, (x + 11.5), y, (z - 10.5), 45, 0),
+                new Location(gameWorld, (x + 11.5), y, (z + 11.5), 135, 0))
+        );
+        // Shuffle the list (randomize)
+        Collections.shuffle(scatterLocations);
+        // While there are still unteleported players from the list, teleport them
+        for (Player aPlayer : players) {
+            // Select a singular player and singular location from the lists and teleport that player
+            aPlayer.teleport(scatterLocations.get(0));
+            // Remove that location so multiple players won't get the same one
             scatterLocations.remove(0);
         }
     }
@@ -230,9 +271,8 @@ public class Game {
         else {
             // Re-generate layers
             generateLayers(gameType);
-            // Teleport players
-            // A new method will need to be written for this; current one only supports lobby
-
+            // Re-scatter players
+            teleportPlayers(gamePlayers);
             // Set their gamemodes to survival
             setSurvival();
         }
