@@ -90,14 +90,17 @@ public class Game {
             gameType = "mixed";
             // Mixed gamemode (choose random shovels or snowballs)
             if (Random.nextInt(2) == 0) {
+                roundType = "shovels";
                 generateLayers("shovels");
                 giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
                 sendPlayers();
             }
             else {
+                roundType = "snowballs";
                 generateLayers("snowballs");
                 giveItems(new ItemStack(Material.SNOWBALL));
                 sendPlayers();
+
             }
         }
         else {
@@ -116,7 +119,7 @@ public class Game {
     private boolean generateLayers(String gameType) {
         // Location layer = gameSpawn;
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
-        if (Objects.equals(gameType, "shovels")) {
+        if (Objects.equals(roundType, "shovels")) {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK);
             Generator.generateLayer(layer, 13, 1, Material.AIR);
@@ -128,7 +131,7 @@ public class Game {
             Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
             roundType = "shovels";
         }
-        else if (Objects.equals(gameType, "snowballs")) {
+        else if (Objects.equals(roundType, "snowballs")) {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 17, 1, Material.COAL_ORE);
             Generator.generateLayer(layer, 13, 1, Material.AIR);
@@ -142,10 +145,8 @@ public class Game {
         else if (Objects.equals(gameType, "mixed")) {
             if (Random.nextInt(2) == 0) {
                 generateLayers("shovels");
-                roundType = "shovels";
             } else {
                 generateLayers("snowballs");
-                roundType = "snowballs";
             }
         }
         else {

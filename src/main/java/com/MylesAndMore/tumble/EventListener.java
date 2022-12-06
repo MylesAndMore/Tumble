@@ -1,13 +1,22 @@
 package com.MylesAndMore.tumble;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.Objects;
 
@@ -63,7 +72,23 @@ public class EventListener implements Listener{
             }
         }
     }
+
+    @EventHandler
+    public void ProjectileLaunchEvent(ProjectileLaunchEvent event) {
+        // When A projectile is launched, check to make sure there is a defined gameWorld
+        if (TumbleManager.getGameWorld() != null) {
+            // Then check to see if projectile was thrown in the gameWorld.
+            if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+                if (event.getEntity() instanceof Snowball) {
+                    if (event.getEntity().getShooter() instanceof Player player) {
+                        player.getInventory().addItem(new ItemStack(Material.SNOWBALL));
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 
 
