@@ -3,7 +3,6 @@ package com.MylesAndMore.tumble;
 import com.MylesAndMore.tumble.api.Generator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +27,7 @@ public class Game {
         return gameInstance;
     }
 
+
     // Define local game vars
     // The gameType keeps the current game type (shocker)
     private static String gameType = TumbleManager.getGameType();
@@ -42,12 +42,17 @@ public class Game {
     private final World gameWorld;
     private final Location gameSpawn;
 
+    // Make a list of the lobby's players for later
+    private List<Player> lobbyPlayers = TumbleManager.getPlayersInLobby();
     // Make a list of the game's players for later
     private List<Player> gamePlayers;
     // Make a list of the round's players
     private List<Player> roundPlayers;
     // Initialize a list to keep track of wins between rounds
     private List<Integer> gameWins;
+
+
+    // BEGIN PUBLIC METHODS
 
     /**
      * Creates a new Game
@@ -62,9 +67,9 @@ public class Game {
             // The else statement is just in case the generator fails; this command will fail
             if (generateLayers(gameType)) {
                 // If the layer generation succeeds, give players diamond shovels
-                giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
+                giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
                 // Send all players from lobby to the game
-                teleportPlayers(TumbleManager.getPlayersInLobby());
+                teleportPlayers(lobbyPlayers);
                 // Keep in mind that after this runs, this command will complete and return true
             }
             else {
@@ -74,8 +79,8 @@ public class Game {
         else if (Objects.equals(TumbleManager.getGameType(), "snowballs")) {
             roundType = gameType;
             if (generateLayers(gameType)) {
-                giveItems(new ItemStack(Material.SNOWBALL));
-                teleportPlayers(TumbleManager.getPlayersInLobby());
+                giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
+                teleportPlayers(lobbyPlayers);
             }
             else {
                 return false;
@@ -86,14 +91,14 @@ public class Game {
             if (Random.nextInt(2) == 0) {
                 roundType = "shovels";
                 generateLayers("shovels");
-                giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
-                teleportPlayers(TumbleManager.getPlayersInLobby());
+                giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
+                teleportPlayers(lobbyPlayers);
             }
             else {
                 roundType = "snowballs";
                 generateLayers("snowballs");
-                giveItems(new ItemStack(Material.SNOWBALL));
-                teleportPlayers(TumbleManager.getPlayersInLobby());
+                giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
+                teleportPlayers(lobbyPlayers);
             }
         }
         else {
@@ -113,11 +118,47 @@ public class Game {
     }
 
     /**
+     * This method should be called on the death of one of the Game's players
+     * @param player The player who died
+     */
+    public void playerDeath(@NotNull Player player) {
+        player.setGameMode(GameMode.SPECTATOR);
+        // If there are more than 2 players in the game,
+        if (roundPlayers.size() > 2) {
+            // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
+            roundPlayers.remove(player);
+        }
+        // Otherwise, the game must have two people left (and one just died), meaning it is over
+        // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
+        else {
+            // roundPlayers.remove(player);
+            // End the game, passing the winner to the gameEnd method
+            roundEnd(roundPlayers.get(0));
+        }
+    }
+
+    // Methods to get the game type and game state for other classes outside the Game
+
+    /**
+     * @return The round type of the current round as a String ("shovels", "snowballs")
+     */
+    public String getRoundType() { return roundType; }
+
+    /**
+     * @return The game's current state as a String ("starting", "running", "complete")
+     */
+    public String getGameState() { return gameState; }
+
+
+    // BEGIN PRIVATE METHODS
+
+    /**
      * Generates the layers in the gameWorld for a certain gameType
      * @param gameType can be either "shovels", "snowballs", or "mixed", anything else will fail generation
      * @return true if gameType was recognized and layers were (hopefully) generated, false if unrecognized
      */
     private boolean generateLayers(String gameType) {
+        // Create a new Location for the layers to work with--this is so that we don't modify the actual gameSpawn var
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
         if (Objects.equals(roundType, "shovels")) {
             layer.setY(layer.getY() - 1);
@@ -143,16 +184,25 @@ public class Game {
             roundType = "snowballs";
         }
         else if (Objects.equals(gameType, "mixed")) {
+            // Randomly select either shovels or snowballs and re-run the method
             if (Random.nextInt(2) == 0) {
                 generateLayers("shovels");
             } else {
                 generateLayers("snowballs");
             }
         }
+        // Game type was invalid
         else {
             return false;
         }
         return true;
+    }
+
+    private void giveItems(List<Player> players, ItemStack itemStack) {
+        for (Player aPlayer : players) {
+            // Get a singular player from the player list and give that player the specified item
+            aPlayer.getInventory().addItem(itemStack);
+        }
     }
 
     // THIS METHOD IS DEPRECATED!!
@@ -233,22 +283,6 @@ public class Game {
         }
     }
 
-    public void playerDeath(@NotNull Player player) {
-        player.setGameMode(GameMode.SPECTATOR);
-        // If there are more than 2 players in the game,
-        if (roundPlayers.size() > 2) {
-            // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
-            roundPlayers.remove(player);
-        }
-        // otherwise, the game must have two people left (and one just died), meaning it is over
-        // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
-        else {
-            // roundPlayers.remove(player);
-            // End the game, passing the winner to the gameEnd method
-            roundEnd(roundPlayers.get(0));
-        }
-    }
-
     private void roundEnd(@NotNull Player winner) {
         // Set the wins of the player to their current # of wins + 1
         gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
@@ -272,22 +306,8 @@ public class Game {
 
     private void gameEnd(@NotNull Player winner) {
         Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
-    
         // Send players back to lobby
+
     }
-
-    private void giveItems(ItemStack itemStack) {
-        for (List<Player> playersWithoutItem = TumbleManager.getPlayersInLobby(); playersWithoutItem.size() > 0; playersWithoutItem.remove(0)) {
-            // Get a singular player from the player list
-            Player playerWithoutItem = playersWithoutItem.get(0);
-            // Give that player the specified item
-            playerWithoutItem.getInventory().addItem(itemStack);
-        }
-    }
-
-    // Methods to get the game type and game state for other classes outside the Game
-    public String getRoundType() { return roundType; }
-
-    public String getGameState() { return gameState; }
 
 }
