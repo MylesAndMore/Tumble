@@ -253,7 +253,6 @@ public class Game {
         }
     }
 
-
     // Methods to get the game type and game state for other classes outside the Game
     private String getGameType() { return gameType; }
 
