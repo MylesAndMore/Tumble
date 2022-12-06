@@ -233,14 +233,6 @@ public class Game {
         }
     }
 
-    public void itemDamage(PlayerItemDamageEvent event) {
-        // If the game type is shovels,
-        if (Objects.equals(roundType, "shovels")) {
-            // Cancel the event
-            event.setCancelled(true);
-        }
-    }
-
     public void playerDeath(@NotNull Player player) {
         player.setGameMode(GameMode.SPECTATOR);
         // If there are more than 2 players in the game,
@@ -294,7 +286,7 @@ public class Game {
     }
 
     // Methods to get the game type and game state for other classes outside the Game
-    private String getGameType() { return gameType; }
+    public String getRoundType() { return roundType; }
 
     public String getGameState() { return gameState; }
 

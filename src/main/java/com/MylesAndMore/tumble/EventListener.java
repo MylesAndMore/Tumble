@@ -1,5 +1,7 @@
 package com.MylesAndMore.tumble;
 
+import java.util.Objects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -60,8 +62,10 @@ public class EventListener implements Listener{
         if (TumbleManager.getGameWorld() != null) {
             // Then check to see if the block was broken in the gameWorld,
             if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
-                // If it was in the gameWorld, pass this event to the Game
-                Game.getGame().itemDamage(event);
+                // If it was in the gameWorld, check if the roundType was shovels
+                if (Objects.equals(Game.getGame().getRoundType(), "shovels")) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
