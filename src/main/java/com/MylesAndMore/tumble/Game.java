@@ -312,9 +312,12 @@ public class Game {
     }
 
     private void gameEnd(Player winner) {
+        // Announce win
         Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
-        // Send players back to lobby
-        
+        // Send all players back to lobby (spawn)
+        for (Player aPlayer : gamePlayers) {
+            aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
+        }
     }
 
 }
