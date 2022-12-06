@@ -2,14 +2,10 @@ package com.MylesAndMore.tumble.commands;
 
 import com.MylesAndMore.tumble.Game;
 import com.MylesAndMore.tumble.TumbleManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
-import java.util.List;
 
 public class StartGame implements CommandExecutor {
     public void startGame(CommandSender sender, String[] args) {

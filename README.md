@@ -11,7 +11,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 ## game realism  
 
-- [ ] make the shovel in shovels mode not lose any durabilty
+- [x] make the shovel in shovels mode not lose any durabilty
 - [ ] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
 - [ ] add infinite snowballs in the gamemanager for tumble mode  
 - [ ] make it so that you can't remove any of the game items from your inventory
@@ -21,7 +21,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 ## game logic (fyi: very object-oriented)  
 
-- [ ] make a Game class and object that we can initialize a new instance of with a gameType
+- [x] make a Game class and object that we can initialize a new instance of with a gameType
   - [ ] within this game object, while games are running:
     - [ ] prevent players from joining/autojoining during
     - [ ] keep track of when someone wins; start a new round when this happens

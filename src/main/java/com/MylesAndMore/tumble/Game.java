@@ -3,11 +3,8 @@ package com.MylesAndMore.tumble;
 import com.MylesAndMore.tumble.api.Generator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -52,8 +49,10 @@ public class Game {
     // Initialize a list to keep track of wins between rounds
     private List<Integer> gameWins;
 
-    // Creates a new Game
-    // This will return true if the game succeeds creation, and false if not
+    /**
+     * Creates a new Game
+     * @return true if the game succeeds creation, and false if not
+     */
     public boolean startGame() {
         gameState = "starting";
         if (Objects.equals(TumbleManager.getGameType(), "shovels")) {
@@ -67,8 +66,6 @@ public class Game {
                 giveItems(new ItemStack(Material.DIAMOND_SHOVEL));
                 // Send players to the game
                 sendPlayers();
-
-
                 // Keep in mind that after this runs, this command will complete and return true
             }
             else {
@@ -78,7 +75,6 @@ public class Game {
         else if (Objects.equals(TumbleManager.getGameType(), "snowballs")) {
             gameType = "snowballs";
             if (generateLayers(gameType)) {
-                // Reminder: we need a way to make this snowball infinite!
                 giveItems(new ItemStack(Material.SNOWBALL));
                 sendPlayers();
             }
@@ -117,7 +113,6 @@ public class Game {
     }
 
     private boolean generateLayers(String gameType) {
-        // Location layer = gameSpawn;
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
         if (Objects.equals(roundType, "shovels")) {
             layer.setY(layer.getY() - 1);
@@ -152,7 +147,6 @@ public class Game {
         else {
             return false;
         }
-        // layer = null;
         return true;
     }
 
@@ -189,6 +183,15 @@ public class Game {
         }
     }
 
+    private void setSurvival() {
+        for (List<Player> spectators = gamePlayers; spectators.size() > 0; spectators.remove(0)) {
+            // Get a singular player from the player list
+            Player spectatorPlayer = spectators.get(0);
+            // Set that player's gamemode to survival
+            spectatorPlayer.setGameMode(GameMode.SURVIVAL);
+        }
+    }
+
     public void itemDamage(PlayerItemDamageEvent event) {
         // If the game type is shovels,
         if (Objects.equals(roundType, "shovels")) {
@@ -217,32 +220,27 @@ public class Game {
         // Set the wins of the player to their current # of wins + 1
         gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
         Bukkit.getServer().broadcastMessage(ChatColor.GREEN + winner.getName() + " has won the round!");
+        // Clear old layers (as a fill command, this would be /fill ~-20 ~-4 ~-20 ~20 ~ ~20 relative to spawn)
+        Generator.generateCuboid(new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20), new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20), Material.AIR);
+        // If the player has three wins, they won the game, so initiate the gameEnd
         if (gameWins.get(gamePlayers.indexOf(winner)) == 3)  {
             gameEnd(winner);
         }
+        // If that player doesn't have three wins, nobody else does, so we need another round
         else {
-            // Clear old layers
-            Location firstPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20);
-            Location secondPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20);
-            Generator.generateCuboid(firstPos, secondPos, Material.AIR);
-            // Generate layers
-            // Debug
-            Bukkit.getServer().broadcastMessage(gameType);
+            // Re-generate layers
             generateLayers(gameType);
             // Teleport players
             // A new method will need to be written for this; current one only supports lobby
 
             // Set their gamemodes to survival
-
+            setSurvival();
         }
     }
 
     private void gameEnd(@NotNull Player winner) {
         Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
-        // Clear layers
-        Location firstPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20);
-        Location secondPos = new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20);
-        Generator.generateCuboid(firstPos, secondPos, Material.AIR);
+    
         // Send players back to lobby
     }
 
