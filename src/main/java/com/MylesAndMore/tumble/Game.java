@@ -314,12 +314,19 @@ public class Game {
     private void gameEnd(Player winner) {
         // Announce win
         Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
-        // Set their gamemodes to survival
-        setGamemode(gamePlayers, GameMode.SURVIVAL);
-        // Send all players back to lobby (spawn)
-        for (Player aPlayer : gamePlayers) {
-            aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
-        }
+        Bukkit.getServer().broadcastMessage(ChatColor.GREEN + "Teleporting in five seconds...");
+        // Wait 5s (100t), then
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), new Runnable() {
+            @Override
+            public void run() {
+                // Set their gamemodes to survival
+                setGamemode(gamePlayers, GameMode.SURVIVAL);
+                // Send all players back to lobby (spawn)
+                for (Player aPlayer : gamePlayers) {
+                    aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
+                }
+            }
+        }, 100);
     }
 
 }
