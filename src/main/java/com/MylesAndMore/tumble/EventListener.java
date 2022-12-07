@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -78,9 +79,22 @@ public class EventListener implements Listener{
             if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
                 if (event.getEntity() instanceof Snowball) {
                     if (event.getEntity().getShooter() instanceof Player player) {
-                        player.getInventory().addItem(new ItemStack(Material.SNOWBALL));
+                        player.getInventory().addItem(new ItemStack(Material.SNOWBALL,1));
                     }
                 }
+            }
+        }
+    }
+
+
+    @EventHandler
+    public void PlayerDropItemEvent(PlayerDropItemEvent event) {
+        // When an item is dropped, make sure there is a defined gameWorld
+        if (TumbleManager.getGameWorld() != null) {
+            // Then check if the item was dropped in the game world
+            if (event.getPlayer().getWorld() == Bukkit.getWorld((TumbleManager.getGameWorld()))) {
+                event.setCancelled(true);
+
             }
         }
     }
