@@ -12,6 +12,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 ## game realism  
 
 - [x] make the shovel in shovels mode not lose any durabilty
+- [ ] make it so that you can't move until the game begins
 - [ ] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
 - [ ] add infinite snowballs in the gamemanager for tumble mode  
 - [ ] make it so that you can't remove any of the game items from your inventory
