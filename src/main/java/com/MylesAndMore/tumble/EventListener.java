@@ -94,7 +94,6 @@ public class EventListener implements Listener{
             // Then check if the item was dropped in the game world
             if (event.getPlayer().getWorld() == Bukkit.getWorld((TumbleManager.getGameWorld()))) {
                 event.setCancelled(true);
-
             }
         }
     }

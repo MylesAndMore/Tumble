@@ -60,69 +60,78 @@ public class Game {
      * @return true if the game succeeds creation, and false if not
      */
     public boolean startGame() {
-        gameState = "starting";
-        if (Objects.equals(TumbleManager.getGameType(), "shovels")) {
-            // Set the roundType to gameType since it won't change for this mode
-            roundType = gameType;
-            // Generate the correct layers for a Shovels game
-            // The else statement is just in case the generator fails; this command will fail
-            if (generateLayers(gameType)) {
-                // If the layer generation succeeds, give players diamond shovels
-                giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
-                // Send all players from lobby to the game
-                scatterPlayers(lobbyPlayers);
-                // Keep in mind that after this runs, this command will complete and return true
-            }
-            else {
-                return false;
-            }
-        }
-        else if (Objects.equals(TumbleManager.getGameType(), "snowballs")) {
-            roundType = gameType;
-            if (generateLayers(gameType)) {
-                giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
-                scatterPlayers(lobbyPlayers);
-            }
-            else {
-                return false;
-            }
-        }
-        else if (Objects.equals(TumbleManager.getGameType(), "mixed")) {
-            // Mixed gamemode (choose random shovels/0 or snowballs/1)
-            if (Random.nextInt(2) == 0) {
-                roundType = "shovels";
-                generateLayers("shovels");
-                giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
-                scatterPlayers(lobbyPlayers);
-            }
-            else {
-                roundType = "snowballs";
-                generateLayers("snowballs");
-                giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
-                scatterPlayers(lobbyPlayers);
-            }
-        }
-        else {
-            // The game type in the config did not match a specified game type; return false to signify that
+        // Check if the game is starting or running, if so, do not start
+        if (Objects.equals(gameState, "starting")) {
             return false;
         }
-        // If a game creation succeeded, then,
-        // Update the game's players for later
-        gamePlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
-        // Update the round's players for later
-        roundPlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
-        // Create a list that will later keep track of each player's wins
-        gameWins = new ArrayList<>();
-        gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
-        // Wait 5s (100t) for the clients to load in
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-            // Display the "go!" title
-            displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
-            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
-            // Set gamemodes to survival
-            setGamemode(gamePlayers, GameMode.SURVIVAL);
-            gameState = "running";
-        }, 100);
+        else if (Objects.equals(gameState, "running")) {
+            return false;
+        }
+        else {
+            gameState = "starting";
+            if (Objects.equals(TumbleManager.getGameType(), "shovels")) {
+                // Set the roundType to gameType since it won't change for this mode
+                roundType = gameType;
+                // Generate the correct layers for a Shovels game
+                // The else statement is just in case the generator fails; this command will fail
+                if (generateLayers(gameType)) {
+                    // If the layer generation succeeds, give players diamond shovels
+                    giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
+                    // Send all players from lobby to the game
+                    scatterPlayers(lobbyPlayers);
+                    // Keep in mind that after this runs, this command will complete and return true
+                }
+                else {
+                    return false;
+                }
+            }
+            else if (Objects.equals(TumbleManager.getGameType(), "snowballs")) {
+                roundType = gameType;
+                if (generateLayers(gameType)) {
+                    giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
+                    scatterPlayers(lobbyPlayers);
+                }
+                else {
+                    return false;
+                }
+            }
+            else if (Objects.equals(TumbleManager.getGameType(), "mixed")) {
+                // Mixed gamemode (choose random shovels/0 or snowballs/1)
+                if (Random.nextInt(2) == 0) {
+                    roundType = "shovels";
+                    generateLayers("shovels");
+                    giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
+                    scatterPlayers(lobbyPlayers);
+                }
+                else {
+                    roundType = "snowballs";
+                    generateLayers("snowballs");
+                    giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
+                    scatterPlayers(lobbyPlayers);
+                }
+            }
+            else {
+                // The game type in the config did not match a specified game type; return false to signify that
+                return false;
+            }
+            // If a game creation succeeded, then,
+            // Update the game's players for later
+            gamePlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+            // Update the round's players for later
+            roundPlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+            // Create a list that will later keep track of each player's wins
+            gameWins = new ArrayList<>();
+            gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
+            // Wait 5s (100t) for the clients to load in
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                // Display the "go!" title
+                displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
+                // Set gamemodes to survival
+                setGamemode(gamePlayers, GameMode.SURVIVAL);
+                gameState = "running";
+            }, 100);   
+        }
         return true;
     }
 

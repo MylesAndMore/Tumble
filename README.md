@@ -24,7 +24,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 - [x] make a Game class and object that we can initialize a new instance of with a gameType
   - [ ] within this game object, while games are running:
-    - [ ] prevent players from joining/autojoining during
+    - [x] prevent players from joining/autojoining during
     - [x] keep track of when someone wins; start a new round when this happens
     - [x] keep track of how many wins each player has; end the game when a player reaches 3
       - [ ] add a section in the config for a place to tp the winning player
