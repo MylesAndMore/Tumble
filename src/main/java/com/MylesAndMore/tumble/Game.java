@@ -114,7 +114,7 @@ public class Game {
         // Create a list that will later keep track of each player's wins
         gameWins = new ArrayList<>();
         gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
-        // Wait 5s (50t) for the clients to load in
+        // Wait 5s (100t) for the clients to load in
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             // Display the "go!" title
             displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
@@ -122,7 +122,7 @@ public class Game {
             // Set gamemodes to survival
             setGamemode(gamePlayers, GameMode.SURVIVAL);
             gameState = "running";
-        }, 50);
+        }, 100);
         return true;
     }
 
@@ -336,7 +336,7 @@ public class Game {
         // Announce win
         displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 4, 40, 2);
         displayMessage(gamePlayers, ChatColor.BLUE + "Teleporting back in five seconds...");
-        // Wait 5s (100t), then
+        // Wait 10s (200t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             // Set their gamemodes to survival
             setGamemode(gamePlayers, GameMode.SURVIVAL);
@@ -344,8 +344,7 @@ public class Game {
             for (Player aPlayer : gamePlayers) {
                 aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
             }
-        }, 100);
+        }, 200);
         gameState = "complete";
     }
-
 }

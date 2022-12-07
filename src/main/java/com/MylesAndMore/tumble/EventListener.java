@@ -13,6 +13,7 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -86,7 +87,6 @@ public class EventListener implements Listener{
         }
     }
 
-
     @EventHandler
     public void PlayerDropItemEvent(PlayerDropItemEvent event) {
         // When an item is dropped, make sure there is a defined gameWorld
@@ -96,6 +96,15 @@ public class EventListener implements Listener{
                 event.setCancelled(true);
 
             }
+        }
+    }
+
+    @EventHandler
+    public void PlayerMoveEvent(PlayerMoveEvent event) {
+        // On a PlayerMoveEvent, check if the game is starting
+        if (Objects.equals(Game.getGame().getGameState(), "starting")) {
+            // Cancel the event if the game is starting (so players can't move before the game starts)
+            event.setCancelled(true);
         }
     }
 }

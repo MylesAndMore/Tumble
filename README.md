@@ -12,12 +12,12 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 ## game realism  
 
 - [x] make the shovel in shovels mode not lose any durabilty
-- [ ] make it so that you can't move until the game begins
+- [x] make it so that you can't move until the game begins
 - [ ] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
 - [ ] add infinite snowballs in the gamemanager for tumble mode  
-- [ ] make it so that you can't remove any of the game items from your inventory
+- [x] make it so that you can't remove any of the game items from your inventory
 - [ ] make snowballs actually break blocks (duh)
-- [ ] make the randomized mode logic
+- [x] make the randomized mode logic
 - [ ] set some limits on the spectator mode in-game; make it so they can't fly outside of the map
 
 ## game logic (fyi: very object-oriented)  
@@ -25,8 +25,8 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [x] make a Game class and object that we can initialize a new instance of with a gameType
   - [ ] within this game object, while games are running:
     - [ ] prevent players from joining/autojoining during
-    - [ ] keep track of when someone wins; start a new round when this happens
-    - [ ] keep track of how many wins each player has; end the game when a player reaches 3
+    - [x] keep track of when someone wins; start a new round when this happens
+    - [x] keep track of how many wins each player has; end the game when a player reaches 3
       - [ ] add a section in the config for a place to tp the winning player
       - [ ] add logic to do this  
 
