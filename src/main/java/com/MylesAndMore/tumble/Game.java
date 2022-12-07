@@ -5,6 +5,7 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class Game {
@@ -112,7 +113,14 @@ public class Game {
         // Create a list that will later keep track of each player's wins
         gameWins = new ArrayList<>();
         gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
-        gameState = "running";
+        // Wait 5s (50t) for the clients to load in
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            // Display the "go!" title
+            displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+            // Set gamemodes to survival
+            setGamemode(gamePlayers, GameMode.SURVIVAL);
+            gameState = "running";
+        }, 50);
         return true;
     }
 
@@ -221,42 +229,21 @@ public class Game {
         }
     }
 
-    // THIS METHOD IS DEPRECATED!!
-    // It has been replaced by teleportPlayers(), I'm just leaving this just in case teleportPlayers() doesn't work out
     /**
-    private void sendPlayers() {
-        // Get the X, Y, and Z coords of that location
-        double x = gameSpawn.getX();
-        double y = gameSpawn.getY();
-        double z = gameSpawn.getZ();
-        // Create Locations to scatter players around the first layer
-        // These are just edited off the original spawn location;
-        // they assume that the first layer has a radius of 17 blocks (it always will w/ the current generator code)
-        List<Location> scatterLocations = new ArrayList<>();
-        scatterLocations.addAll(List.of(
-                new Location(gameWorld, (x - 14.5), y, (z + 0.5) , -90, 0),
-                new Location(gameWorld, (x + 0.5), y, (z - 14.5), 0, 0),
-                new Location(gameWorld, (x + 15.5), y, (z + 0.5), 90, 0),
-                new Location(gameWorld, (x + 0.5), y, (z + 15.5), 180, 0 ),
-                new Location(gameWorld, (x - 10.5), y, (z - 10.5), -45, 0),
-                new Location(gameWorld, (x - 10.5), y, (z + 11.5), -135, 0),
-                new Location(gameWorld, (x + 11.5), y, (z - 10.5), 45, 0),
-                new Location(gameWorld, (x + 11.5), y, (z + 11.5), 135, 0))
-        );
-        // Shuffle the location list so players don't always spawn in the same location (basically, actually scatter the locations)
-        Collections.shuffle(scatterLocations);
-        // While there are still players in the lobby, send them to the gameWorld
-        // This is just a way of sending everybody in the lobby to the game
-        for (Player aPlayer : TumbleManager.getPlayersInLobby()) {
-            // Get a singular location from the scatter list
-            Location aLocation = scatterLocations.get(0);
-            // Teleport that player to that scatter location
-            aPlayer.teleport(aLocation);
-            // Remove that location from the list so that it cannot be used again
-            scatterLocations.remove(0);
+     * Displays a customized title to a provided list of players
+     * @param players The player list for which to show the titles to
+     * @param title The top title text
+     * @param subtitle The bottom title subtext (nullable)
+     * @param fadeIn The fadeIn duration (in ticks)
+     * @param stay The stay duration (in ticks)
+     * @param fadeOut The fadeOut duration (in ticks)
+     */
+    private void displayTitles(List<Player> players, String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
+        for (Player aPlayer : players) {
+            // Get a singular player from the player list and display them the specified title
+            aPlayer.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         }
     }
-    */
 
     /**
      * Teleports a list of players to the specified scatter locations in the gameWorld
@@ -304,20 +291,32 @@ public class Game {
         else {
             // Re-generate layers
             generateLayers(gameType);
-            // Re-scatter players
-            scatterPlayers(gamePlayers);
-            // Set their gamemodes to survival
-            setGamemode(gamePlayers, GameMode.SURVIVAL);
+            Bukkit.getServer().broadcastMessage(ChatColor.BLUE + "A new round will begin in ten seconds!");
+            // Wait 10s (100t) for tp method
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                // Re-scatter players
+                scatterPlayers(gamePlayers);
+                displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                // Set their gamemodes to survival
+                setGamemode(gamePlayers, GameMode.SURVIVAL);
+            }, 200);
         }
     }
 
     private void gameEnd(Player winner) {
         // Announce win
         Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
-        // Send all players back to lobby (spawn)
-        for (Player aPlayer : gamePlayers) {
-            aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
-        }
+        Bukkit.getServer().broadcastMessage(ChatColor.BLUE + "Teleporting back in five seconds...");
+        // Wait 5s (100t), then
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            // Set their gamemodes to survival
+            setGamemode(gamePlayers, GameMode.SURVIVAL);
+            // Send all players back to lobby (spawn)
+            for (Player aPlayer : gamePlayers) {
+                aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
+            }
+        }, 100);
+        gameState = "complete";
     }
 
 }
