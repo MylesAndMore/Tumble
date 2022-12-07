@@ -4,6 +4,7 @@ import com.MylesAndMore.tumble.api.Generator;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -117,6 +118,7 @@ public class Game {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             // Display the "go!" title
             displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
             // Set gamemodes to survival
             setGamemode(gamePlayers, GameMode.SURVIVAL);
             gameState = "running";
@@ -246,6 +248,31 @@ public class Game {
     }
 
     /**
+     * Displays a message to a provided list of players
+     * @param players The player list for which to send the message to
+     * @param message The provided message (String format)
+     */
+    private void displayMessage(List<Player> players, String message) {
+        for (Player aPlayer : players) {
+            aPlayer.sendMessage(message);
+        }
+    }
+
+    /**
+     * Plays a sound to a provided list of players
+     * @param players The player list for which to play the sound to
+     * @param sound The sound to play
+     * @param category The category of the sound
+     * @param volume The volume of the sound
+     * @param pitch The pitch of the sound
+     */
+    private void playSound(@NotNull List<Player> players, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch) {
+        for (Player aPlayer : players) {
+            aPlayer.playSound(aPlayer, sound, category, volume, pitch);
+        }
+    }
+
+    /**
      * Teleports a list of players to the specified scatter locations in the gameWorld
      * @param players a List of Players to teleport
      */
@@ -280,23 +307,25 @@ public class Game {
     private void roundEnd(Player winner) {
         // Set the wins of the player to their current # of wins + 1
         gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
-        Bukkit.getServer().broadcastMessage(ChatColor.GREEN + winner.getName() + " has won the round!");
         // Clear old layers (as a fill command, this would be /fill ~-20 ~-4 ~-20 ~20 ~ ~20 relative to spawn)
         Generator.generateCuboid(new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20), new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20), Material.AIR);
+        playSound(gamePlayers, Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.HOSTILE, 1, 1);
         // If the player has three wins, they won the game, so initiate the gameEnd
         if (gameWins.get(gamePlayers.indexOf(winner)) == 3)  {
             gameEnd(winner);
         }
         // If that player doesn't have three wins, nobody else does, so we need another round
         else {
+            displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 2, 20, 2);
             // Re-generate layers
             generateLayers(gameType);
-            Bukkit.getServer().broadcastMessage(ChatColor.BLUE + "A new round will begin in ten seconds!");
+            displayMessage(gamePlayers, ChatColor.BLUE + "A new round will begin in ten seconds!");
             // Wait 10s (100t) for tp method
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                 // Re-scatter players
                 scatterPlayers(gamePlayers);
                 displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
                 // Set their gamemodes to survival
                 setGamemode(gamePlayers, GameMode.SURVIVAL);
             }, 200);
@@ -305,8 +334,8 @@ public class Game {
 
     private void gameEnd(Player winner) {
         // Announce win
-        Bukkit.getServer().broadcastMessage(ChatColor.GOLD + winner.getName() + " has won the game!");
-        Bukkit.getServer().broadcastMessage(ChatColor.BLUE + "Teleporting back in five seconds...");
+        displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 4, 40, 2);
+        displayMessage(gamePlayers, ChatColor.BLUE + "Teleporting back in five seconds...");
         // Wait 5s (100t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             // Set their gamemodes to survival
