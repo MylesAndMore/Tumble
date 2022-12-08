@@ -27,8 +27,8 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [x] prevent players from joining/autojoining during a game
 - [x] keep track of when someone wins; start a new round when this happens
 - [x] keep track of how many wins each player has; end the game when a player reaches 3
-  - [ ] add a section in the config for a place to tp the winning player
-    - [ ] add logic to do this
+  - [x] add a section in the config for a place to tp the winning player
+    - [x] add logic to do this
 
 ## configuration/customization
 

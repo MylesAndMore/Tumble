@@ -22,6 +22,11 @@ commands:
     description: Force starts a Tumble match.
     usage: '§cUsage: /tumble:start'
     permission: start
+  winlocation:
+    description: Links the location to teleport the winning player of a game.
+    usage: '§cUsage: /tumble:winlocation <x> <y> <z>'
+    permission: winlocation
+    aliases: [win-location, winloc, win-loc]
 permissions:
   reload:
     description: Allows you to reload the plugin's config.
@@ -31,4 +36,7 @@ permissions:
     default: op
   start:
     description: Allows you to start a Tumble match.
+    default: op
+  winlocation:
+    description: Allows you to link a win location.
     default: op

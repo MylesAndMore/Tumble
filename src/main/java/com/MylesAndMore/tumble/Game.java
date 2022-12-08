@@ -370,8 +370,13 @@ public class Game {
         displayMessage(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
         // Wait 10s (200t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-            // Set their gamemodes to survival
-            setGamemode(gamePlayers, GameMode.SURVIVAL);
+            // First, check to see if there is a separate location to tp the winner to
+            if ((TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.x") != 0) && (TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.y") != 0)  && (TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.z") != 0)) {
+                // Tp the winner to that location
+                winner.teleport(new Location(Bukkit.getWorld(TumbleManager.getLobbyWorld()), TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.x"), TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.y"), TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.z")));
+                // Remove the winner from the gamePlayers so they don't get double-tp'd
+                gamePlayers.remove(winner);
+            }
             // Send all players back to lobby (spawn)
             for (Player aPlayer : gamePlayers) {
                 aPlayer.teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
