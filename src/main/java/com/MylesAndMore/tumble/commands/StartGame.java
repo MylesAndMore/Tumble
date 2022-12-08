@@ -7,6 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
+import java.util.Objects;
+
 public class StartGame implements CommandExecutor {
     public void startGame(CommandSender sender, String[] args) {
         // Check if sender has perms to run command
@@ -17,14 +19,22 @@ public class StartGame implements CommandExecutor {
                 if (TumbleManager.getPlayersInLobby().size() > 0) {
                     // Check if there is a gameWorld specified in config
                     if (TumbleManager.getGameWorld() != null) {
-                        sender.sendMessage("Starting game, please wait.");
                         // Use multiverse to load game world
                         // If the load was successful, start game
                         if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
                             // Check which gamemode to initiate from the config file
                             if (!Game.getGame().startGame()) {
-                                // If game type does not exist, give sender feedback
-                                sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
+                                // Sender feedback for if the game failed to start
+                                if (Objects.equals(Game.getGame().getGameState(), "starting")) {
+                                    sender.sendMessage(ChatColor.RED + "A game is already starting!");
+                                }
+                                else if (Objects.equals(Game.getGame().getGameState(), "running")) {
+                                    sender.sendMessage(ChatColor.RED + "A game is already running!");
+                                }
+                                else {
+                                    sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
+                                }
+                                sender.sendMessage(ChatColor.BLUE + "Starting game, please wait.");
                             }
                         }
                         // If load was unsuccessful, give feedback
