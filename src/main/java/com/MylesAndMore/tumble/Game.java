@@ -30,8 +30,6 @@ public class Game {
 
 
     // Define local game vars
-    // The gameType keeps the current game type (shocker)
-    private static String gameType = TumbleManager.getGameType();
     // The gameState keeps the current state of the game (I'm so creative, I know)
     private String gameState;
     // Define a variable for the roundType
@@ -57,9 +55,10 @@ public class Game {
 
     /**
      * Creates a new Game
+     * @param type The type of game
      * @return true if the game succeeds creation, and false if not
      */
-    public boolean startGame() {
+    public boolean startGame(@NotNull String type) {
         // Check if the game is starting or running, if so, do not start
         if (Objects.equals(gameState, "starting")) {
             return false;
@@ -68,15 +67,14 @@ public class Game {
             return false;
         }
         else {
-            gameState = "starting";
-            if (Objects.equals(TumbleManager.getGameType(), "shovels")) {
+            // Define the gameType
+            if (Objects.equals(type, "shovels")) {
+                gameState = "starting";
                 // Set the roundType to gameType since it won't change for this mode
-                roundType = gameType;
+                roundType = type;
                 // Generate the correct layers for a Shovels game
                 // The else statement is just in case the generator fails; this command will fail
-                if (generateLayers(gameType)) {
-                    // If the layer generation succeeds, give players diamond shovels
-                    giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
+                if (generateLayers(type)) {
                     // Send all players from lobby to the game
                     scatterPlayers(lobbyPlayers);
                     // Keep in mind that after this runs, this command will complete and return true
@@ -85,29 +83,24 @@ public class Game {
                     return false;
                 }
             }
-            else if (Objects.equals(TumbleManager.getGameType(), "snowballs")) {
-                roundType = gameType;
-                if (generateLayers(gameType)) {
-                    giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
+            else if (Objects.equals(type, "snowballs")) {
+                gameState = "starting";
+                roundType = type;
+                if (generateLayers(type)) {
                     scatterPlayers(lobbyPlayers);
                 }
                 else {
                     return false;
                 }
             }
-            else if (Objects.equals(TumbleManager.getGameType(), "mixed")) {
-                // Mixed gamemode (choose random shovels/0 or snowballs/1)
-                if (Random.nextInt(2) == 0) {
-                    roundType = "shovels";
-                    generateLayers("shovels");
-                    giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
+            else if (Objects.equals(type, "mixed")) {
+                gameState = "starting";
+                roundType = type;
+                if (generateLayers(type)) {
                     scatterPlayers(lobbyPlayers);
                 }
                 else {
-                    roundType = "snowballs";
-                    generateLayers("snowballs");
-                    giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
-                    scatterPlayers(lobbyPlayers);
+                    return false;
                 }
             }
             else {
@@ -141,7 +134,7 @@ public class Game {
                         }, 20);
                     }, 20);
                 }, 20);
-            }, 100);   
+            }, 100);
         }
         return true;
     }
@@ -183,13 +176,13 @@ public class Game {
 
     /**
      * Generates the layers in the gameWorld for a certain gameType
-     * @param gameType can be either "shovels", "snowballs", or "mixed", anything else will fail generation
+     * @param type can be either "shovels", "snowballs", or "mixed", anything else will fail generation
      * @return true if gameType was recognized and layers were (hopefully) generated, false if unrecognized
      */
-    private boolean generateLayers(String gameType) {
+    private boolean generateLayers(String type) {
         // Create a new Location for the layers to work with--this is so that we don't modify the actual gameSpawn var
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
-        if (Objects.equals(roundType, "shovels")) {
+        if (Objects.equals(type, "shovels")) {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK);
             Generator.generateLayer(layer, 13, 1, Material.AIR);
@@ -199,9 +192,9 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
             layer.setY(layer.getY() + 2);
             Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
-            roundType = "shovels";
+            giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
         }
-        else if (Objects.equals(roundType, "snowballs")) {
+        else if (Objects.equals(type, "snowballs")) {
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 17, 1, Material.COAL_ORE);
             Generator.generateLayer(layer, 13, 1, Material.AIR);
@@ -210,9 +203,9 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA);
-            roundType = "snowballs";
+            giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
         }
-        else if (Objects.equals(gameType, "mixed")) {
+        else if (Objects.equals(type, "mixed")) {
             // Randomly select either shovels or snowballs and re-run the method
             if (Random.nextInt(2) == 0) {
                 generateLayers("shovels");
@@ -338,7 +331,7 @@ public class Game {
         else {
             displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
             // Re-generate layers
-            generateLayers(gameType);
+            generateLayers(roundType);
             // Wait 5s (100t) for tp method
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                 // Re-scatter players
