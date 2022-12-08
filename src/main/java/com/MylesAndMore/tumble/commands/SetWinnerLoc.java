@@ -9,8 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
-
 public class SetWinnerLoc implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -22,7 +20,7 @@ public class SetWinnerLoc implements CommandExecutor {
                 if (sender instanceof Player) {
                     Location senderPos = ((Player) sender).getLocation();
                     // if so, check if any of their locations are zero
-                    if (!((Objects.equals(senderPos.getX(), "0") || Objects.equals(senderPos.getX(), "-0") || Objects.equals(senderPos.getY(), "0") || Objects.equals(senderPos.getY(), "-0") || Objects.equals(senderPos.getZ(), "0") || Objects.equals(senderPos.getZ(), "-0")))) {
+                    if (!((senderPos.getX() == 0) || (senderPos.getY() == 0) || (senderPos.getZ() == 0))) {
                         // set the config values to their current pos
                         TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", senderPos.getX());
                         TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", senderPos.getY());
