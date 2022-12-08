@@ -24,7 +24,7 @@ commands:
     permission: start
   winlocation:
     description: Links the location to teleport the winning player of a game.
-    usage: '§cUsage: /tumble:winlocation <x> <y> <z>'
+    usage: '§cUsage: /tumble:winlocation [x] [y] [z]'
     permission: winlocation
     aliases: [win-location, winloc, win-loc]
 permissions:

@@ -18,20 +18,54 @@ public class SetWinnerLoc implements CommandExecutor {
             if (TumbleManager.getLobbyWorld() != null) {
                 // Check if the sender is a player
                 if (sender instanceof Player) {
-                    Location senderPos = ((Player) sender).getLocation();
-                    // if so, check if any of their locations are zero
-                    if (!((senderPos.getX() == 0) || (senderPos.getY() == 0) || (senderPos.getZ() == 0))) {
-                        // set the config values to their current pos
-                        TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", senderPos.getX());
-                        TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", senderPos.getY());
-                        TumbleManager.getPlugin().getConfig().set("winnerTeleport.z", senderPos.getZ());
-                        TumbleManager.getPlugin().saveConfig();
-                        sender.sendMessage(ChatColor.GREEN + "Win location successfully set!");
-                        sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
+                    // Check the sender entered the correct number of args
+                    if (args.length == 3) {
+                        double args0 = 0;
+                        double args1 = 0;
+                        double args2 = 0;
+                        try {
+                            args0 = Double.parseDouble(args[0]);
+                            args1 = Double.parseDouble(args[1]);
+                            args2 = Double.parseDouble(args[2]);
+                        } catch (NumberFormatException nfe){
+                            sender.sendMessage(ChatColor.RED + "Input arguments must be valid numbers.");
+                        } catch (Exception e){
+                            sender.sendMessage(ChatColor.RED + "Invalid input arguments.");
+                        }
+                        // Check if any of the args were 0 (this will cause future problems so we prevent it here)
+                        if (!((args0 == 0) || (args1 == 0) || (args2 == 0))) {
+                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", args0);
+                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", args1);
+                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.z", args2);
+                            TumbleManager.getPlugin().saveConfig();
+                            sender.sendMessage(ChatColor.GREEN + "Win location successfully set!");
+                            sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
+                        }
+                        else {
+                            sender.sendMessage(ChatColor.RED + "Your coordinates cannot be zero!");
+                            sender.sendMessage(ChatColor.RED + "Use something like 0.5 (the middle of the block) instead.");
+                        }
+                    }
+                    // If the sender entered no args, use their current location
+                    else if (args.length == 0) {
+                        Location senderPos = ((Player) sender).getLocation();
+                        // if so, check if any of their locations are zero
+                        if (!((senderPos.getX() == 0) || (senderPos.getY() == 0) || (senderPos.getZ() == 0))) {
+                            // set the config values to their current pos
+                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", senderPos.getX());
+                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", senderPos.getY());
+                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.z", senderPos.getZ());
+                            TumbleManager.getPlugin().saveConfig();
+                            sender.sendMessage(ChatColor.GREEN + "Win location successfully set!");
+                            sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
+                        }
+                        else {
+                            sender.sendMessage(ChatColor.RED + "Your coordinates cannot be zero!");
+                            sender.sendMessage(ChatColor.RED + "Use something like 0.5 (the middle of the block) instead.");
+                        }
                     }
                     else {
-                        sender.sendMessage(ChatColor.RED + "Your coordinates cannot be zero!");
-                        sender.sendMessage(ChatColor.RED + "Use something like 0.5 (the middle of the block) instead.");
+                        return false;
                     }
                 }
                 // Check if the sender is the console
@@ -47,10 +81,8 @@ public class SetWinnerLoc implements CommandExecutor {
                             args2 = Double.parseDouble(args[2]);
                         } catch (NumberFormatException nfe){
                             sender.sendMessage(ChatColor.RED + "Input arguments must be valid numbers.");
-                            return false;
                         } catch (Exception e){
                             sender.sendMessage(ChatColor.RED + "Invalid input arguments.");
-                            return false;
                         }
                         // Check if any of the args were 0 (this will cause future problems so we prevent it here)
                         if (!((args0 == 0) || (args1 == 0) || (args2 == 0))) {
