@@ -1,6 +1,10 @@
 package com.MylesAndMore.tumble;
 
 import com.MylesAndMore.tumble.api.Generator;
+
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -261,13 +265,13 @@ public class Game {
     }
 
     /**
-     * Displays a message to a provided list of players
-     * @param players The player list for which to send the message to
+     * Displays an actionbar message to a provided list of players
+     * @param players The player list for which to display the actionbar to
      * @param message The provided message (String format)
      */
-    private void displayMessage(List<Player> players, String message) {
+    private void displayActionbar(List<Player> players, String message) {
         for (Player aPlayer : players) {
-            aPlayer.sendMessage(message);
+            aPlayer.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
         }
     }
 
@@ -360,7 +364,7 @@ public class Game {
     private void gameEnd(Player winner) {
         // Announce win
         displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 5, 60, 5);
-        displayMessage(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
+        displayActionbar(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
         // Wait 10s (200t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             // First, check to see if there is a separate location to tp the winner to
