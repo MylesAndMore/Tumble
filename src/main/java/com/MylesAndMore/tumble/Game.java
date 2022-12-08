@@ -124,12 +124,23 @@ public class Game {
             gameWins.addAll(List.of(0,0,0,0,0,0,0,0));
             // Wait 5s (100t) for the clients to load in
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                // Display the "go!" title
-                displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
-                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
-                // Set gamemodes to survival
-                setGamemode(gamePlayers, GameMode.SURVIVAL);
-                gameState = "running";
+                // Begin the countdown sequence
+                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                    displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                        displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
+                            displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                            setGamemode(gamePlayers, GameMode.SURVIVAL);
+                            gameState = "running";
+                        }, 20);
+                    }, 20);
+                }, 20);
             }, 100);   
         }
         return true;
@@ -328,20 +339,27 @@ public class Game {
             displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
             // Re-generate layers
             generateLayers(gameType);
-            displayMessage(gamePlayers, ChatColor.BLUE + "A new round will begin in ten seconds!");
             // Wait 5s (100t) for tp method
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                 // Re-scatter players
                 gameState = "starting";
                 scatterPlayers(gamePlayers);
-                // Wait another 5s for game start
+                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                    displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
-                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
-                    // Set their gamemodes to survival
-                    setGamemode(gamePlayers, GameMode.SURVIVAL);
-                    gameState = "running";
-                }, 100);
+                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                    displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                        displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
+                            displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                            setGamemode(gamePlayers, GameMode.SURVIVAL);
+                            gameState = "running";
+                        }, 20);
+                    }, 20);
+                }, 20);
             }, 100);
         }
     }
@@ -349,7 +367,7 @@ public class Game {
     private void gameEnd(Player winner) {
         // Announce win
         displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 5, 60, 5);
-        displayMessage(gamePlayers, ChatColor.BLUE + "Teleporting back in ten seconds...");
+        displayMessage(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
         // Wait 10s (200t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             // Set their gamemodes to survival
