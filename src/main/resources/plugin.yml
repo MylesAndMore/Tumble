@@ -1,7 +1,7 @@
 main: com.MylesAndMore.tumble.Main
 name: tumble
 version: 0.0.1-SNAPSHOT
-description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft: Xbox 360 Edition.'
+description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
 api-version: 1.19
 load: STARTUP
 author: MylesAndMore
@@ -15,12 +15,12 @@ commands:
     permission: reload
   link:
     description: Links a world on the server as a lobby/game world.
-    usage: '§cUsage: /tumble:link <world> lobby|game'
+    usage: '§cUsage: /tumble:link <world> (lobby|game)'
     permission: link
     aliases: [linkworld, link-world]
   start:
-    description: Force starts a Tumble match.
-    usage: '§cUsage: /tumble:start'
+    description: Force starts a Tumble match with an optional game type.
+    usage: '§cUsage: /tumble:start [gametype]'
     permission: start
   winlocation:
     description: Links the location to teleport the winning player of a game.
