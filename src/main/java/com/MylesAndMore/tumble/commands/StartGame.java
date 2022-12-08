@@ -10,7 +10,8 @@ import org.bukkit.command.CommandSender;
 import java.util.Objects;
 
 public class StartGame implements CommandExecutor {
-    public void startGame(CommandSender sender, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Check if sender has perms to run command
         if (sender.hasPermission("tumble.start")) {
             // Check if there is a lobbyWorld specified in config
@@ -81,11 +82,6 @@ public class StartGame implements CommandExecutor {
         else {
             sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
         }
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        startGame(sender, args);
         return true;
     }
 }
