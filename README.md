@@ -7,7 +7,10 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 - [ ] layers should be able to generate w/ "clumps" of blocks; instead of only one material as a whole
   - [ ] the clump size should be customizable (for later); be able to set a min/max val and it will choose randomly per each clump (not in config file yet, just internally)
-  - PLEASE make a new class for this and make use of the generator if you can!  
+- [ ] make shovels generation actually work properly
+  - make different types of platforms (square, circle, multi-tiered, etc.); still should be pseudo-random
+- [ ] make snowballs generation actually work properly (shocker)
+  - make three layers generate (same layer types as shovels, just multiple of them)
 
 ## game realism  
 
@@ -20,8 +23,11 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [x] make snowballs actually break blocks (duh)
 - [x] make the randomized mode logic
 - [ ] set some limits on the spectator mode in-game; make it so they can't fly outside of the map
+- [ ] make it so rounds end in a draw after 5m
+- [ ] make it so that players get snowballs instead of shovels in shovels rounds after 2m 30s
+- [ ] remove snowball knockback
 
-## game logic 
+## game logic  
 
 - [x] make a Game class and object that we can initialize a new instance of with a gameType
 - [x] prevent players from joining/autojoining during a game

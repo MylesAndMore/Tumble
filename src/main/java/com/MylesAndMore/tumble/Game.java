@@ -192,7 +192,7 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
             layer.setY(layer.getY() + 2);
             Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
-            giveItems(lobbyPlayers, new ItemStack(Material.DIAMOND_SHOVEL));
+            giveItems(lobbyPlayers, new ItemStack(Material.IRON_SHOVEL));
         }
         else if (Objects.equals(type, "snowballs")) {
             layer.setY(layer.getY() - 1);
