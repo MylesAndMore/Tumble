@@ -38,6 +38,8 @@ public class Game {
     private String gameState;
     // Define a variable for the roundType
     private String roundType;
+    // Define a variable for the autostart PID
+    private int autoStartID;
 
     // Initialize a new instance of the Random class for use later
     private final Random Random = new Random();
@@ -143,6 +145,16 @@ public class Game {
         return true;
     }
 
+    public void autoStart() {
+        gameState = "waiting";
+        displayActionbar(lobbyPlayers, ChatColor.GREEN + "Game will begin in 15 seconds!");
+        playSound(lobbyPlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
+        // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
+        autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            startGame(TumbleManager.getGameType());
+        }, 300);
+    }
+
     /**
      * This method should be called on the death of one of the Game's players
      * @param player The player who died
@@ -171,9 +183,16 @@ public class Game {
     public String getRoundType() { return roundType; }
 
     /**
-     * @return The game's current state as a String ("starting", "running", "complete")
+     * @return The game's current state as a String ("waiting", "starting", "running", "complete")
+     * Can also be null if not initialized.
      */
     public String getGameState() { return gameState; }
+
+    /**
+     * @return The Bukkit process ID of the autostart process, if applicable
+     * Can also be null if not initialized, and -1 if the process failed to schedule.
+     */
+    public int getAutoStartID() { return autoStartID; }
 
 
     // BEGIN PRIVATE METHODS

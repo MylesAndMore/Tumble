@@ -35,6 +35,14 @@ public class EventListener implements Listener{
                 // send them back to the lobby.
                 event.getPlayer().teleport(Bukkit.getWorld(TumbleManager.getLobbyWorld()).getSpawnLocation());
             }
+            // For auto-start function: check if the autoStart is enabled
+            if (TumbleManager.getPlugin().getConfig().getBoolean("autoStart.enabled")) {
+                // If so, check if the amount of players has been reached
+                if (Bukkit.getWorld(TumbleManager.getGameWorld()).getPlayers().size() == TumbleManager.getPlugin().getConfig().getInt("autoStart.players")) {
+                    // The autoStart should begin; pass this to the Game
+                    Game.getGame().autoStart();
+                }
+            }
         }
     }
 
@@ -45,6 +53,16 @@ public class EventListener implements Listener{
         // If false, nothing will happen, and the default message will display
         if (TumbleManager.getPlugin().getConfig().getBoolean("hideJoinLeaveMessages")) {
             event.setQuitMessage(null);
+        }
+        // Check if a player left in the lobbyWorld
+        if (TumbleManager.getLobbyWorld() != null) {
+            if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getLobbyWorld())) {
+                // Check if the game is in the process of autostarting
+                if (Objects.equals(Game.getGame().getGameState(), "waiting")) {
+                    // Cancel the autostart
+                    Bukkit.getServer().getScheduler().cancelTask(Game.getGame().getAutoStartID());
+                }
+            }
         }
     }
 
