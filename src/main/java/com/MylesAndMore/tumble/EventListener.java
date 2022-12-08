@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -88,6 +90,27 @@ public class EventListener implements Listener{
     }
 
     @EventHandler
+    public void ProjectileHitEvent(ProjectileHitEvent event) {
+        // When a projectile hits, check to see if the gameWorld is null,
+        if (TumbleManager.getGameWorld() != null) {
+            // then check to see if the projectile hit in the gameWorld,
+            if (event.getHitBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+                // then check if the projectile was a snowball,
+                if (event.getEntity() instanceof Snowball) {
+                    // then check if a player threw it,
+                    if (event.getEntity().getShooter() instanceof Player player) {
+                        // then check if that block is within the game area,
+                        if (event.getHitBlock().getLocation().distanceSquared(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation()) < 402) {
+                            // then remove that block.
+                            event.getHitBlock().setType(Material.AIR);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
     public void PlayerDropItemEvent(PlayerDropItemEvent event) {
         // When an item is dropped, make sure there is a defined gameWorld
         if (TumbleManager.getGameWorld() != null) {
@@ -104,6 +127,17 @@ public class EventListener implements Listener{
         if (Objects.equals(Game.getGame().getGameState(), "starting")) {
             // Cancel the event if the game is starting (so players can't move before the game starts)
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void FoodLevelChangeEvent(FoodLevelChangeEvent event) {
+        // When someone's food level changes, check if the gameWorld is null,
+        if (TumbleManager.getGameWorld() != null) {
+            // then check if that happened in the gameWorld
+            if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+                event.setCancelled(true);
+            }
         }
     }
 }
