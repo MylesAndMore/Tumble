@@ -107,6 +107,9 @@ public class EventListener implements Listener{
                     }
                 }
             }
+            else if (event.getHitBlock().getWorld() == null) {
+                event.setCancelled(true);
+            }
         }
     }
 
