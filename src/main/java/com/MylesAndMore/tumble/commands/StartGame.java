@@ -24,6 +24,7 @@ public class StartGame implements CommandExecutor {
                         if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
                             // Check which gamemode to initiate from the config file
                             if (!Game.getGame().startGame()) {
+                                sender.sendMessage(ChatColor.BLUE + "Starting game, please wait.");
                                 // Sender feedback for if the game failed to start
                                 if (Objects.equals(Game.getGame().getGameState(), "starting")) {
                                     sender.sendMessage(ChatColor.RED + "A game is already starting!");
@@ -34,7 +35,6 @@ public class StartGame implements CommandExecutor {
                                 else {
                                     sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
                                 }
-                                sender.sendMessage(ChatColor.BLUE + "Starting game, please wait.");
                             }
                         }
                         // If load was unsuccessful, give feedback
