@@ -15,6 +15,7 @@ public class Main extends JavaPlugin{
         this.getCommand("link").setExecutor(new SetWorldConfig());
         this.getCommand("start").setExecutor(new StartGame());
         this.getCommand("winlocation").setExecutor(new SetWinnerLoc());
+        this.getCommand("autostart").setExecutor(new SetAutoStart());
         // Save the default config file (packaged in the JAR)
         this.saveDefaultConfig();
 

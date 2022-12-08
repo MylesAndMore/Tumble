@@ -10,19 +10,23 @@ permissionMessage: You do not have permission to perform this command!
 # Default is mixed
 gameMode: mixed
 
+# Customize the auto start feature of Tumble
+# Defaults are disabled and two players
+# Players can be up to 8
+autoStart:
+  enabled: false
+  players: 2
+
 # Customize the place that the winner is teleported after a game ends
-# This is an optional value
-# Default is nothing
-winnerTeleport:
-  # These coordinates cannot be zero! The teleport will fail if any of them are.
-  # Use something like 0.5 instead.
-  x:
-  y:
-  z:
+# Keep in mind that these coordinates cannot be zero! The teleport will fail if any of them are; use something like 0.5 instead.
+# These are optional values--defaults are nothing
+winnerTeleport: 
+  x: 
+  y: 
+  z: 
 
 # This tells the plugin which worlds it should use as the lobby/game worlds
 # Do NOT change unless you know what you're doing!!
 # Will be blank by default
-lobbyWorld:
-# Game world
-gameWorld:
+lobbyWorld: 
+gameWorld: 

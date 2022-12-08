@@ -20,13 +20,18 @@ commands:
     aliases: [linkworld, link-world]
   start:
     description: Force starts a Tumble match with an optional game type.
-    usage: '§cUsage: /tumble:start [gametype]'
+    usage: '§cUsage: /tumble:start [gameType]'
     permission: start
   winlocation:
     description: Links the location to teleport the winning player of a game.
     usage: '§cUsage: /tumble:winlocation [x] [y] [z]'
     permission: winlocation
     aliases: [win-location, winloc, win-loc]
+  autostart:
+    description: Configures the auto start functions of Tumble.
+    usage: '§cUsage: /tumble:autostart <playerAmount> [enable|disable]'
+    permission: autostart
+    aliases: [auto-start]
 permissions:
   reload:
     description: Allows you to reload the plugin's config.
@@ -39,4 +44,7 @@ permissions:
     default: op
   winlocation:
     description: Allows you to link a win location.
+    default: op
+  autostart:
+    description: Allows you to set the autostart details of Tumble.
     default: op

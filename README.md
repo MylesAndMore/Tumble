@@ -38,9 +38,9 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 ## configuration/customization
 
-- [ ] add two configs where you can:
-  - [ ] set if you want the game to auto-start
-  - [ ] set the amt of players you want the game to auto-start at
+- [x] add two configs where you can:
+  - [x] set if you want the game to auto-start
+  - [x] set the amt of players you want the game to auto-start at
   - [ ] program the auto-start (just add an if statement on the PlayerJoin listener to run the StartGame method on a certain amt of players in the config)  
 
 ## etc  
