@@ -45,4 +45,6 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 ## etc  
 
+- [ ] refactor EventListener null checker code
+  - if (TumbleManager.getGameWorld() == null && TumbleManager.getLobbyWorld() == null) { return; }
 - [ ] add game music? but probably only for us; I feel like the og music must be copyrighted
