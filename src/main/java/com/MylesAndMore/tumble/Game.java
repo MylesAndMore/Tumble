@@ -47,8 +47,8 @@ public class Game {
     private final World gameWorld;
     private final Location gameSpawn;
 
-    // Make a list of the lobby's players for later
-    private List<Player> lobbyPlayers = TumbleManager.getPlayersInLobby();
+//    // Make a list of the lobby's players for later
+//    private List<Player> lobbyPlayers = TumbleManager.getPlayersInLobby();
     // Make a list of the game's players for later
     private List<Player> gamePlayers;
     // Make a list of the round's players
@@ -73,7 +73,6 @@ public class Game {
             return false;
         }
         else {
-            Bukkit.getServer().broadcastMessage("game starting");
             // Define the gameType
             if (Objects.equals(type, "shovels")) {
                 gameState = "starting";
@@ -83,7 +82,7 @@ public class Game {
                 // The else statement is just in case the generator fails; this command will fail
                 if (generateLayers(type)) {
                     // Send all players from lobby to the game
-                    scatterPlayers(lobbyPlayers);
+                    scatterPlayers(TumbleManager.getPlayersInLobby());
                     // Keep in mind that after this runs, this command will complete and return true
                 }
                 else {
@@ -94,7 +93,7 @@ public class Game {
                 gameState = "starting";
                 roundType = type;
                 if (generateLayers(type)) {
-                    scatterPlayers(lobbyPlayers);
+                    scatterPlayers(TumbleManager.getPlayersInLobby());
                 }
                 else {
                     return false;
@@ -104,7 +103,7 @@ public class Game {
                 gameState = "starting";
                 roundType = type;
                 if (generateLayers(type)) {
-                    scatterPlayers(lobbyPlayers);
+                    scatterPlayers(TumbleManager.getPlayersInLobby());
                 }
                 else {
                     return false;
@@ -150,17 +149,14 @@ public class Game {
      * Initiates an automatic start of a Tumble game
      */
     public void autoStart() {
-        Bukkit.getServer().broadcastMessage("autoStart()");
         // Wait for the player to load in
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             gameState = "waiting";
-            displayActionbar(lobbyPlayers, ChatColor.GREEN + "Game will begin in 15 seconds!");
-            playSound(lobbyPlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
-            Bukkit.getServer().broadcastMessage("title + sound");
+            displayActionbar(TumbleManager.getPlayersInLobby(), ChatColor.GREEN + "Game will begin in 15 seconds!");
+            playSound(TumbleManager.getPlayersInLobby(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
             TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld());
             // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
             autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                Bukkit.getServer().broadcastMessage("startGame");
                 startGame(TumbleManager.getGameType());
             }, 300);
         }, 50);
@@ -171,9 +167,8 @@ public class Game {
      */
     public void cancelStart() {
         Bukkit.getServer().getScheduler().cancelTask(Game.getGame().getAutoStartID());
-        displayActionbar(lobbyPlayers, ChatColor.RED + "Game start cancelled!");
-        playSound(lobbyPlayers, Sound.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1, 1);
-        Bukkit.getServer().broadcastMessage("game start cancelled");
+        displayActionbar(TumbleManager.getPlayersInLobby(), ChatColor.RED + "Game start cancelled!");
+        playSound(TumbleManager.getPlayersInLobby(), Sound.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1, 1);
         gameState = null;
         autoStartID = -1;
     }
@@ -238,7 +233,7 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
             layer.setY(layer.getY() + 2);
             Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
-            giveItems(lobbyPlayers, new ItemStack(Material.IRON_SHOVEL));
+            giveItems(TumbleManager.getPlayersInLobby(), new ItemStack(Material.IRON_SHOVEL));
         }
         else if (Objects.equals(type, "snowballs")) {
             layer.setY(layer.getY() - 1);
@@ -249,7 +244,7 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA);
-            giveItems(lobbyPlayers, new ItemStack(Material.SNOWBALL));
+            giveItems(TumbleManager.getPlayersInLobby(), new ItemStack(Material.SNOWBALL));
         }
         else if (Objects.equals(type, "mixed")) {
             // Randomly select either shovels or snowballs and re-run the method
