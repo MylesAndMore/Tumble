@@ -14,6 +14,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 public class EventListener implements Listener {
     @EventHandler
@@ -145,12 +146,23 @@ public class EventListener implements Listener {
             // then check if the projectile was a snowball,
             if (event.getEntity() instanceof Snowball) {
                 // then check if a player threw it,
-                if (event.getEntity().getShooter() instanceof Player player) {
-                    // then check if that block is within the game area,
-                    if (event.getHitBlock().getLocation().distanceSquared(
-                            Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation()) < 402) {
+                if (event.getEntity().getShooter() instanceof Player shooterPlayer) {
+                    // then check to see if it hit a player or a block
+                    if (event.getHitBlock() != null) {
+                        // if it was a block, check if that block is within the game area,
+                        if (event.getHitBlock().getLocation().distanceSquared(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation()) < 402) {
                         // then remove that block.
                         event.getHitBlock().setType(Material.AIR);
+                        }
+                    }
+                    else if (event.getHitEntity() != null) {
+                        // if it was an entity, check if it hit a player,
+                        if (event.getHitEntity() instanceof Player hitPlayer) {
+                            // then cancel the knockback (has to be delayed by a tick for some reason)
+                            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                                hitPlayer.setVelocity(new Vector());
+                            }, 1);
+                        }
                     }
                 }
             }

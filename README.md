@@ -25,7 +25,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [ ] set some limits on the spectator mode in-game; make it so they can't fly outside of the map
 - [ ] make it so rounds end in a draw after 5m
 - [ ] make it so that players get snowballs instead of shovels in shovels rounds after 2m 30s
-- [ ] remove snowball knockback
+- [x] remove snowball knockback
 
 ## game logic  
 
