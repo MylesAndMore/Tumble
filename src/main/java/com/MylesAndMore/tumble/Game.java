@@ -39,7 +39,7 @@ public class Game {
     // Define a variable for the roundType
     private String roundType;
     // Define a variable for the autostart PID
-    private int autoStartID;
+    private int autoStartID = -1;
 
     // Initialize a new instance of the Random class for use later
     private final Random Random = new Random();
@@ -73,6 +73,7 @@ public class Game {
             return false;
         }
         else {
+            Bukkit.getServer().broadcastMessage("game starting");
             // Define the gameType
             if (Objects.equals(type, "shovels")) {
                 gameState = "starting";
@@ -145,14 +146,36 @@ public class Game {
         return true;
     }
 
+    /**
+     * Initiates an automatic start of a Tumble game
+     */
     public void autoStart() {
-        gameState = "waiting";
-        displayActionbar(lobbyPlayers, ChatColor.GREEN + "Game will begin in 15 seconds!");
-        playSound(lobbyPlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
-        // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
-        autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-            startGame(TumbleManager.getGameType());
-        }, 300);
+        Bukkit.getServer().broadcastMessage("autoStart()");
+        // Wait for the player to load in
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            gameState = "waiting";
+            displayActionbar(lobbyPlayers, ChatColor.GREEN + "Game will begin in 15 seconds!");
+            playSound(lobbyPlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
+            Bukkit.getServer().broadcastMessage("title + sound");
+            TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld());
+            // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
+            autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                Bukkit.getServer().broadcastMessage("startGame");
+                startGame(TumbleManager.getGameType());
+            }, 300);
+        }, 50);
+    }
+
+    /**
+     * Cancels a "waiting" automatic start
+     */
+    public void cancelStart() {
+        Bukkit.getServer().getScheduler().cancelTask(Game.getGame().getAutoStartID());
+        displayActionbar(lobbyPlayers, ChatColor.RED + "Game start cancelled!");
+        playSound(lobbyPlayers, Sound.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1, 1);
+        Bukkit.getServer().broadcastMessage("game start cancelled");
+        gameState = null;
+        autoStartID = -1;
     }
 
     /**

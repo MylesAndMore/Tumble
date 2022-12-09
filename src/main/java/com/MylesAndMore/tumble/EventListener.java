@@ -12,11 +12,7 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 
 public class EventListener implements Listener{
@@ -38,9 +34,31 @@ public class EventListener implements Listener{
             // For auto-start function: check if the autoStart is enabled
             if (TumbleManager.getPlugin().getConfig().getBoolean("autoStart.enabled")) {
                 // If so, check if the amount of players has been reached
-                if (Bukkit.getWorld(TumbleManager.getGameWorld()).getPlayers().size() == TumbleManager.getPlugin().getConfig().getInt("autoStart.players")) {
+                if (TumbleManager.getPlayersInLobby().size() == TumbleManager.getPlugin().getConfig().getInt("autoStart.players")) {
                     // The autoStart should begin; pass this to the Game
                     Game.getGame().autoStart();
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void PlayerChangedWorldEvent(PlayerChangedWorldEvent event) {
+        // If the gameWorld and lobbyWorld is not null, then check
+        if (TumbleManager.getGameWorld() != null && TumbleManager.getLobbyWorld() != null) {
+            // if the player changed to the lobbyWorld, then
+            if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getLobbyWorld())) {
+                // run the autostart checks (from above)
+                if (TumbleManager.getPlugin().getConfig().getBoolean("autoStart.enabled")) {
+                    if (TumbleManager.getPlayersInLobby().size() == TumbleManager.getPlugin().getConfig().getInt("autoStart.players")) {
+                        Game.getGame().autoStart();
+                    }
+                }
+            }
+            // also check if the player left to another world
+            else if (event.getFrom() == Bukkit.getWorld(TumbleManager.getLobbyWorld())) {
+                if (Objects.equals(Game.getGame().getGameState(), "waiting")) {
+                    Game.getGame().cancelStart();
                 }
             }
         }
@@ -60,7 +78,7 @@ public class EventListener implements Listener{
                 // Check if the game is in the process of autostarting
                 if (Objects.equals(Game.getGame().getGameState(), "waiting")) {
                     // Cancel the autostart
-                    Bukkit.getServer().getScheduler().cancelTask(Game.getGame().getAutoStartID());
+                    Game.getGame().cancelStart();
                 }
             }
         }
