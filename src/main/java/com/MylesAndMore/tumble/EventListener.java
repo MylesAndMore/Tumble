@@ -128,8 +128,8 @@ public class EventListener implements Listener {
         if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
             if (event.getEntity() instanceof Snowball) {
                 if (event.getEntity().getShooter() instanceof Player player) {
-                    // Check to see if the last snowball was thrown less than 210ms ago, if so, don't allow another
-                    if ((System.currentTimeMillis() - lastTimeP) < 205) { event.setCancelled(true); }
+                    // Check to see if the last snowball was thrown less than 200ms ago, if so, don't allow another
+                    if ((System.currentTimeMillis() - lastTimeP) < 200) { event.setCancelled(true); }
                     else {
                         // Otherwise, continue with logic
                         lastTimeP = System.currentTimeMillis();

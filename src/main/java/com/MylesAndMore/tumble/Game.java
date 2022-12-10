@@ -130,19 +130,20 @@ public class Game {
             // Wait 5s (100t) for the clients to load in
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                 // Begin the countdown sequence
-                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
                 displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
                     displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
                         displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
+                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 2);
                             displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
                             setGamemode(gamePlayers, GameMode.SURVIVAL);
                             gameState = "running";
+                            playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
                         }, 20);
                     }, 20);
                 }, 20);
@@ -351,6 +352,26 @@ public class Game {
         }
     }
 
+    private void playMusic(@NotNull List<Player> players, @NotNull SoundCategory category, float volume, float pitch) {
+        List<String> sounds = new ArrayList<>(List.of(
+                "minecraft:tumble.0",
+                "minecraft:tumble.1",
+                "minecraft:tumble.2",
+                "minecraft:tumble.3",
+                "minecraft:tumble.4",
+                "minecraft:tumble.5",
+                "minecraft:tumble.6",
+                "minecraft:tumble.7",
+                "minecraft:tumble.8",
+                "minecraft:tumble.9"));
+        for (Player aPlayer : players) {
+            aPlayer.playSound(aPlayer.getLocation(), sounds.get(Random.nextInt(sounds.size())), category, volume, pitch);
+        }
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
+        }, 1460);
+    }
+
     /**
      * Teleports a list of players to the specified scatter locations in the gameWorld
      * @param players a List of Players to teleport
@@ -361,17 +382,15 @@ public class Game {
         double y = gameSpawn.getY();
         double z = gameSpawn.getZ();
         // Create the scatter locations based off the game's spawn
-        List<Location> scatterLocations = new ArrayList<>();
-        scatterLocations.addAll(List.of(
-                new Location(gameWorld, (x - 14.5), y, (z + 0.5) , -90, 0),
+        List<Location> scatterLocations = new ArrayList<>(List.of(
+                new Location(gameWorld, (x - 14.5), y, (z + 0.5), -90, 0),
                 new Location(gameWorld, (x + 0.5), y, (z - 14.5), 0, 0),
                 new Location(gameWorld, (x + 15.5), y, (z + 0.5), 90, 0),
-                new Location(gameWorld, (x + 0.5), y, (z + 15.5), 180, 0 ),
+                new Location(gameWorld, (x + 0.5), y, (z + 15.5), 180, 0),
                 new Location(gameWorld, (x - 10.5), y, (z - 10.5), -45, 0),
                 new Location(gameWorld, (x - 10.5), y, (z + 11.5), -135, 0),
                 new Location(gameWorld, (x + 11.5), y, (z - 10.5), 45, 0),
-                new Location(gameWorld, (x + 11.5), y, (z + 11.5), 135, 0))
-        );
+                new Location(gameWorld, (x + 11.5), y, (z + 11.5), 135, 0)));
         // Shuffle the list (randomize)
         Collections.shuffle(scatterLocations);
         // While there are still unteleported players from the list, teleport them
@@ -409,16 +428,16 @@ public class Game {
                     // Re-scatter players
                     gameState = "starting";
                     scatterPlayers(gamePlayers);
-                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
                     displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
                         displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
                             displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
                             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
+                                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 2);
                                 displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
                                 setGamemode(gamePlayers, GameMode.SURVIVAL);
                                 gameState = "running";
