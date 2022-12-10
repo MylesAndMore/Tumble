@@ -273,10 +273,12 @@ public class EventListener implements Listener {
         if (TumbleManager.getGameWorld() == null) {
             return;
         }
-        // Check to see if a player got damaged in the gameWorld, if so, cancel it
+        // Check to see if a player got damaged by another entity (player, snowball, etc) in the gameWorld, if so, cancel it
         if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
             if (event.getEntity() instanceof Player) {
-                event.setCancelled(true);
+                if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
+                    event.setCancelled(true);
+                }
             }
         }
     }
