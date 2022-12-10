@@ -1,5 +1,5 @@
 # Hides join/leave messages in public chat
-# Default is true
+# Default is false
 hideJoinLeaveMessages: false
 
 # Customize the message that displays when the player does not have permission to execute a command from this plugin

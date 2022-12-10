@@ -52,6 +52,7 @@ public class SetWorldConfig implements CommandExecutor {
                             TumbleManager.getPlugin().saveConfig();
                             // Set the gamerule of doImmediateRespawn in the gameWorld for later
                             Bukkit.getWorld(world).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+                            Bukkit.getWorld(world).setGameRule(GameRule.KEEP_INVENTORY, true);
                             sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
                             sender.sendMessage(ChatColor.GREEN + "Please restart your server for the changes to take effect; " + ChatColor.RED + "reloading the plugin is insufficient!");
                         }

@@ -16,7 +16,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 - [x] make the shovel in shovels mode not lose any durabilty
 - [x] make it so that you can't move until the game begins
-- [ ] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
+- [x] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
   - Basically, just set a "cooldown" on both snowballs and shovels--not a long one--but one at that
 - [ ] add infinite snowballs in the gamemanager for tumble mode  
 - [x] make it so that you can't remove any of the game items from your inventory

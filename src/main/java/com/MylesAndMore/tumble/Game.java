@@ -6,6 +6,7 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -78,6 +79,8 @@ public class Game {
                 gameState = "starting";
                 // Set the roundType to gameType since it won't change for this mode
                 roundType = type;
+                // Clear the players' inventories so they can't bring any items into the game
+                clearInventories(TumbleManager.getPlayersInLobby());
                 // Generate the correct layers for a Shovels game
                 // The else statement is just in case the generator fails; this command will fail
                 if (generateLayers(type)) {
@@ -92,6 +95,7 @@ public class Game {
             else if (Objects.equals(type, "snowballs")) {
                 gameState = "starting";
                 roundType = type;
+                clearInventories(TumbleManager.getPlayersInLobby());
                 if (generateLayers(type)) {
                     scatterPlayers(TumbleManager.getPlayersInLobby());
                 }
@@ -102,6 +106,7 @@ public class Game {
             else if (Objects.equals(type, "mixed")) {
                 gameState = "starting";
                 roundType = type;
+                clearInventories(TumbleManager.getPlayersInLobby());
                 if (generateLayers(type)) {
                     scatterPlayers(TumbleManager.getPlayersInLobby());
                 }
@@ -187,7 +192,7 @@ public class Game {
         // Otherwise, the game must have two people left (and one just died), meaning it is over
         // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
         else {
-            // roundPlayers.remove(player);
+            roundPlayers.remove(player);
             // End the game, passing the winner to the gameEnd method
             roundEnd(roundPlayers.get(0));
         }
@@ -229,11 +234,19 @@ public class Game {
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK);
+            Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.PODZOL);
             layer.setY(layer.getY() + 2);
             Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
-            giveItems(TumbleManager.getPlayersInLobby(), new ItemStack(Material.IRON_SHOVEL));
+            ItemStack shovel = new ItemStack(Material.IRON_SHOVEL);
+            shovel.addEnchantment(Enchantment.SILK_TOUCH, 1);
+            if (Objects.equals(gameState, "running")) {
+                giveItems(TumbleManager.getPlayersInGame(), shovel);
+            }
+            else if (Objects.equals(gameState, "starting")) {
+                giveItems(TumbleManager.getPlayersInLobby(), shovel);
+            }
         }
         else if (Objects.equals(type, "snowballs")) {
             layer.setY(layer.getY() - 1);
@@ -244,7 +257,12 @@ public class Game {
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA);
-            giveItems(TumbleManager.getPlayersInLobby(), new ItemStack(Material.SNOWBALL));
+            if (Objects.equals(gameState, "running")) {
+                giveItems(TumbleManager.getPlayersInGame(), new ItemStack(Material.SNOWBALL));
+            }
+            else if (Objects.equals(gameState, "starting")) {
+                giveItems(TumbleManager.getPlayersInLobby(), new ItemStack(Material.SNOWBALL));
+            }
         }
         else if (Objects.equals(type, "mixed")) {
             // Randomly select either shovels or snowballs and re-run the method
@@ -270,6 +288,16 @@ public class Game {
         for (Player aPlayer : players) {
             // Get a singular player from the player list and give that player the specified item
             aPlayer.getInventory().addItem(itemStack);
+        }
+    }
+
+    /**
+     * Clears the inventories of a provided player list
+     * @param players The player list for which to clear the inventories of
+     */
+    private void clearInventories(List<Player> players) {
+        for (Player aPlayer : players) {
+            aPlayer.getInventory().clear();
         }
     }
 
@@ -370,6 +398,10 @@ public class Game {
         }
         // If that player doesn't have three wins, nobody else does, so we need another round
         else {
+            roundPlayers.get(0).setGameMode(GameMode.SPECTATOR);
+            roundPlayers.remove(0);
+            roundPlayers.addAll(gamePlayers);
+            clearInventories(gamePlayers);
             displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
             // Re-generate layers
             generateLayers(roundType);
@@ -399,6 +431,8 @@ public class Game {
     }
 
     private void gameEnd(Player winner) {
+        winner.setGameMode(GameMode.SPECTATOR);
+        clearInventories(gamePlayers);
         // Announce win
         displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 5, 60, 5);
         displayActionbar(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");

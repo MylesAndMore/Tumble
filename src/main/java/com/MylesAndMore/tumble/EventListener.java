@@ -4,14 +4,15 @@ import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -105,20 +106,18 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void ItemDamageEvent(PlayerItemDamageEvent event) {
+    public void PlayerItemDamageEvent(PlayerItemDamageEvent event) {
         if (TumbleManager.getGameWorld() == null) {
             return;
         }
-        // On a BlockBreakEvent,
-        // check to see if the block was broken in the gameWorld,
+        // On an ItemDamageEvent
+        // check to see if the item was damaged in the gameWorld,
         if (event.getPlayer().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
-            // If it was in the gameWorld, check if the roundType was shovels
-            if (Objects.equals(Game.getGame().getRoundType(), "shovels")) {
-                event.setCancelled(true);
-            }
+            event.setCancelled(true);
         }
     }
 
+    private long lastTimeP;
     @EventHandler
     public void ProjectileLaunchEvent(ProjectileLaunchEvent event) {
         if (TumbleManager.getGameWorld() == null) {
@@ -129,7 +128,22 @@ public class EventListener implements Listener {
         if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
             if (event.getEntity() instanceof Snowball) {
                 if (event.getEntity().getShooter() instanceof Player player) {
-                    player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
+                    // Check to see if the last snowball was thrown less than 200ms ago, if so, don't allow another
+                    if ((System.currentTimeMillis() - lastTimeP) < 200) { event.setCancelled(true); }
+                    else {
+                        // Otherwise, continue with logic
+                        lastTimeP = System.currentTimeMillis();
+                        // This prevents players from shooting snowballs before the game actually begins
+                        if (Objects.equals(Game.getGame().getGameState(), "starting")) {
+                            event.setCancelled(true);
+                        }
+                        else {
+                            // This gives players a snowball when they've used one
+                            Bukkit.getServer().getScheduler().runTask(TumbleManager.getPlugin(), () -> {
+                                player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
+                            });
+                        }
+                    }
                 }
             }
         }
@@ -138,6 +152,10 @@ public class EventListener implements Listener {
     @EventHandler
     public void ProjectileHitEvent(ProjectileHitEvent event) {
         if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        // Weird stacktrace thing
+        else if (event.getHitBlock() == null) {
             return;
         }
         // When a projectile hits
@@ -151,8 +169,8 @@ public class EventListener implements Listener {
                     if (event.getHitBlock() != null) {
                         // if it was a block, check if that block is within the game area,
                         if (event.getHitBlock().getLocation().distanceSquared(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation()) < 402) {
-                        // then remove that block.
-                        event.getHitBlock().setType(Material.AIR);
+                            // then remove that block.
+                            event.getHitBlock().setType(Material.AIR);
                         }
                     }
                     else if (event.getHitEntity() != null) {
@@ -161,14 +179,10 @@ public class EventListener implements Listener {
                             // then cancel the knockback (has to be delayed by a tick for some reason)
                             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                                 hitPlayer.setVelocity(new Vector());
-                            }, 1);
+                            });
                         }
                     }
                 }
-            }
-            // Weird stacktrace thing
-            else if (event.getHitBlock().getWorld() == null) {
-                event.setCancelled(true);
             }
         }
     }
@@ -187,10 +201,58 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerMoveEvent(PlayerMoveEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
         // On a PlayerMoveEvent, check if the game is starting
         if (Objects.equals(Game.getGame().getGameState(), "starting")) {
-            // Cancel the event if the game is starting (so players can't move before the
-            // game starts)
+            // Cancel the event if the game is starting (so players can't move before the game starts)
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void BlockDropItemEvent(BlockDropItemEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        // If a block was going to drop an item (ex. snow dropping snowballs) in the GameWorld, cancel it
+        if (event.getBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+            event.setCancelled(true);
+        }
+    }
+
+    private long lastTimeI;
+    @EventHandler
+    public void PlayerInteractEvent(PlayerInteractEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        // Check if a player was left clicking a block in the gameWorld
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if (event.getClickedBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+                // Then check if it was with an item enchanted w/ silk touch
+                if (event.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
+                    // Then check to see if the player interacted less than 150ms ago
+                    if ((System.currentTimeMillis() - lastTimeI) < 150) return;
+                    // If not, set that block to air (break it)
+                    else {
+                        lastTimeI = System.currentTimeMillis();
+                        event.getClickedBlock().setType(Material.AIR);
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void BlockBreakEvent(BlockBreakEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        // This just doesn't allow blocks to break in the gameWorld; the PlayerInteractEvent will take care of everything
+        // It just keeps client commonality w/ animations and stuff
+        if (event.getBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
             event.setCancelled(true);
         }
     }
@@ -200,10 +262,22 @@ public class EventListener implements Listener {
         if (TumbleManager.getGameWorld() == null) {
             return;
         }
-        // When someone's food level changes
-        // check if that happened in the gameWorld
+        // When someone's food level changes, check if that happened in the gameWorld, then cancel it
         if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void EntityDamageEvent(EntityDamageEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        // Check to see if a player got damaged in the gameWorld, if so, cancel it
+        if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
+            if (event.getEntity() instanceof Player) {
+                event.setCancelled(true);
+            }
         }
     }
 }
