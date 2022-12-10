@@ -5,8 +5,9 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 
 ## generation  
 
-- [ ] layers should be able to generate w/ "clumps" of blocks; instead of only one material as a whole
-  - [ ] the clump size should be customizable (for later); be able to set a min/max val and it will choose randomly per each clump (not in config file yet, just internally)
+- [x] layers should be able to generate w/ "clumps" of blocks; instead of only one material as a whole
+  - [x] the clump size should be customizable (for later); be able to set a min/max val and it will choose randomly per each clump (not in config file yet, just internally)
+    - *Note: this is done through the amount of times each Material shows up in the List--there's no config for it.*
 - [ ] make shovels generation actually work properly
   - make different types of platforms (square, circle, multi-tiered, etc.); still should be pseudo-random
 - [ ] make snowballs generation actually work properly (shocker)
@@ -18,7 +19,7 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [x] make it so that you can't move until the game begins
 - [x] make the game blocks breakable very fast, but **not instantly--very important for balancing!!**
   - Basically, just set a "cooldown" on both snowballs and shovels--not a long one--but one at that
-- [ ] add infinite snowballs in the gamemanager for tumble mode  
+- [x] add infinite snowballs in the gamemanager for tumble mode  
 - [x] make it so that you can't remove any of the game items from your inventory
 - [x] make snowballs actually break blocks (duh)
 - [x] make the randomized mode logic

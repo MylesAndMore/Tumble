@@ -2,6 +2,7 @@ package com.MylesAndMore.tumble;
 
 import com.MylesAndMore.tumble.api.Generator;
 
+import com.MylesAndMore.tumble.api.Layers;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -37,8 +38,8 @@ public class Game {
     // Define local game vars
     // The gameState keeps the current state of the game (I'm so creative, I know)
     private String gameState;
-    // Define a variable for the roundType
-    private String roundType;
+    // Define a variable for the gameType
+    private String gameType;
     // Define a variable for the autostart PID
     private int autoStartID = -1;
 
@@ -77,8 +78,8 @@ public class Game {
             // Define the gameType
             if (Objects.equals(type, "shovels")) {
                 gameState = "starting";
-                // Set the roundType to gameType since it won't change for this mode
-                roundType = type;
+                // Set the type to gameType since it won't change for this mode
+                gameType = type;
                 // Clear the players' inventories so they can't bring any items into the game
                 clearInventories(TumbleManager.getPlayersInLobby());
                 // Generate the correct layers for a Shovels game
@@ -94,7 +95,7 @@ public class Game {
             }
             else if (Objects.equals(type, "snowballs")) {
                 gameState = "starting";
-                roundType = type;
+                gameType = type;
                 clearInventories(TumbleManager.getPlayersInLobby());
                 if (generateLayers(type)) {
                     scatterPlayers(TumbleManager.getPlayersInLobby());
@@ -105,7 +106,7 @@ public class Game {
             }
             else if (Objects.equals(type, "mixed")) {
                 gameState = "starting";
-                roundType = type;
+                gameType = type;
                 clearInventories(TumbleManager.getPlayersInLobby());
                 if (generateLayers(type)) {
                     scatterPlayers(TumbleManager.getPlayersInLobby());
@@ -184,6 +185,7 @@ public class Game {
      */
     public void playerDeath(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(gameSpawn);
         // If there are more than 2 players in the game,
         if (roundPlayers.size() > 2) {
             // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
@@ -199,11 +201,6 @@ public class Game {
     }
 
     // Methods to get the game type and game state for other classes outside the Game
-
-    /**
-     * @return The round type of the current round as a String ("shovels", "snowballs")
-     */
-    public String getRoundType() { return roundType; }
 
     /**
      * @return The game's current state as a String ("waiting", "starting", "running", "complete")
@@ -225,20 +222,20 @@ public class Game {
      * @param type can be either "shovels", "snowballs", or "mixed", anything else will fail generation
      * @return true if gameType was recognized and layers were (hopefully) generated, false if unrecognized
      */
+    // Initialize Layers
+    private final Layers layers = new Layers();
     private boolean generateLayers(String type) {
         // Create a new Location for the layers to work with--this is so that we don't modify the actual gameSpawn var
         Location layer = new Location(gameSpawn.getWorld(), gameSpawn.getX(), gameSpawn.getY(), gameSpawn.getZ(), gameSpawn.getYaw(), gameSpawn.getPitch());
         if (Objects.equals(type, "shovels")) {
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK);
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), layers.getMaterialList());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK);
+            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK), layers.getMaterialList());
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 4, 1, Material.PODZOL);
-            layer.setY(layer.getY() + 2);
-            Generator.generateLayer(layer, 4, 2, Material.TALL_GRASS);
+            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.PODZOL), layers.getMaterialList());
             ItemStack shovel = new ItemStack(Material.IRON_SHOVEL);
             shovel.addEnchantment(Enchantment.SILK_TOUCH, 1);
             if (Objects.equals(gameState, "running")) {
@@ -250,13 +247,13 @@ public class Game {
         }
         else if (Objects.equals(type, "snowballs")) {
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 17, 1, Material.COAL_ORE);
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getMaterialList());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 13, 1, Material.GRANITE);
+            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), layers.getMaterialList());
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA);
+            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
             if (Objects.equals(gameState, "running")) {
                 giveItems(TumbleManager.getPlayersInGame(), new ItemStack(Material.SNOWBALL));
             }
@@ -403,30 +400,33 @@ public class Game {
             roundPlayers.addAll(gamePlayers);
             clearInventories(gamePlayers);
             displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
-            // Re-generate layers
-            generateLayers(roundType);
-            // Wait 5s (100t) for tp method
+            // Wait for player to respawn before completely l a g g i n g the server ._.
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                // Re-scatter players
-                gameState = "starting";
-                scatterPlayers(gamePlayers);
-                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
-                displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
+                // Re-generate layers
+                generateLayers(gameType);
+                // Wait 5s (100t) for tp method
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                    // Re-scatter players
+                    gameState = "starting";
+                    scatterPlayers(gamePlayers);
                     playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
-                    displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
+                    displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                         playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
-                        displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
+                        displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
                         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
-                            displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
-                            setGamemode(gamePlayers, GameMode.SURVIVAL);
-                            gameState = "running";
+                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 1);
+                            displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
+                            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 1, 2);
+                                displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                                setGamemode(gamePlayers, GameMode.SURVIVAL);
+                                gameState = "running";
+                            }, 20);
                         }, 20);
                     }, 20);
-                }, 20);
-            }, 100);
+                }, 100);
+            }, 1);
         }
     }
 

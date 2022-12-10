@@ -1,12 +1,14 @@
 package com.MylesAndMore.tumble.api;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.util.BlockVector;
+import org.bukkit.block.BlockFace;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -45,21 +47,45 @@ public class Generator {
 
     /**
      * Generates clumps in a pre-generated layer.
-     * @param blocks A list of block Locations that this method is allowed to edit
-     * @param materials A list of Materials for the generator to randomly choose from.
+     * @param blockList A list of block Locations that this method is allowed to edit
+     * @param materialList A list of Materials for the generator to randomly choose from.
      * Keep in mind that not all Materials may be used, the amount used depends on the size of the layer.
      * More Materials = more randomization
      */
-    public static void generateClumps(List<Block> blocks, List<Material> materials) {
+    public static void generateClumps(List<Block> blockList, List<Material> materialList) {
         // Define random class
         Random random = new Random();
-        // This for loop will run until there are no blocks left to change
-        for (Block aBlock : blocks) {
+        // Define new blocks list so we can manipulate it
+        List<Block> blocks = new ArrayList<>(blockList);
+        // Define new shuffled Materials list
+        List<Material> materials = new ArrayList<>(materialList);
+        Collections.shuffle(materials);
+        // This loop will run until there are no blocks left to change
+        while (blocks.size() > 0) {
             // Get a random Material from the provided materials list
             Material randomMaterial = materials.get(random.nextInt(materials.size()));
+            // Gets the first Block from the list, to modify
+            Block aBlock = blocks.get(0);
+            // Modifies the block
             aBlock.setType(randomMaterial);
             // Get the blocks around that and change it to that same material
-            // ...
+            if (blocks.contains(aBlock.getRelative(BlockFace.NORTH))) {
+                aBlock.getRelative(BlockFace.NORTH).setType(randomMaterial);
+                blocks.remove(aBlock.getRelative(BlockFace.NORTH));
+            }
+            if (blocks.contains(aBlock.getRelative(BlockFace.SOUTH))) {
+                aBlock.getRelative(BlockFace.SOUTH).setType(randomMaterial);
+                blocks.remove(aBlock.getRelative(BlockFace.SOUTH));
+            }
+            if (blocks.contains(aBlock.getRelative(BlockFace.EAST))) {
+                aBlock.getRelative(BlockFace.EAST).setType(randomMaterial);
+                blocks.remove(aBlock.getRelative(BlockFace.EAST));
+            }
+            if (blocks.contains(aBlock.getRelative(BlockFace.WEST))) {
+                aBlock.getRelative(BlockFace.WEST).setType(randomMaterial);
+                blocks.remove(aBlock.getRelative(BlockFace.WEST));
+            }
+            blocks.remove(aBlock);
         }
     }
 
