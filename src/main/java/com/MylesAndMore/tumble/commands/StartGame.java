@@ -22,7 +22,7 @@ public class StartGame implements CommandExecutor {
                     if (TumbleManager.getGameWorld() != null) {
                         // Check if a game is already pending to start
                         if (!Objects.equals(Game.getGame().getGameState(), "waiting")) {
-                            sender.sendMessage(ChatColor.BLUE + "Starting game, please wait.");
+                            sender.sendMessage(ChatColor.BLUE + "Generating layers, please wait.");
                             // Use multiverse to load game world
                             // If the load was successful, start game
                             if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
