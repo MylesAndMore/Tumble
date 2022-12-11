@@ -23,6 +23,41 @@ public class Layers {
         matList.add(gen8);
         matList.add(gen9);
         matList.add(gen10);
+        matList.add(gen12);
+        matList.add(gen14);
+        matList.add(gen15);
+        matList.add(gen16);
+        matList.add(gen0);
+        matList.add(gen1);
+        matList.add(gen2);
+        matList.add(gen3);
+        matList.add(gen4);
+        matList.add(gen5);
+        matList.add(gen6);
+        matList.add(gen7);
+        matList.add(gen8);
+        matList.add(gen9);
+        matList.add(gen10);
+        matList.add(gen12);
+        matList.add(gen14);
+        matList.add(gen15);
+        matList.add(gen16);
+        matList.add(gen0);
+        matList.add(gen1);
+        matList.add(gen2);
+        matList.add(gen3);
+        matList.add(gen4);
+        matList.add(gen5);
+        matList.add(gen6);
+        matList.add(gen7);
+        matList.add(gen8);
+        matList.add(gen9);
+        matList.add(gen10);
+        matList.add(gen12);
+        matList.add(gen14);
+        matList.add(gen15);
+        matList.add(gen16);
+        // Troll glass layer
         matList.add(gen11);
     }
 
@@ -97,17 +132,13 @@ public class Layers {
 
     private final List<Material> gen3 = new ArrayList<>() {{
         add(Material.PACKED_ICE);
-        add(Material.ICE);
         add(Material.PACKED_ICE);
-        add(Material.ICE);
         add(Material.NOTE_BLOCK);
         add(Material.TNT);
         add(Material.LIGHT_BLUE_CONCRETE);
         add(Material.GLASS);
         add(Material.PACKED_ICE);
-        add(Material.ICE);
         add(Material.PACKED_ICE);
-        add(Material.ICE);
         add(Material.NOTE_BLOCK);
         add(Material.TNT);
         add(Material.LIGHT_BLUE_CONCRETE);
@@ -170,6 +201,7 @@ public class Layers {
         add(Material.RED_NETHER_BRICKS);
         add(Material.NETHER_WART_BLOCK);
         add(Material.CRYING_OBSIDIAN);
+        add(Material.MAGMA_BLOCK);
     }};
 
     private final List<Material> gen7 = new ArrayList<>() {{
@@ -264,6 +296,46 @@ public class Layers {
         add(Material.GLASS);
         add(Material.GLASS);
         add(Material.WHITE_STAINED_GLASS);
+    }};
+
+    private final List<Material> gen12 = new ArrayList<>() {{
+        add(Material.DIRT);
+        add(Material.DIRT_PATH);
+        add(Material.GRASS_BLOCK);
+        add(Material.OAK_SLAB);
+        add(Material.BRICK_WALL);
+        add(Material.BRICK_STAIRS);
+    }};
+
+    private final List<Material> gen14 = new ArrayList<>() {{
+        add(Material.LECTERN);
+        add(Material.OBSIDIAN);
+        add(Material.SPONGE);
+        add(Material.BEEHIVE);
+        add(Material.DRIED_KELP_BLOCK);
+    }};
+
+    private final List<Material> gen15 = new ArrayList<>() {{
+        add(Material.SANDSTONE);
+        add(Material.SANDSTONE_SLAB);
+        add(Material.RED_SANDSTONE);
+        add(Material.RED_SANDSTONE_SLAB);
+        add(Material.RED_TERRACOTTA);
+        add(Material.TERRACOTTA);
+        add(Material.YELLOW_TERRACOTTA);
+    }};
+
+    private final List<Material> gen16 = new ArrayList<>() {{
+        add(Material.JUNGLE_LOG);
+        add(Material.STRIPPED_JUNGLE_LOG);
+        add(Material.JUNGLE_WOOD);
+        add(Material.STRIPPED_JUNGLE_WOOD);
+        add(Material.MOSSY_COBBLESTONE);
+        add(Material.MOSSY_COBBLESTONE);
+        add(Material.MOSSY_COBBLESTONE);
+        add(Material.JUNGLE_LEAVES);
+        add(Material.JUNGLE_SLAB);
+        add(Material.JUNGLE_TRAPDOOR);
     }};
 
     private final List<List<Material>> matList = new ArrayList<>();

@@ -168,7 +168,7 @@ public class EventListener implements Listener {
                     // then check to see if it hit a player or a block
                     if (event.getHitBlock() != null) {
                         // if it was a block, check if that block is within the game area,
-                        if (event.getHitBlock().getLocation().distanceSquared(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation()) < 402) {
+                        if (event.getHitBlock().getLocation().distanceSquared(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation()) < 579) {
                             // then remove that block.
                             event.getHitBlock().setType(Material.AIR);
                         }
@@ -231,15 +231,12 @@ public class EventListener implements Listener {
         // Check if a player was left clicking a block in the gameWorld
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (event.getClickedBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
-                // Then check if it was with an item enchanted w/ silk touch
-                if (event.getPlayer().getInventory().getItemInMainHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
-                    // Then check to see if the player interacted less than 150ms ago
-                    if ((System.currentTimeMillis() - lastTimeI) < 150) return;
+                // Then check to see if the player interacted less than 150ms ago
+                if ((System.currentTimeMillis() - lastTimeI) < 150) return;
                     // If not, set that block to air (break it)
-                    else {
-                        lastTimeI = System.currentTimeMillis();
-                        event.getClickedBlock().setType(Material.AIR);
-                    }
+                else {
+                    lastTimeI = System.currentTimeMillis();
+                    event.getClickedBlock().setType(Material.AIR);
                 }
             }
         }

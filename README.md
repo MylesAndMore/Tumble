@@ -8,9 +8,9 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [x] layers should be able to generate w/ "clumps" of blocks; instead of only one material as a whole
   - [x] the clump size should be customizable (for later); be able to set a min/max val and it will choose randomly per each clump (not in config file yet, just internally)
     - *Note: this is done through the amount of times each Material shows up in the List--there's no config for it.*
-- [ ] make shovels generation actually work properly
+- [x] make shovels generation actually work properly
   - make different types of platforms (square, circle, multi-tiered, etc.); still should be pseudo-random
-- [ ] make snowballs generation actually work properly (shocker)
+- [x] make snowballs generation actually work properly (shocker)
   - make three layers generate (same layer types as shovels, just multiple of them)
 
 ## game realism  

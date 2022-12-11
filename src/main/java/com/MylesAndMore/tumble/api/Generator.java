@@ -45,6 +45,33 @@ public class Generator {
     }
 
     /**
+     * Generates a cubiod (literally just a ripoff fill command)
+     * @param firstPos The first Location to fill (first three coords in a fill command)
+     * @param secondPos The second Location to fill to (second three coords)
+     * @param material The Material to fill
+     */
+    public static List<Block> generateCuboid(Location firstPos, Location secondPos, Material material) {
+        World world = firstPos.getWorld();
+        List<Block> blocks = new ArrayList<>();
+        int fX = firstPos.getBlockX();
+        int fY = firstPos.getBlockY();
+        int fZ = firstPos.getBlockZ();
+        int sX = secondPos.getBlockX();
+        int sY = secondPos.getBlockY();
+        int sZ = secondPos.getBlockZ();
+
+        for (int x = fX; x <= sX; x++) {
+            for (int y = fY; y <= sY; y++) {
+                for (int z = fZ; z <= sZ; z++) {
+                    world.getBlockAt(x, y, z).setType(material);
+                    blocks.add(world.getBlockAt(x, y, z));
+                }
+            }
+        }
+        return blocks;
+    }
+
+    /**
      * Generates clumps in a pre-generated layer.
      * @param blockList A list of block Locations that this method is allowed to edit
      * @param materialList A list of Materials for the generator to randomly choose from.
@@ -85,30 +112,6 @@ public class Generator {
                 blocks.remove(aBlock.getRelative(BlockFace.WEST));
             }
             blocks.remove(aBlock);
-        }
-    }
-
-    /**
-     * Generates a cubiod (literally just a ripoff fill command)
-     * @param firstPos The first Location to fill (first three coords in a fill command)
-     * @param secondPos The second Location to fill to (second three coords)
-     * @param material The Material to fill
-     */
-    public static void generateCuboid(Location firstPos, Location secondPos, Material material) {
-        World world = firstPos.getWorld();
-        int fX = firstPos.getBlockX();
-        int fY = firstPos.getBlockY();
-        int fZ = firstPos.getBlockZ();
-        int sX = secondPos.getBlockX();
-        int sY = secondPos.getBlockY();
-        int sZ = secondPos.getBlockZ();
-
-        for (int x = fX; x <= sX; x++) {
-            for (int y = fY; y <= sY; y++) {
-                for (int z = fZ; z <= sZ; z++) {
-                    world.getBlockAt(x, y, z).setType(material);
-                }
-            }
         }
     }
 }
