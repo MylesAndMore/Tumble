@@ -42,6 +42,8 @@ public class Game {
     private String gameState;
     // Define a variable for the gameType
     private String gameType;
+    // Define a variable for the game ID
+    private int gameID = -1;
     // Define a variable for the autostart PID
     private int autoStartID = -1;
     // Define a variable for music ID
@@ -91,7 +93,6 @@ public class Game {
                 if (generateLayers(type)) {
                     // Send all players from lobby to the game
                     scatterPlayers(TumbleManager.getPlayersInLobby());
-                    // Keep in mind that after this runs, this command will complete and return true
                 }
                 else {
                     return false;
@@ -256,6 +257,17 @@ public class Game {
             else if (Objects.equals(gameState, "starting")) {
                 giveItems(TumbleManager.getPlayersInLobby(), shovel);
             }
+            // Schedule a process to give snowballs after 2m30s (so people can't island, the OG game had this)
+            // Add 160t because of the countdown
+            gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                clearInventories(gamePlayers);
+                giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
+                displayActionbar(gamePlayers, ChatColor.DARK_RED + "Showdown!");
+                // End the round in another 2m30s
+                gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                    roundEnd(null);
+                }, 3000);
+            }, 3160);
         }
         else if (Objects.equals(type, "snowballs")) {
             layer.setY(layer.getY() - 1);
@@ -272,6 +284,10 @@ public class Game {
             else if (Objects.equals(gameState, "starting")) {
                 giveItems(TumbleManager.getPlayersInLobby(), new ItemStack(Material.SNOWBALL));
             }
+            // End the round in 5m
+            gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                roundEnd(null);
+            }, 6160);    
         }
         else if (Objects.equals(type, "mixed")) {
             // Randomly select either shovels or snowballs and re-run the method
@@ -364,7 +380,9 @@ public class Game {
     }
 
     private void playMusic(@NotNull List<Player> players, @NotNull SoundCategory category, float volume, float pitch) {
-        List<String> sounds = new ArrayList<>(List.of(
+        List<String> sounds = new ArrayList<>();
+        if (sounds.size() == 0) {
+            sounds = new ArrayList<>(List.of(
                 "minecraft:tumble.0",
                 "minecraft:tumble.1",
                 "minecraft:tumble.2",
@@ -375,13 +393,17 @@ public class Game {
                 "minecraft:tumble.7",
                 "minecraft:tumble.8",
                 "minecraft:tumble.9"));
-        String currentSong = sounds.get(Random.nextInt(sounds.size()));
-        for (Player aPlayer : players) {
-            aPlayer.playSound(aPlayer.getLocation(), currentSong, category, volume, pitch);
         }
-        musicID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
-            playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
-        }, 1460);
+        else {
+            String currentSong = sounds.get(Random.nextInt(sounds.size()));
+            for (Player aPlayer : players) {
+                aPlayer.playSound(aPlayer.getLocation(), currentSong, category, volume, pitch);
+            }
+            sounds.remove(currentSong);
+            musicID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
+            }, 1460);   
+        }
     }
 
     /**
@@ -414,15 +436,23 @@ public class Game {
         }
     }
 
-    private void roundEnd(Player winner) {
-        // Set the wins of the player to their current # of wins + 1
-        gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
+    private void roundEnd(@Nullable Player winner) {
+        // Cancel the tasks to auto-end the round
+        Bukkit.getServer().getScheduler().cancelTask(gameID);
+        // Check if there was a winner of the round
+        if (winner != null) {
+            // Set the wins of the player to their current # of wins + 1
+            gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
+        }
         // Clear old layers (as a fill command, this would be /fill ~-20 ~-4 ~-20 ~20 ~ ~20 relative to spawn)
         Generator.generateCuboid(new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 4, gameSpawn.getZ() - 20), new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20), Material.AIR);
         playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 5, 0);
-        // If the player has three wins, they won the game, so initiate the gameEnd
-        if (gameWins.get(gamePlayers.indexOf(winner)) == 3)  {
-            gameEnd(winner);
+        // Again, check if there was a winner to...win
+        if (winner != null) {
+            // If the player has three wins, they won the game, so initiate the gameEnd
+            if (gameWins.get(gamePlayers.indexOf(winner)) == 3)  {
+                gameEnd(winner);
+            }
         }
         // If that player doesn't have three wins, nobody else does, so we need another round
         else {
@@ -430,8 +460,14 @@ public class Game {
             roundPlayers.remove(0);
             roundPlayers.addAll(gamePlayers);
             clearInventories(gamePlayers);
-            displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
-            // Wait for player to respawn before completely l a g g i n g the server ._.
+            // Display personalized title if someone won, generalized if not
+            if (winner != null) {
+                displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
+            }
+            else {
+                displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + "Draw!", 5, 60, 5);
+            }
+            // Wait for player to respawn before completely  l a g g i n g  the server ._.
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                 // Re-generate layers
                 generateLayers(gameType);

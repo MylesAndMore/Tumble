@@ -34,6 +34,6 @@ public class Main extends JavaPlugin{
         }
 
         // Init message
-        Bukkit.getServer().getLogger().info("[tumble] tumble successfully enabled!");
+        Bukkit.getServer().getLogger().info("[tumble] Tumble successfully enabled!");
     }
 }

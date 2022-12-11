@@ -23,8 +23,8 @@ once this list is complete and all bugs are fixed, we *should* be ready for rele
 - [x] make it so that you can't remove any of the game items from your inventory
 - [x] make snowballs actually break blocks (duh)
 - [x] make the randomized mode logic
-- [ ] make it so rounds end in a draw after 5m
-- [ ] make it so that players get snowballs instead of shovels in shovels rounds after 2m 30s
+- [x] make it so rounds end in a draw after 5m
+- [x] make it so that players get snowballs instead of shovels in shovels rounds after 2m 30s
 - [x] remove snowball knockback
 
 ## game logic  
