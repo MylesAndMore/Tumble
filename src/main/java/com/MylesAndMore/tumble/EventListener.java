@@ -117,7 +117,7 @@ public class EventListener implements Listener {
         }
     }
 
-    private long lastTimeP;
+    // private long lastTimeP;
     @EventHandler
     public void ProjectileLaunchEvent(ProjectileLaunchEvent event) {
         if (TumbleManager.getGameWorld() == null) {
@@ -129,11 +129,11 @@ public class EventListener implements Listener {
             if (event.getEntity() instanceof Snowball) {
                 if (event.getEntity().getShooter() instanceof Player player) {
                     // Check to see if the last snowball was thrown less than 200ms ago, if so, don't allow another
-                    if ((System.currentTimeMillis() - lastTimeP) < 200) { event.setCancelled(true); }
-                    else {
-                        // Otherwise, continue with logic
-                        lastTimeP = System.currentTimeMillis();
-                        // This prevents players from shooting snowballs before the game actually begins
+                    // if ((System.currentTimeMillis() - lastTimeP) < 200) { event.setCancelled(true); }
+                    // else {
+                        // // Otherwise, continue with logic
+                        // lastTimeP = System.currentTimeMillis();
+                        // // This prevents players from shooting snowballs before the game actually begins
                         if (Objects.equals(Game.getGame().getGameState(), "starting")) {
                             event.setCancelled(true);
                         }
@@ -143,7 +143,7 @@ public class EventListener implements Listener {
                                 player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
                             });
                         }
-                    }
+                    // }
                 }
             }
         }
