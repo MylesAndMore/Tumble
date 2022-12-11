@@ -13,16 +13,17 @@ public class Layers {
 
     public Layers(){
         matList.add(gen0);
-        matList.add(gen0);
-        matList.add(gen0);
-        matList.add(gen1);
-        matList.add(gen1);
-        matList.add(gen0);
-        matList.add(gen0);
-        matList.add(gen0);
-        matList.add(gen1);
         matList.add(gen1);
         matList.add(gen2);
+        matList.add(gen3);
+        matList.add(gen4);
+        matList.add(gen5);
+        matList.add(gen6);
+        matList.add(gen7);
+        matList.add(gen8);
+        matList.add(gen9);
+        matList.add(gen10);
+        matList.add(gen11);
     }
 
     // Define Random class
@@ -38,7 +39,7 @@ public class Layers {
     // Begin lists
 
     // private final List<Material> gen = new ArrayList<>() {{
-        // add(Material.);
+        // add(Material.
     // }};
 
     private final List<Material> gen0 = new ArrayList<>() {{
@@ -53,9 +54,11 @@ public class Layers {
         add(Material.GOLD_ORE);
         add(Material.LAPIS_ORE);
         add(Material.DIAMOND_ORE);
-        add(Material.COBWEB);
         add(Material.GRASS_BLOCK);
         add(Material.GRASS_BLOCK);
+        add(Material.GRASS_BLOCK);
+        add(Material.GRASS_BLOCK);
+        // add(Material.COBWEB);
     }};
 
     private final List<Material> gen1 = new ArrayList<>() {{
@@ -87,6 +90,179 @@ public class Layers {
         add(Material.BROWN_TERRACOTTA);
         add(Material.GREEN_TERRACOTTA);
         add(Material.YELLOW_TERRACOTTA);
+        add(Material.WHITE_STAINED_GLASS);
+        add(Material.HONEYCOMB_BLOCK);
+        add(Material.HONEYCOMB_BLOCK);
+    }};
+
+    private final List<Material> gen3 = new ArrayList<>() {{
+        add(Material.PACKED_ICE);
+        add(Material.ICE);
+        add(Material.PACKED_ICE);
+        add(Material.ICE);
+        add(Material.NOTE_BLOCK);
+        add(Material.TNT);
+        add(Material.LIGHT_BLUE_CONCRETE);
+        add(Material.GLASS);
+        add(Material.PACKED_ICE);
+        add(Material.ICE);
+        add(Material.PACKED_ICE);
+        add(Material.ICE);
+        add(Material.NOTE_BLOCK);
+        add(Material.TNT);
+        add(Material.LIGHT_BLUE_CONCRETE);
+        add(Material.GLASS);
+        add(Material.SOUL_SAND);
+    }};
+
+    private final List<Material> gen4 = new ArrayList<>() {{
+        add(Material.DIAMOND_BLOCK);
+        add(Material.GOLD_BLOCK);
+        add(Material.REDSTONE_BLOCK);
+        add(Material.REDSTONE_BLOCK);
+        add(Material.LAPIS_BLOCK);
+        add(Material.LAPIS_BLOCK);
+        add(Material.IRON_BLOCK);
+        add(Material.COAL_BLOCK);
+        add(Material.IRON_BLOCK);
+        add(Material.COAL_BLOCK);
+        add(Material.IRON_BLOCK);
+        add(Material.COAL_BLOCK);
+        add(Material.COAL_BLOCK);
+    }};
+
+    private final List<Material> gen5 = new ArrayList<>() {{
+        add(Material.WHITE_TERRACOTTA);
+        add(Material.BLUE_ICE);
+        add(Material.SOUL_SAND);
+        add(Material.STONE_SLAB);
+        add(Material.WHITE_TERRACOTTA);
+        add(Material.BLUE_ICE);
+        add(Material.SOUL_SAND);
+        add(Material.STONE_SLAB);
+        add(Material.WHITE_TERRACOTTA);
+        add(Material.BLUE_ICE);
+        add(Material.SOUL_SAND);
+        add(Material.STONE_SLAB);
+        add(Material.GLOWSTONE);
+        add(Material.GLOWSTONE);
+        add(Material.HONEY_BLOCK);
+        add(Material.SLIME_BLOCK);
+    }};
+
+    private final List<Material> gen6 = new ArrayList<>() {{
+        add(Material.NETHERRACK);
+        add(Material.NETHERRACK);
+        add(Material.NETHERRACK);
+        add(Material.NETHER_BRICKS);
+        add(Material.NETHER_BRICKS);
+        add(Material.NETHERRACK);
+        add(Material.NETHERRACK);
+        add(Material.NETHERRACK);
+        add(Material.NETHER_BRICKS);
+        add(Material.NETHER_BRICKS);
+        add(Material.NETHER_GOLD_ORE);
+        add(Material.NETHER_GOLD_ORE);
+        add(Material.CRIMSON_NYLIUM);
+        add(Material.WARPED_NYLIUM);
+        add(Material.SOUL_SOIL);
+        add(Material.CRACKED_NETHER_BRICKS);
+        add(Material.RED_NETHER_BRICKS);
+        add(Material.NETHER_WART_BLOCK);
+        add(Material.CRYING_OBSIDIAN);
+    }};
+
+    private final List<Material> gen7 = new ArrayList<>() {{
+        add(Material.END_STONE);
+        add(Material.END_STONE_BRICKS);
+        add(Material.END_STONE);
+        add(Material.END_STONE_BRICKS);
+        add(Material.END_STONE);
+        add(Material.END_STONE_BRICKS);
+        add(Material.END_STONE);
+        add(Material.END_STONE_BRICKS);
+        add(Material.OBSIDIAN);
+        add(Material.PURPUR_BLOCK);
+        add(Material.PURPUR_PILLAR);
+        add(Material.COBBLESTONE);
+    }};
+
+    private final List<Material> gen8 = new ArrayList<>() {{
+        add(Material.REDSTONE_BLOCK);
+        add(Material.REDSTONE_BLOCK);
+        add(Material.REDSTONE_LAMP);
+        add(Material.TARGET);
+        add(Material.DAYLIGHT_DETECTOR);
+        add(Material.PISTON);
+        add(Material.STICKY_PISTON);
+        add(Material.SLIME_BLOCK);
+        add(Material.OBSERVER);
+        add(Material.HOPPER);
+    }};
+
+    private final List<Material> gen9 = new ArrayList<>() {{
+        add(Material.PRISMARINE);
+        add(Material.DARK_PRISMARINE);
+        add(Material.BLUE_STAINED_GLASS);
+        add(Material.WET_SPONGE);
+        add(Material.PRISMARINE_BRICKS);
+        add(Material.PRISMARINE_BRICK_SLAB);
+        add(Material.DARK_PRISMARINE);
+        add(Material.SEA_LANTERN);
+        add(Material.TUBE_CORAL_BLOCK);
+        add(Material.BRAIN_CORAL_BLOCK);
+        add(Material.BUBBLE_CORAL_BLOCK);
+    }};
+
+    private final List<Material> gen10 = new ArrayList<>() {{
+        add(Material.OAK_LOG);
+        add(Material.SPRUCE_LOG);
+        add(Material.ACACIA_LOG);
+        add(Material.STRIPPED_OAK_LOG);
+        add(Material.STRIPPED_SPRUCE_LOG);
+        add(Material.STRIPPED_ACACIA_LOG);
+        add(Material.OAK_WOOD);
+        add(Material.SPRUCE_WOOD);
+        add(Material.ACACIA_WOOD);
+        add(Material.OAK_LEAVES);
+        add(Material.SPRUCE_LEAVES);
+        add(Material.ACACIA_LEAVES);
+        add(Material.OAK_LEAVES);
+        add(Material.SPRUCE_LEAVES);
+        add(Material.ACACIA_LEAVES);
+    }};
+
+    private final List<Material> gen11 = new ArrayList<>() {{
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
         add(Material.WHITE_STAINED_GLASS);
     }};
 
