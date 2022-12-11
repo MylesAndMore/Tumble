@@ -8,6 +8,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +44,8 @@ public class Game {
     private String gameType;
     // Define a variable for the autostart PID
     private int autoStartID = -1;
+    // Define a variable for music ID
+    private int musicID = -1;
 
     // Initialize a new instance of the Random class for use later
     private final Random Random = new Random();
@@ -186,7 +190,14 @@ public class Game {
      */
     public void playerDeath(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
-        player.teleport(gameSpawn);
+        // Add a delay to tp them to the gameWorld just in case they have a bed in another world
+        // Delay is needed because instant respawn takes 1t
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            player.teleport(gameSpawn);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                player.setGameMode(GameMode.SPECTATOR);
+            }, 5);
+        }, 5);
         // If there are more than 2 players in the game,
         if (roundPlayers.size() > 2) {
             // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
@@ -364,10 +375,11 @@ public class Game {
                 "minecraft:tumble.7",
                 "minecraft:tumble.8",
                 "minecraft:tumble.9"));
+        String currentSong = sounds.get(Random.nextInt(sounds.size()));
         for (Player aPlayer : players) {
-            aPlayer.playSound(aPlayer.getLocation(), sounds.get(Random.nextInt(sounds.size())), category, volume, pitch);
+            aPlayer.playSound(aPlayer.getLocation(), currentSong, category, volume, pitch);
         }
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+        musicID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
             playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
         }, 1460);
     }
@@ -425,6 +437,12 @@ public class Game {
                 generateLayers(gameType);
                 // Wait 5s (100t) for tp method
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                    // Kill all items (pistons are weird)
+                    for (Entity entity : gameWorld.getEntities()) {
+                        if (entity instanceof Item) {
+                            entity.remove();
+                        }
+                    }
                     // Re-scatter players
                     gameState = "starting";
                     scatterPlayers(gamePlayers);
@@ -457,6 +475,8 @@ public class Game {
         displayActionbar(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
         // Wait 10s (200t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            // Stop music from replaying
+            Bukkit.getServer().getScheduler().cancelTask(musicID);
             // First, check to see if there is a separate location to tp the winner to
             if ((TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.x") != 0) && (TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.y") != 0)  && (TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.z") != 0)) {
                 // Tp the winner to that location

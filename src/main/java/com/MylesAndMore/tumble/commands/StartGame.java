@@ -17,7 +17,7 @@ public class StartGame implements CommandExecutor {
             // Check if there is a lobbyWorld specified in config
             if (TumbleManager.getLobbyWorld() != null) {
                 // Check if there is more than one person in lobby
-                if (TumbleManager.getPlayersInLobby().size() > 0) {
+                if (TumbleManager.getPlayersInLobby().size() > 1) {
                     // Check if there is a gameWorld specified in config
                     if (TumbleManager.getGameWorld() != null) {
                         // Check if a game is already pending to start
