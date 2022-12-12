@@ -222,7 +222,7 @@ public class EventListener implements Listener {
         }
     }
 
-    private long lastTimeI;
+    // private long lastTimeI;
     @EventHandler
     public void PlayerInteractEvent(PlayerInteractEvent event) {
         if (TumbleManager.getGameWorld() == null) {
@@ -232,12 +232,12 @@ public class EventListener implements Listener {
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (event.getClickedBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
                 // Then check to see if the player interacted less than 150ms ago
-                if ((System.currentTimeMillis() - lastTimeI) < 150) return;
+                // if ((System.currentTimeMillis() - lastTimeI) < 150) return;
                     // If not, set that block to air (break it)
-                else {
-                    lastTimeI = System.currentTimeMillis();
-                    event.getClickedBlock().setType(Material.AIR);
-                }
+                // else {
+                    // lastTimeI = System.currentTimeMillis();
+                event.getClickedBlock().setType(Material.AIR);
+                // }
             }
         }
     }
@@ -273,7 +273,7 @@ public class EventListener implements Listener {
         // Check to see if a player got damaged by another entity (player, snowball, etc) in the gameWorld, if so, cancel it
         if (event.getEntity().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
             if (event.getEntity() instanceof Player) {
-                if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
+                if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK || event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                     event.setCancelled(true);
                 }
             }

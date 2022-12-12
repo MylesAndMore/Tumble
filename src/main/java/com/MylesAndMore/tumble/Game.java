@@ -181,15 +181,10 @@ public class Game {
                 player.setGameMode(GameMode.SPECTATOR);
             }, 5);
         }, 5);
-        // If there are more than 2 players in the game,
-        if (roundPlayers.size() > 2) {
-            // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
-            roundPlayers.remove(player);
-        }
-        // Otherwise, the game must have two people left (and one just died), meaning it is over
-        // This logic is so that it will not remove the last player standing from the list, so we know who the winner is.
-        else {
-            roundPlayers.remove(player);
+        // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
+        roundPlayers.remove(player);
+        // If there are less than 2 players in the game (1 just died),
+        if (roundPlayers.size() < 2) {
             // End the game, passing the winner to the gameEnd method
             roundEnd(roundPlayers.get(0));
         }
@@ -505,34 +500,65 @@ public class Game {
     private void roundEnd(@Nullable Player winner) {
         // Cancel the tasks that auto-end the round
         Bukkit.getServer().getScheduler().cancelTask(gameID);
-        // Check if there was a winner of the round
-        if (winner != null) {
-            // Set the wins of the player to their current # of wins + 1
-            gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
-        }
         // Clear old layers (as a fill command, this would be /fill ~-20 ~-20 ~-20 ~20 ~ ~20 relative to spawn)
         Generator.generateCuboid(new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 20, gameSpawn.getZ() - 20), new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20), Material.AIR);
         playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 5, 0);
-        // Again, check if there was a winner to...win
+        // Check if there was a definite winner or not
         if (winner != null) {
+            // Set the wins of the player to their current # of wins + 1
+            gameWins.set(gamePlayers.indexOf(winner), (gameWins.get(gamePlayers.indexOf(winner)) + 1));
             // If the player has three wins, they won the game, so initiate the gameEnd
             if (gameWins.get(gamePlayers.indexOf(winner)) == 3)  {
                 gameEnd(winner);
             }
+            // If that player doesn't have three wins, nobody else does, so we need another round
+            else {
+                roundPlayers.get(0).setGameMode(GameMode.SPECTATOR);
+                roundPlayers.remove(0);
+                roundPlayers.addAll(gamePlayers);
+                clearInventories(gamePlayers);
+                displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
+                // Wait for player to respawn before completely  l a g g i n g  the server ._.
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                    // Re-generate layers
+                    generateLayers(gameType);
+                    // Wait 5s (100t) for tp method
+                    Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                        // Kill all items (pistons are weird)
+                        for (Entity entity : gameWorld.getEntities()) {
+                            if (entity instanceof Item) {
+                                entity.remove();
+                            }
+                        }
+                        // Re-scatter players
+                        gameState = "starting";
+                        scatterPlayers(gamePlayers);
+                        playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
+                        displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
+                        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                            playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
+                            displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
+                            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                                playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
+                                displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
+                                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                                    playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 2);
+                                    displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                                    setGamemode(gamePlayers, GameMode.SURVIVAL);
+                                    gameState = "running";
+                                }, 20);
+                            }, 20);
+                        }, 20);
+                    }, 100);
+                }, 1);
+            }
         }
-        // If that player doesn't have three wins, nobody else does, so we need another round
         else {
-            roundPlayers.get(0).setGameMode(GameMode.SPECTATOR);
-            roundPlayers.remove(0);
+            setGamemode(gamePlayers, GameMode.SPECTATOR);
+            roundPlayers.removeAll(roundPlayers);
             roundPlayers.addAll(gamePlayers);
             clearInventories(gamePlayers);
-            // Display personalized title if someone won, generalized if not
-            if (winner != null) {
-                displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
-            }
-            else {
-                displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + "Draw!", 5, 60, 5);
-            }
+            displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + "Draw!", 5, 60, 5);
             // Wait for player to respawn before completely  l a g g i n g  the server ._.
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
                 // Re-generate layers
