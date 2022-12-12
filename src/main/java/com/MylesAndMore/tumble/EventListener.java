@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -17,6 +16,9 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+/**
+ * Tumble event listener for all plugin and game-related events.
+ */
 public class EventListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {

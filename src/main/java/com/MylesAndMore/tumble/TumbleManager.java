@@ -8,6 +8,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
+/**
+ * Class to store long return methods to make writing this plugin slightly less painful.
+ */
 public class TumbleManager {
     // Tumble plugin
     public static Plugin getPlugin() {

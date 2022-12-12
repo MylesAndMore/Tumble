@@ -12,52 +12,24 @@ import java.util.Random;
 public class Layers {
 
     public Layers(){
-        matList.add(gen0);
-        matList.add(gen1);
-        matList.add(gen2);
-        matList.add(gen3);
-        matList.add(gen4);
-        matList.add(gen5);
-        matList.add(gen6);
-        matList.add(gen7);
-        matList.add(gen8);
-        matList.add(gen9);
-        matList.add(gen10);
-        matList.add(gen12);
-        matList.add(gen14);
-        matList.add(gen15);
-        matList.add(gen16);
-        matList.add(gen0);
-        matList.add(gen1);
-        matList.add(gen2);
-        matList.add(gen3);
-        matList.add(gen4);
-        matList.add(gen5);
-        matList.add(gen6);
-        matList.add(gen7);
-        matList.add(gen8);
-        matList.add(gen9);
-        matList.add(gen10);
-        matList.add(gen12);
-        matList.add(gen14);
-        matList.add(gen15);
-        matList.add(gen16);
-        matList.add(gen0);
-        matList.add(gen1);
-        matList.add(gen2);
-        matList.add(gen3);
-        matList.add(gen4);
-        matList.add(gen5);
-        matList.add(gen6);
-        matList.add(gen7);
-        matList.add(gen8);
-        matList.add(gen9);
-        matList.add(gen10);
-        matList.add(gen12);
-        matList.add(gen14);
-        matList.add(gen15);
-        matList.add(gen16);
-        // Troll glass layer
+        // Make the other layers more common than the glass layer
+        for (int i = 0; i < 10; i++) {
+            matList.add(gen0);
+            matList.add(gen1);
+            matList.add(gen2);
+            matList.add(gen3);
+            matList.add(gen4);
+            matList.add(gen5);
+            matList.add(gen6);
+            matList.add(gen7);
+            matList.add(gen8);
+            matList.add(gen9);
+            matList.add(gen10);
+            matList.add(gen12);
+            matList.add(gen15);
+            matList.add(gen16);
+        }
+        // Glass layer
         matList.add(gen11);
     }
 
@@ -69,6 +41,9 @@ public class Layers {
     public List<Material> getMaterialList() {
         return matList.get(random.nextInt(matList.size()));
     }
+
+    // Define the list that will store the material lists
+    private final List<List<Material>> matList = new ArrayList<>();
 
 
     // Begin lists
@@ -287,14 +262,6 @@ public class Layers {
         add(Material.GLASS);
         add(Material.GLASS);
         add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
-        add(Material.GLASS);
         add(Material.WHITE_STAINED_GLASS);
     }};
 
@@ -305,14 +272,6 @@ public class Layers {
         add(Material.OAK_SLAB);
         add(Material.BRICK_WALL);
         add(Material.BRICK_STAIRS);
-    }};
-
-    private final List<Material> gen14 = new ArrayList<>() {{
-        add(Material.LECTERN);
-        add(Material.OBSIDIAN);
-        add(Material.SPONGE);
-        add(Material.BEEHIVE);
-        add(Material.DRIED_KELP_BLOCK);
     }};
 
     private final List<Material> gen15 = new ArrayList<>() {{
@@ -337,7 +296,5 @@ public class Layers {
         add(Material.JUNGLE_SLAB);
         add(Material.JUNGLE_TRAPDOOR);
     }};
-
-    private final List<List<Material>> matList = new ArrayList<>();
 
 }
