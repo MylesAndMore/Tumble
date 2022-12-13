@@ -1,3 +1,8 @@
+# Customize the default game mode of Tumble
+# Acceptable options include: shovels, snowballs, mixed
+# Default is mixed
+gameMode: mixed
+
 # Hides join/leave messages in public chat
 # Default is false
 hideJoinLeaveMessages: false
@@ -5,13 +10,8 @@ hideJoinLeaveMessages: false
 # Customize the message that displays when the player does not have permission to execute a command from this plugin
 permissionMessage: You do not have permission to perform this command!
 
-# Customize the game mode of Tumble
-# Acceptable options include: shovels, snowballs, mixed
-# Default is mixed
-gameMode: mixed
-
 # Customize the auto start feature of Tumble
-# Defaults are disabled and two players
+# Defaults are false and two players
 # Players can be up to 8
 autoStart:
   enabled: false
