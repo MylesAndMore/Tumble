@@ -20,7 +20,7 @@ If you've never heard of it, [Tumble](https://minecraft-archive.fandom.com/wiki/
 
 ## Setup
 
-1. Simply [download]() **add link to download** the plugin's JAR file and place it in your server's plugins directory.  
+1. Simply [download](https://github.com/MylesAndMore/tumble/releases/tag/stable) the plugin's JAR file and place it in your server's plugins directory.  
 
     - *Note: Multiverse is also required for the plugin to run, you may download it [here](https://www.spigotmc.org/resources/multiverse-core.390/).*  
 
@@ -73,3 +73,7 @@ Scroll down for more options to configure your game.
 
 - ```permissionMessage```
   - Customize the message that displays when the player does not have permission to execute a command from this plugin.  
+
+## Issues & Feedback
+
+Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on our [GitHub issues page](https://github.com/MylesAndMore/tumble/issues/new)!
