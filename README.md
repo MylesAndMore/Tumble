@@ -1,4 +1,4 @@
-# tumble
+# tumble  
 
 ## Overview  
 
@@ -26,12 +26,13 @@ If you've never heard of it, [Tumble](https://minecraft-archive.fandom.com/wiki/
 
 2. Make sure that you have at least two worlds in your world directory! One is for your lobby world, and the other is for your game arena.  
 
-    - If you would like an experience similar to the original game, see [my guide]() **add this guide** for using the original worlds.  
+    - If you would like an experience similar to the original game, see [my guide](https://github.com/MylesAndMore/tumble/blob/main/og-guide.md) for using the original worlds.  
 
 3. Start your server. The plugin will generate a couple of warnings, these are normal.
 4. Ensure that you have imported your worlds into Multiverse. This can be done with the command ```/mv import <your-world-name> normal```.
 5. Now you need to tell Tumble which world is your lobby and which world is your game arena. You can do this with  ```/tumble:link <your-lobby-world> lobby``` and ```/tumble:link <your-game-world> game``` respectively.
-6. You're done! You can now start games with the command ```/tumble:start```.
+6. **VERY IMPORTANT:** The plugin will teleport players to the world spawn point of each world, and generate the game's blocks around the spawn point of the game world. Ensure that your spawn points are clear of any obstructions, and that a 20x20x20 cube is cleared out from the spawn of whatever game world you are using. **Any blocks in this area will be destroyed when the game begins.**
+7. You're done! You can now start games with the command ```/tumble:start```.
 
 Scroll down for more options to configure your game.  
 
