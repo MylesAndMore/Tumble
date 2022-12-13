@@ -1,9 +1,7 @@
 package com.MylesAndMore.tumble;
 
-import com.MylesAndMore.tumble.commands.ReloadCommand;
+import com.MylesAndMore.tumble.commands.*;
 import com.MylesAndMore.tumble.api.Metrics;
-import com.MylesAndMore.tumble.commands.SetWorldConfig;
-import com.MylesAndMore.tumble.commands.StartGame;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -16,6 +14,8 @@ public class Main extends JavaPlugin{
         this.getCommand("reload").setExecutor(new ReloadCommand());
         this.getCommand("link").setExecutor(new SetWorldConfig());
         this.getCommand("start").setExecutor(new StartGame());
+        this.getCommand("winlocation").setExecutor(new SetWinnerLoc());
+        this.getCommand("autostart").setExecutor(new SetAutoStart());
         // Save the default config file (packaged in the JAR)
         this.saveDefaultConfig();
 
@@ -25,12 +25,15 @@ public class Main extends JavaPlugin{
 
         // Check if worlds are null in config
         if (TumbleManager.getGameWorld() == null) {
-            Bukkit.getServer().getLogger().warning("It appears you have not configured a game world for Tumble.");
-            Bukkit.getServer().getLogger().info("If this is your first time running the plugin, you may disregard this message.");
+            Bukkit.getServer().getLogger().warning("[tumble] It appears you have not configured a game world for Tumble.");
+            Bukkit.getServer().getLogger().info("[tumble] If this is your first time running the plugin, you may disregard this message.");
         }
         if (TumbleManager.getLobbyWorld() == null) {
-            Bukkit.getServer().getLogger().warning("It appears you have not configured a lobby world for Tumble.");
-            Bukkit.getServer().getLogger().info("If this is your first time running the plugin, you may disregard this message.");
+            Bukkit.getServer().getLogger().warning("[tumble] It appears you have not configured a lobby world for Tumble.");
+            Bukkit.getServer().getLogger().info("[tumble] If this is your first time running the plugin, you may disregard this message.");
         }
+
+        // Init message
+        Bukkit.getServer().getLogger().info("[tumble] Tumble successfully enabled!");
     }
 }

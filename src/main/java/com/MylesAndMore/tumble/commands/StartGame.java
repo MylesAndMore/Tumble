@@ -1,19 +1,17 @@
 package com.MylesAndMore.tumble.commands;
 
-import com.MylesAndMore.tumble.GameManager;
+import com.MylesAndMore.tumble.Game;
 import com.MylesAndMore.tumble.TumbleManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
-import java.util.List;
+import java.util.Objects;
 
 public class StartGame implements CommandExecutor {
-    // Define the startGame method so that other classes can refrence it
-    public void startGame(CommandSender sender, String[] args) {
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Check if sender has perms to run command
         if (sender.hasPermission("tumble.start")) {
             // Check if there is a lobbyWorld specified in config
@@ -22,28 +20,54 @@ public class StartGame implements CommandExecutor {
                 if (TumbleManager.getPlayersInLobby().size() > 1) {
                     // Check if there is a gameWorld specified in config
                     if (TumbleManager.getGameWorld() != null) {
-                        sender.sendMessage("Checking world, this could take a few moments...");
-                        // Use multiverse to load game world
-                        // If the load was successful, start game
-                        if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
-                            sender.sendMessage("Generating layers...");
-                            // Check which gamemode to initiate from the config file
-                            if (GameManager.createGame(TumbleManager.getPlugin().getConfig().getString("gameMode"))) {
-                                // If game type exists, send players to the world
-                                // At this point, layers have been generated, and items have been allotted from the createGame method
-                                sendWorld();
+                        // Check if a game is already pending to start
+                        if (!Objects.equals(Game.getGame().getGameState(), "waiting")) {
+                            sender.sendMessage(ChatColor.BLUE + "Generating layers, please wait.");
+                            // Use multiverse to load game world
+                            // If the load was successful, start game
+                            if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
+                                // If there is no starting argument,
+                                if (args.length == 0) {
+                                    // pull which gamemode to initiate from the config file
+                                    if (!Game.getGame().startGame(TumbleManager.getGameType())) {
+                                        // Sender feedback for if the game failed to start
+                                        if (Objects.equals(Game.getGame().getGameState(), "starting")) {
+                                            sender.sendMessage(ChatColor.RED + "A game is already starting!");
+                                        }
+                                        else if (Objects.equals(Game.getGame().getGameState(), "running")) {
+                                            sender.sendMessage(ChatColor.RED + "A game is already running!");
+                                        }
+                                        else {
+                                            sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
+                                        }
+                                    }
+                                }
+                                // If there was an argument for gameType, pass that into the startGame method
+                                else {
+                                    if (!Game.getGame().startGame(args[0])) {
+                                        // Sender feedback for if the game failed to start
+                                        if (Objects.equals(Game.getGame().getGameState(), "starting")) {
+                                            sender.sendMessage(ChatColor.RED + "A game is already starting!");
+                                        }
+                                        else if (Objects.equals(Game.getGame().getGameState(), "running")) {
+                                            sender.sendMessage(ChatColor.RED + "A game is already running!");
+                                        }
+                                        else {
+                                            sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + args[0]);
+                                        }
+                                    }
+                                }
                             }
+                            // If load was unsuccessful, give feedback
+                            // Note: this should not occur unless the config file was edited externally,
+                            // because the plugin prevents adding "worlds" that are not actually present to the config.
                             else {
-                                // If game type does not exist, give sender feedback
-                                sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
+                                sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + TumbleManager.getGameWorld());
+                                sender.sendMessage(ChatColor.RED + "Is the configuration file correct?");
                             }
                         }
-                        // If load was unsuccessful, give feedback
-                        // Note: this should not occur unless the config file was edited externally,
-                        // because the plugin prevents adding "worlds" that are not actually present to the config.
                         else {
-                            sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + TumbleManager.getGameWorld());
-                            sender.sendMessage(ChatColor.RED + "Is the configuration file correct?");
+                            sender.sendMessage(ChatColor.RED + "A game is already queued to begin!");
                         }
                     }
                     // Feedback for if there is no gameWorld in the config
@@ -64,29 +88,6 @@ public class StartGame implements CommandExecutor {
         else {
             sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
         }
-    }
-
-    public void sendWorld() {
-        // Create Locations to scatter players around the first layer
-
-        // While there are still players in the lobby, send them to the gameWorld
-        // This is just a way of sending everybody in the lobby to the game
-        for (List<Player> playersInLobby = TumbleManager.getPlayersInLobby(); playersInLobby.size() > 0; playersInLobby = TumbleManager.getPlayersInLobby()) {
-            // Get a singular player from the player list
-            Player aPlayer = playersInLobby.get(0);
-            // Teleport that player to the spawn of the gameWorld
-            aPlayer.teleport(Bukkit.getWorld(TumbleManager.getGameWorld()).getSpawnLocation());
-        }
-
-        // Add a little break because it can take the clients a bit to load into the new world
-        // Then, transition to another method because this one is getting really long
-        // In that method: set a flag to monitor the playerDeathEvent so we know when all the players have died
-        // Also start music
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        startGame(sender, args);
         return true;
     }
 }

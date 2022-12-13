@@ -8,6 +8,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
+/**
+ * Class to store long return methods to make writing this plugin slightly less painful.
+ */
 public class TumbleManager {
     // Tumble plugin
     public static Plugin getPlugin() {
@@ -18,6 +21,7 @@ public class TumbleManager {
     public static String getPermissionMessage() { return TumbleManager.getPlugin().getConfig().getString("permissionMessage"); }
     public static String getGameWorld() { return TumbleManager.getPlugin().getConfig().getString("gameWorld"); }
     public static String getLobbyWorld() { return TumbleManager.getPlugin().getConfig().getString("lobbyWorld"); }
+    public static String getGameType() { return TumbleManager.getPlugin().getConfig().getString("gameMode"); }
     public static List<Player> getPlayersInGame() { return Bukkit.getServer().getWorld(TumbleManager.getGameWorld()).getPlayers(); }
     public static List<Player> getPlayersInLobby() { return Bukkit.getServer().getWorld(TumbleManager.getLobbyWorld()).getPlayers(); }
 
