@@ -12,6 +12,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -281,4 +282,15 @@ public class EventListener implements Listener {
             }
         }
     }
+    
+    @EventHandler
+    public void InventoryDragEvent(InventoryDragEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        if (event.getWhoClicked().getWorld() == Bukkit.getWorld((TumbleManager.getGameWorld()))) {
+            event.setCancelled(true);
+        }
+    }
+    
 }

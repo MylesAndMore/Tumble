@@ -67,13 +67,13 @@ Scroll down for more options to configure your game.
   - Acceptable options include: shovels, snowballs, mixed  
   - *Default:* ```mixed```  
 
-- ```hideJoinLeaveMessages```
+- ```hideJoinLeaveMessages```  
   - Hides join/leave messages in public chat.  
   - *Default:* ```false```  
 
-- ```permissionMessage```
+- ```permissionMessage```  
   - Customize the message that displays when the player does not have permission to execute a command from this plugin.  
 
-## Issues & Feedback
+## Issues & Feedback  
 
-Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on our [GitHub issues page](https://github.com/MylesAndMore/tumble/issues/new)!
+Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on our [GitHub issues page](https://github.com/MylesAndMore/tumble/issues/new)!  
