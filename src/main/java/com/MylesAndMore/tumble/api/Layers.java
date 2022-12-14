@@ -12,25 +12,77 @@ import java.util.Random;
 public class Layers {
 
     public Layers(){
-        // Make the other layers more common than the glass layer
-        for (int i = 0; i < 10; i++) {
-            matList.add(gen0);
-            matList.add(gen1);
-            matList.add(gen2);
-            matList.add(gen3);
-            matList.add(gen4);
-            matList.add(gen5);
-            matList.add(gen6);
-            matList.add(gen7);
-            matList.add(gen8);
-            matList.add(gen9);
-            matList.add(gen10);
-            matList.add(gen12);
-            matList.add(gen15);
-            matList.add(gen16);
-        }
-        // Glass layer
+        matList.add(gen0);
+        matList.add(gen1);
+        matList.add(gen2);
+        matList.add(gen3);
+        matList.add(gen4);
+        matList.add(gen5);
+        matList.add(gen6);
+        matList.add(gen7);
+        matList.add(gen8);
+        matList.add(gen9);
+        matList.add(gen10);
+        matList.add(gen12);
+        matList.add(gen14);
+        matList.add(gen15);
+        matList.add(gen16);
+        matList.add(gen0);
+        matList.add(gen1);
+        matList.add(gen2);
+        matList.add(gen3);
+        matList.add(gen4);
+        matList.add(gen5);
+        matList.add(gen6);
+        matList.add(gen7);
+        matList.add(gen8);
+        matList.add(gen9);
+        matList.add(gen10);
+        matList.add(gen12);
+        matList.add(gen14);
+        matList.add(gen15);
+        matList.add(gen16);
+        matList.add(gen0);
+        matList.add(gen1);
+        matList.add(gen2);
+        matList.add(gen3);
+        matList.add(gen4);
+        matList.add(gen5);
+        matList.add(gen6);
+        matList.add(gen7);
+        matList.add(gen8);
+        matList.add(gen9);
+        matList.add(gen10);
+        matList.add(gen12);
+        matList.add(gen14);
+        matList.add(gen15);
+        matList.add(gen16);
+        // Troll glass layer
         matList.add(gen11);
+
+        safeMatList.add(gen1);
+        safeMatList.add(gen2);
+        safeMatList.add(gen4);
+        safeMatList.add(gen5);
+        safeMatList.add(gen7);
+        safeMatList.add(gen9);
+        safeMatList.add(gen10);
+        safeMatList.add(gen1);
+        safeMatList.add(gen2);
+        safeMatList.add(gen4);
+        safeMatList.add(gen5);
+        safeMatList.add(gen7);
+        safeMatList.add(gen9);
+        safeMatList.add(gen10);
+        safeMatList.add(gen1);
+        safeMatList.add(gen2);
+        safeMatList.add(gen4);
+        safeMatList.add(gen5);
+        safeMatList.add(gen7);
+        safeMatList.add(gen9);
+        safeMatList.add(gen10);
+        // Troll glass layer
+        safeMatList.add(gen11);
     }
 
     // Define Random class
@@ -42,9 +94,7 @@ public class Layers {
         return matList.get(random.nextInt(matList.size()));
     }
 
-    // Define the list that will store the material lists
-    private final List<List<Material>> matList = new ArrayList<>();
-
+    public List<Material> getSafeMaterialList() { return safeMatList.get(random.nextInt(safeMatList.size())); }
 
     // Begin lists
 
@@ -68,7 +118,7 @@ public class Layers {
         add(Material.GRASS_BLOCK);
         add(Material.GRASS_BLOCK);
         add(Material.GRASS_BLOCK);
-        // add(Material.COBWEB);
+        add(Material.COBWEB);
     }};
 
     private final List<Material> gen1 = new ArrayList<>() {{
@@ -262,6 +312,14 @@ public class Layers {
         add(Material.GLASS);
         add(Material.GLASS);
         add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
+        add(Material.GLASS);
         add(Material.WHITE_STAINED_GLASS);
     }};
 
@@ -272,6 +330,14 @@ public class Layers {
         add(Material.OAK_SLAB);
         add(Material.BRICK_WALL);
         add(Material.BRICK_STAIRS);
+    }};
+
+    private final List<Material> gen14 = new ArrayList<>() {{
+        add(Material.LECTERN);
+        add(Material.OBSIDIAN);
+        add(Material.SPONGE);
+        add(Material.BEEHIVE);
+        add(Material.DRIED_KELP_BLOCK);
     }};
 
     private final List<Material> gen15 = new ArrayList<>() {{
@@ -296,5 +362,9 @@ public class Layers {
         add(Material.JUNGLE_SLAB);
         add(Material.JUNGLE_TRAPDOOR);
     }};
+
+    private final List<List<Material>> matList = new ArrayList<>();
+
+    private final List<List<Material>> safeMatList = new ArrayList<>();
 
 }
