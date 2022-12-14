@@ -13,6 +13,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -131,18 +133,17 @@ public class EventListener implements Listener {
                     // Check to see if the last snowball was thrown less than 200ms ago, if so, don't allow another
                     // if ((System.currentTimeMillis() - lastTimeP) < 200) { event.setCancelled(true); }
                     // else {
-                        // // Otherwise, continue with logic
-                        // lastTimeP = System.currentTimeMillis();
-                        // // This prevents players from shooting snowballs before the game actually begins
-                        if (Objects.equals(Game.getGame().getGameState(), "starting")) {
-                            event.setCancelled(true);
-                        }
-                        else {
-                            // This gives players a snowball when they've used one
-                            Bukkit.getServer().getScheduler().runTask(TumbleManager.getPlugin(), () -> {
-                                player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
-                            });
-                        }
+                    // // Otherwise, continue with logic
+                    // lastTimeP = System.currentTimeMillis();
+                    // // This prevents players from shooting snowballs before the game actually begins
+                    if (Objects.equals(Game.getGame().getGameState(), "starting")) {
+                        event.setCancelled(true);
+                    } else {
+                        // This gives players a snowball when they've used one
+                        Bukkit.getServer().getScheduler().runTask(TumbleManager.getPlugin(), () -> {
+                            player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1));
+                        });
+                    }
                     // }
                 }
             }
@@ -172,8 +173,7 @@ public class EventListener implements Listener {
                             // then remove that block.
                             event.getHitBlock().setType(Material.AIR);
                         }
-                    }
-                    else if (event.getHitEntity() != null) {
+                    } else if (event.getHitEntity() != null) {
                         // if it was an entity, check if it hit a player,
                         if (event.getHitEntity() instanceof Player hitPlayer) {
                             // then cancel the knockback (has to be delayed by a tick for some reason)
@@ -233,9 +233,9 @@ public class EventListener implements Listener {
             if (event.getClickedBlock().getWorld() == Bukkit.getWorld(TumbleManager.getGameWorld())) {
                 // Then check to see if the player interacted less than 150ms ago
                 // if ((System.currentTimeMillis() - lastTimeI) < 150) return;
-                    // If not, set that block to air (break it)
+                // If not, set that block to air (break it)
                 // else {
-                    // lastTimeI = System.currentTimeMillis();
+                // lastTimeI = System.currentTimeMillis();
                 event.getClickedBlock().setType(Material.AIR);
                 // }
             }
@@ -279,4 +279,16 @@ public class EventListener implements Listener {
             }
         }
     }
+
+    @EventHandler
+    public void InventoryDragEvent(InventoryDragEvent event) {
+        if (TumbleManager.getGameWorld() == null) {
+            return;
+        }
+        if (event.getWhoClicked().getWorld() == Bukkit.getWorld((TumbleManager.getGameWorld()))) {
+            event.setCancelled(true);
+
+        }
+    }
+
 }
