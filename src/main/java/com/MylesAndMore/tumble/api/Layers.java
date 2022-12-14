@@ -59,6 +59,30 @@ public class Layers {
         matList.add(gen16);
         // Troll glass layer
         matList.add(gen11);
+
+        safeMatList.add(gen1);
+        safeMatList.add(gen2);
+        safeMatList.add(gen4);
+        safeMatList.add(gen5);
+        safeMatList.add(gen7);
+        safeMatList.add(gen9);
+        safeMatList.add(gen10);
+        safeMatList.add(gen1);
+        safeMatList.add(gen2);
+        safeMatList.add(gen4);
+        safeMatList.add(gen5);
+        safeMatList.add(gen7);
+        safeMatList.add(gen9);
+        safeMatList.add(gen10);
+        safeMatList.add(gen1);
+        safeMatList.add(gen2);
+        safeMatList.add(gen4);
+        safeMatList.add(gen5);
+        safeMatList.add(gen7);
+        safeMatList.add(gen9);
+        safeMatList.add(gen10);
+        // Troll glass layer
+        safeMatList.add(gen11);
     }
 
     // Define Random class
@@ -70,6 +94,7 @@ public class Layers {
         return matList.get(random.nextInt(matList.size()));
     }
 
+    public List<Material> getSafeMaterialList() { return safeMatList.get(random.nextInt(safeMatList.size())); }
 
     // Begin lists
 
@@ -93,7 +118,7 @@ public class Layers {
         add(Material.GRASS_BLOCK);
         add(Material.GRASS_BLOCK);
         add(Material.GRASS_BLOCK);
-        // add(Material.COBWEB);
+        add(Material.COBWEB);
     }};
 
     private final List<Material> gen1 = new ArrayList<>() {{
@@ -339,5 +364,7 @@ public class Layers {
     }};
 
     private final List<List<Material>> matList = new ArrayList<>();
+
+    private final List<List<Material>> safeMatList = new ArrayList<>();
 
 }
