@@ -17,8 +17,8 @@ A huge thanks to *Catmanjoe* for porting these worlds! This game would not be th
 4. Import both worlds into Multiverse. You can do this by running the command ```/mv import <your-world-name> normal``` for both worlds.
 5. Now you can link each world! Do this with  ```/tumble:link <your-lobby-world> lobby``` and ```/tumble:link <your-game-world> game``` respectively.  
 6. Teleport to your new lobby world by using ```/mvtp <your-lobby-world>```.  
-7. Set the correct spawn location in this world using ```/setworlspawn```. For me, the correct coordinates were ```/setworldspawn place holder L```, but your results may vary.  
-8. Set the location that the winner will be teleported using ```tumble:winloc```. Again, the correct coordinates were ```tumble:winloc wait no u``` in my case.  
+7. Set the correct spawn location in this world using ```/setworldspawn```. For me, the correct coordinates were ```/setworldspawn -341.5 58 -340.5```, but your results may vary.  
+8. Set the location that the winner will be teleported using ```tumble:winloc```. Again, the correct coordinates were ```tumble:winloc -362.5 76 -340.5``` in my case.  
 9. Now, teleport to the game world. Use ```/mvtp <your-game world>```.  
 10. Set the correct spawn point of this world. This is also where the game will generate its blocks. My preferred position is ```/setworldspawn 0 60 0```, but you may place the spawn whereever you like.  
 
