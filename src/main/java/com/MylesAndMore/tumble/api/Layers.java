@@ -94,6 +94,9 @@ public class Layers {
         return matList.get(random.nextInt(matList.size()));
     }
 
+    /**
+     * @return A random predefined List of Materials that are okay to spawn players on top of
+     */
     public List<Material> getSafeMaterialList() { return safeMatList.get(random.nextInt(safeMatList.size())); }
 
     // Begin lists

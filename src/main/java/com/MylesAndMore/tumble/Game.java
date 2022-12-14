@@ -49,6 +49,8 @@ public class Game {
     private int gameID = -1;
     // Define a variable for the autostart PID
     private int autoStartID = -1;
+    // Define a variable for music ID
+    private int musicID = -1;
     // Define a variable to keep the list of tracks that have already played in the game
     List<String> sounds = new ArrayList<>();
 
@@ -128,6 +130,7 @@ public class Game {
                             displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
                             setGamemode(gamePlayers, GameMode.SURVIVAL);
                             gameState = "running";
+                            playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
                         }, 20);
                     }, 20);
                 }, 20);
@@ -440,6 +443,30 @@ public class Game {
         }
     }
 
+    private void playMusic(@NotNull List<Player> players, @NotNull SoundCategory category, float volume, float pitch) {
+        if (sounds.size() == 0) {
+            sounds.addAll(List.of(
+                    "minecraft:tumble.0",
+                    "minecraft:tumble.1",
+                    "minecraft:tumble.2",
+                    "minecraft:tumble.3",
+                    "minecraft:tumble.4",
+                    "minecraft:tumble.5",
+                    "minecraft:tumble.6",
+                    "minecraft:tumble.7",
+                    "minecraft:tumble.8",
+                    "minecraft:tumble.9"));
+        }
+        String currentSong = sounds.get(Random.nextInt(sounds.size()));
+        for (Player aPlayer : players) {
+            aPlayer.playSound(aPlayer.getLocation(), currentSong, category, volume, pitch);
+        }
+        sounds.remove(currentSong);
+        musicID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            playMusic(gamePlayers, SoundCategory.NEUTRAL, 1, 1);
+        }, 1460);
+    }
+
     /**
      * Teleports a list of players to the specified scatter locations in the gameWorld
      * @param players a List of Players to teleport
@@ -576,6 +603,8 @@ public class Game {
         displayActionbar(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
         // Wait 10s (200t), then
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+            // Stop music from replaying
+            Bukkit.getServer().getScheduler().cancelTask(musicID);
             // First, check to see if there is a separate location to tp the winner to
             if ((TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.x") != 0) && (TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.y") != 0)  && (TumbleManager.getPlugin().getConfig().getDouble("winnerTeleport.z") != 0)) {
                 // Tp the winner to that location
