@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This class holds the methods that generate blocks in-game such as cylinders, cubiods, and clump logic.
+ */
 public class Generator {
     /**
      * Generates a layer (bascally just a cylinder) as best as it can w/ blocks
