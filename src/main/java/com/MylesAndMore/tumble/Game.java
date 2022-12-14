@@ -230,7 +230,7 @@ public class Game {
             }
             else if (Random.nextInt(4) == 2) {
                 // Multi-tiered circle
-                Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), layers.getSafeMaterialList());
                 Generator.generateLayer(layer, 13, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK), layers.getMaterialList());
