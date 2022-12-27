@@ -8,8 +8,8 @@ java {
     }
 }
 
-group 'tumble'
-version '1.0.1'
+group 'Tumble'
+version '1.0.2'
 
 repositories {
     // Use Maven Central for resolving dependencies.
