@@ -1,6 +1,6 @@
 main: com.MylesAndMore.tumble.Main
 name: Tumble
-version: 1.0.1
+version: 1.0.2
 description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
 api-version: 1.19
 load: STARTUP
@@ -12,39 +12,39 @@ commands:
   reload:
     description: Reloads the plugin's config.
     usage: '§cUsage: /tumble:reload'
-    permission: reload
+    permission: tumble.reload
   link:
     description: Links a world on the server as a lobby/game world.
     usage: '§cUsage: /tumble:link <world> (lobby|game)'
-    permission: link
+    permission: tumble.link
     aliases: [linkworld, link-world]
   start:
     description: Force starts a Tumble match with an optional game type.
     usage: '§cUsage: /tumble:start [gameType]'
-    permission: start
+    permission: tumble.start
   winlocation:
     description: Links the location to teleport the winning player of a game.
     usage: '§cUsage: /tumble:winlocation [x] [y] [z]'
-    permission: winlocation
+    permission: tumble.winlocation
     aliases: [win-location, winloc, win-loc]
   autostart:
     description: Configures the auto start functions of Tumble.
     usage: '§cUsage: /tumble:autostart <playerAmount> [enable|disable]'
-    permission: autostart
+    permission: tumble.autostart
     aliases: [auto-start]
 permissions:
-  reload:
+  tumble.reload:
     description: Allows you to reload the plugin's config.
     default: op
-  link:
+  tumble.link:
     description: Allows you to link a world on the server as a lobby/game world.
     default: op
-  start:
+  tumble.start:
     description: Allows you to start a Tumble match.
     default: op
-  winlocation:
+  tumble.winlocation:
     description: Allows you to link a win location.
     default: op
-  autostart:
+  tumble.autostart:
     description: Allows you to set the autostart details of Tumble.
     default: op
