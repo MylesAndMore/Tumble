@@ -12,7 +12,7 @@ public class SetAutoStart implements CommandExecutor{
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         // Check if sender has perms to run command
-        if (sender.hasPermission("autostart")) {
+        if (sender.hasPermission("tumble.autostart")) {
             // Check if game and lobby worlds are null
             if (TumbleManager.getGameWorld() != null) {
                 if (TumbleManager.getLobbyWorld() != null) {
