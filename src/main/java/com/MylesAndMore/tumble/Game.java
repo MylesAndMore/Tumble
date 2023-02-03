@@ -94,6 +94,8 @@ public class Game {
                     // Generate the correct layers for a Shovels game
                     // The else statement is just in case the generator fails; this command will fail
                     if (generateLayers(type)) {
+                        // Put all players in spectator to prevent them from getting kicked for flying
+                        setGamemode(gamePlayers, GameMode.SPECTATOR);
                         // Send all players from lobby to the game
                         scatterPlayers(TumbleManager.getPlayersInLobby());
                     } else {
