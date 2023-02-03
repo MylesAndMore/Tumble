@@ -96,8 +96,6 @@ public class Game {
                     // Generate the correct layers for a Shovels game
                     // The else statement is just in case the generator fails; this command will fail
                     if (generateLayers(type)) {
-                        // Put all players in spectator to prevent them from getting kicked for flying
-                        setGamemode(TumbleManager.getPlayersInLobby(), GameMode.SPECTATOR);
                         // Send all players from lobby to the game
                         scatterPlayers(TumbleManager.getPlayersInLobby());
                     } else {
@@ -111,6 +109,10 @@ public class Game {
             // If a game creation succeeded, then,
             // Update the game's players for later
             gamePlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
+            // Put all players in spectator to prevent them from getting kicked for flying (this needs a delay bc servers are SLOOOWWW)
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(TumbleManager.getPlugin(), () -> {
+                setGamemode(gamePlayers, GameMode.SPECTATOR);
+            }, 25);
             // Update the round's players for later
             roundPlayers = new ArrayList<>(TumbleManager.getPlayersInGame());
             // Create a list that will later keep track of each player's wins
