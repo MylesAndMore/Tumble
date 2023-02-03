@@ -1,6 +1,6 @@
 main: com.MylesAndMore.tumble.Main
 name: Tumble
-version: 1.0.2
+version: 1.0.3
 description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
 api-version: 1.19
 load: STARTUP
