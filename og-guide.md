@@ -11,7 +11,7 @@ A huge thanks to *Catmanjoe* for porting these worlds! This game would not be th
 
     - [Lobby (new edition)](https://mcpedl.com/mc-2017-new-mini-games-lobby-download-map/)  
     - [Lobby (old edition)](https://mcpedl.com/minecraft-2016-classic-mini-games-lobby-map/)  
-    - [Arena](https://www.planetminecraft.com/project/minecraft-2016-classic-mini-games-lobby-download-bedrock-edition/)  
+    - [Arena](https://www.planetminecraft.com/project/minecraft-classic-tumble-mode-arena-download-java/)  
 2. Take note of the names of the world folders (you may rename them), we will need this in a moment.
 3. Start and join your server.
 4. Import both worlds into Multiverse. You can do this by running the command ```/mv import <your-world-name> normal``` for both worlds.
