@@ -1,6 +1,6 @@
-package com.MylesAndMore.tumble.commands;
+package com.MylesAndMore.Tumble.commands;
 
-import com.MylesAndMore.tumble.TumbleManager;
+import com.MylesAndMore.Tumble.plugin.Constants;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -8,15 +8,13 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class SetWinnerLoc implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Check if sender has perms to run command
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender.hasPermission("tumble.winlocation")) {
-            // Check if the lobby world has been configured
-            if (TumbleManager.getLobbyWorld() != null) {
-                // Check if the sender is a player
+            if (Constants.getLobbyWorld() != null) {
                 if (sender instanceof Player) {
                     // Check the sender entered the correct number of args
                     if (args.length == 3) {
@@ -32,12 +30,12 @@ public class SetWinnerLoc implements CommandExecutor {
                         } catch (Exception e){
                             sender.sendMessage(ChatColor.RED + "Invalid input arguments.");
                         }
-                        // Check if any of the args were 0 (this will cause future problems so we prevent it here)
+                        // Check if any of the args were 0 (this will cause future problems, so we prevent it here)
                         if (!((args0 == 0) || (args1 == 0) || (args2 == 0))) {
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", args0);
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", args1);
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.z", args2);
-                            TumbleManager.getPlugin().saveConfig();
+                            Constants.getPlugin().getConfig().set("winnerTeleport.x", args0);
+                            Constants.getPlugin().getConfig().set("winnerTeleport.y", args1);
+                            Constants.getPlugin().getConfig().set("winnerTeleport.z", args2);
+                            Constants.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Win location successfully set!");
                             sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
                         }
@@ -52,10 +50,10 @@ public class SetWinnerLoc implements CommandExecutor {
                         // if so, check if any of their locations are zero
                         if (!((senderPos.getX() == 0) || (senderPos.getY() == 0) || (senderPos.getZ() == 0))) {
                             // set the config values to their current pos
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", senderPos.getX());
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", senderPos.getY());
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.z", senderPos.getZ());
-                            TumbleManager.getPlugin().saveConfig();
+                            Constants.getPlugin().getConfig().set("winnerTeleport.x", senderPos.getX());
+                            Constants.getPlugin().getConfig().set("winnerTeleport.y", senderPos.getY());
+                            Constants.getPlugin().getConfig().set("winnerTeleport.z", senderPos.getZ());
+                            Constants.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Win location successfully set!");
                             sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
                         }
@@ -68,9 +66,7 @@ public class SetWinnerLoc implements CommandExecutor {
                         return false;
                     }
                 }
-                // Check if the sender is the console
                 else if (sender instanceof ConsoleCommandSender) {
-                    // Check if the correct # of args were entered
                     if (args.length == 3) {
                         double args0 = 0;
                         double args1 = 0;
@@ -84,12 +80,11 @@ public class SetWinnerLoc implements CommandExecutor {
                         } catch (Exception e){
                             sender.sendMessage(ChatColor.RED + "Invalid input arguments.");
                         }
-                        // Check if any of the args were 0 (this will cause future problems so we prevent it here)
                         if (!((args0 == 0) || (args1 == 0) || (args2 == 0))) {
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.x", args0);
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.y", args1);
-                            TumbleManager.getPlugin().getConfig().set("winnerTeleport.z", args2);
-                            TumbleManager.getPlugin().saveConfig();
+                            Constants.getPlugin().getConfig().set("winnerTeleport.x", args0);
+                            Constants.getPlugin().getConfig().set("winnerTeleport.y", args1);
+                            Constants.getPlugin().getConfig().set("winnerTeleport.z", args2);
+                            Constants.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Win location successfully set!");
                             sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
                         }
@@ -108,7 +103,7 @@ public class SetWinnerLoc implements CommandExecutor {
             }
         }
         else {
-            sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
+            sender.sendMessage(ChatColor.RED + Constants.getPermissionMessage());
         }
         return true;
     }

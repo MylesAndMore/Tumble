@@ -5,7 +5,7 @@ description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame fr
 api-version: 1.19
 load: STARTUP
 author: MylesAndMore
-website: https://github.com/MylesAndMore/tumble
+website: https://github.com/MylesAndMore/Tumble
 depend:
   - Multiverse-Core
 commands:

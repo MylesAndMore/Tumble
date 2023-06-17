@@ -1,35 +1,30 @@
-package com.MylesAndMore.tumble.commands;
+package com.MylesAndMore.Tumble.commands;
 
-import com.MylesAndMore.tumble.Game;
-import com.MylesAndMore.tumble.TumbleManager;
+import com.MylesAndMore.Tumble.game.Game;
+import com.MylesAndMore.Tumble.plugin.Constants;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class StartGame implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Check if sender has perms to run command
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender.hasPermission("tumble.start")) {
-            // Check if there is a lobbyWorld specified in config
-            if (TumbleManager.getLobbyWorld() != null) {
-                // Check if there is more than one person in lobby
-                if (TumbleManager.getPlayersInLobby().size() > 1) {
-                    // Check if there is a gameWorld specified in config
-                    if (TumbleManager.getGameWorld() != null) {
-                        // Check if a game is already pending to start
+            if (Constants.getLobbyWorld() != null) {
+                if (Constants.getPlayersInLobby().size() > 1) {
+                    if (Constants.getGameWorld() != null) {
                         if (!Objects.equals(Game.getGame().getGameState(), "waiting")) {
                             sender.sendMessage(ChatColor.BLUE + "Generating layers, please wait.");
-                            // Use multiverse to load game world
-                            // If the load was successful, start game
-                            if (TumbleManager.getMVWorldManager().loadWorld(TumbleManager.getGameWorld())) {
+                            // Use multiverse to load game world--if the load was successful, start game
+                            if (Constants.getMVWorldManager().loadWorld(Constants.getGameWorld())) {
                                 // If there is no starting argument,
                                 if (args.length == 0) {
                                     // pull which gamemode to initiate from the config file
-                                    if (!Game.getGame().startGame(TumbleManager.getGameType())) {
+                                    if (!Game.getGame().startGame(Constants.getGameType())) {
                                         // Sender feedback for if the game failed to start
                                         if (Objects.equals(Game.getGame().getGameState(), "starting")) {
                                             sender.sendMessage(ChatColor.RED + "A game is already starting!");
@@ -38,11 +33,11 @@ public class StartGame implements CommandExecutor {
                                             sender.sendMessage(ChatColor.RED + "A game is already running!");
                                         }
                                         else {
-                                            sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + TumbleManager.getPlugin().getConfig().getString("gameMode"));
+                                            sender.sendMessage(ChatColor.RED + "Failed to recognize game of type " + ChatColor.GRAY + Constants.getPlugin().getConfig().getString("gameMode"));
                                         }
                                     }
                                 }
-                                // If there was an argument for gameType, pass that into the startGame method
+                                // If there was an argument for gameType, pass that instead
                                 else {
                                     if (!Game.getGame().startGame(args[0])) {
                                         // Sender feedback for if the game failed to start
@@ -62,7 +57,7 @@ public class StartGame implements CommandExecutor {
                             // Note: this should not occur unless the config file was edited externally,
                             // because the plugin prevents adding "worlds" that are not actually present to the config.
                             else {
-                                sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + TumbleManager.getGameWorld());
+                                sender.sendMessage(ChatColor.RED + "Failed to find a world named " + ChatColor.GRAY + Constants.getGameWorld());
                                 sender.sendMessage(ChatColor.RED + "Is the configuration file correct?");
                             }
                         }
@@ -70,12 +65,10 @@ public class StartGame implements CommandExecutor {
                             sender.sendMessage(ChatColor.RED + "A game is already queued to begin!");
                         }
                     }
-                    // Feedback for if there is no gameWorld in the config
                     else {
                         sender.sendMessage(ChatColor.RED + "Please link a game world first!");
                     }
                 }
-                // Feedback for if there is only one person online
                 else {
                     sender.sendMessage(ChatColor.RED + "You can't start a game with yourself!");
                 }
@@ -84,9 +77,8 @@ public class StartGame implements CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "Please link a lobby world first!");
             }
         }
-        // Feedback for if the sender has no perms
         else {
-            sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
+            sender.sendMessage(ChatColor.RED + Constants.getPermissionMessage());
         }
         return true;
     }
