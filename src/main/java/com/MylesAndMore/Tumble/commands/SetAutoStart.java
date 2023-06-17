@@ -1,22 +1,20 @@
-package com.MylesAndMore.tumble.commands;
+package com.MylesAndMore.Tumble.commands;
 
-import com.MylesAndMore.tumble.TumbleManager;
+import com.MylesAndMore.Tumble.plugin.Constants;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class SetAutoStart implements CommandExecutor{
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        // Check if sender has perms to run command
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (sender.hasPermission("tumble.autostart")) {
-            // Check if game and lobby worlds are null
-            if (TumbleManager.getGameWorld() != null) {
-                if (TumbleManager.getLobbyWorld() != null) {
-                    // Check the amount of args entered
+            if (Constants.getGameWorld() != null) {
+                if (Constants.getLobbyWorld() != null) {
                     if (args.length == 2) {
                         // Check the player # argument and parse it into an int
                         int args0;
@@ -30,20 +28,19 @@ public class SetAutoStart implements CommandExecutor{
                             return true;
                         }
                         // PlayerAmount & enable/disable were entered
-                        // Check if a playerAmount between 2-8 was entered
                         if ((args0 >= 2) && (args0 <= 8)) {
                             if (Objects.equals(args[1], "enable")) {
                                 // Write values to the config
-                                TumbleManager.getPlugin().getConfig().set("autoStart.players", args0);
-                                TumbleManager.getPlugin().getConfig().set("autoStart.enabled", true);
-                                TumbleManager.getPlugin().saveConfig();
+                                Constants.getPlugin().getConfig().set("autoStart.players", args0);
+                                Constants.getPlugin().getConfig().set("autoStart.enabled", true);
+                                Constants.getPlugin().saveConfig();
                                 sender.sendMessage(ChatColor.GREEN + "Configuration saved!");
                                 sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
                             }
                             else if (Objects.equals(args[1], "disable")) {
-                                TumbleManager.getPlugin().getConfig().set("autoStart.players", args0);
-                                TumbleManager.getPlugin().getConfig().set("autoStart.enabled", false);
-                                TumbleManager.getPlugin().saveConfig();
+                                Constants.getPlugin().getConfig().set("autoStart.players", args0);
+                                Constants.getPlugin().getConfig().set("autoStart.enabled", false);
+                                Constants.getPlugin().saveConfig();
                                 sender.sendMessage(ChatColor.GREEN + "Configuration saved!");
                                 sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
                             }
@@ -68,8 +65,8 @@ public class SetAutoStart implements CommandExecutor{
                             return true;
                         }
                         if ((args0 >= 2) && (args0 <= 8)) {
-                            TumbleManager.getPlugin().getConfig().set("autoStart.players", args0);
-                            TumbleManager.getPlugin().saveConfig();
+                            Constants.getPlugin().getConfig().set("autoStart.players", args0);
+                            Constants.getPlugin().saveConfig();
                             sender.sendMessage(ChatColor.GREEN + "Configuration saved!");
                             sender.sendMessage(ChatColor.GREEN + "Run " + ChatColor.GRAY +  "/tumble:reload " + ChatColor.GREEN + "the changes to take effect.");
                         }
@@ -90,7 +87,7 @@ public class SetAutoStart implements CommandExecutor{
             }
         }
         else {
-            sender.sendMessage(ChatColor.RED + TumbleManager.getPermissionMessage());
+            sender.sendMessage(ChatColor.RED + Constants.getPermissionMessage());
         }
         return true;
     }

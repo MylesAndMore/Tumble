@@ -1,4 +1,4 @@
-package com.MylesAndMore.tumble.api;
+package com.MylesAndMore.Tumble.game;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -6,24 +6,20 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
- * This class holds the methods that generate blocks in-game such as cylinders, cubiods, and clump logic.
+ * Holds the methods that generate blocks in-game such as cylinders, cuboids, and block clumps.
  */
 public class Generator {
     /**
-     * Generates a layer (bascally just a cylinder) as best as it can w/ blocks
-     * 
-     * @return A list of Blocks containing all the blocks it just changed
-     * 
+     * Generates a layer (basically just a cylinder) as good as possible with blocks
      * @param center The center of the layer (Location)
      * @param radius The whole number radius of the circle
      * @param height The whole number height of the circle (1 for a flat layer)
      * @param material The Material to use for generation
+     *
+     * @return A list of Blocks containing all the blocks it just changed
      */
     public static List<Block> generateLayer(Location center, int radius, int height, Material material) {
         int Cx = center.getBlockX();
@@ -38,7 +34,7 @@ public class Generator {
             for (int x = Cx - radius; x <= Cx + radius; x++) {
                 for (int z = Cz - radius; z <= Cz + radius; z++) {
                     if ((Cx - x) * (Cx - x) + (Cz - z) * (Cz - z) <= rSq) {
-                        world.getBlockAt(x, y, z).setType(material);
+                        Objects.requireNonNull(world).getBlockAt(x, y, z).setType(material);
                         blocks.add(world.getBlockAt(x, y, z));
                     }
                 }
@@ -48,7 +44,7 @@ public class Generator {
     }
 
     /**
-     * Generates a cubiod (literally just a ripoff fill command)
+     * Generates a cuboid (literally just a ripoff fill command)
      * @param firstPos The first Location to fill (first three coords in a fill command)
      * @param secondPos The second Location to fill to (second three coords)
      * @param material The Material to fill
@@ -66,7 +62,7 @@ public class Generator {
         for (int x = fX; x <= sX; x++) {
             for (int y = fY; y <= sY; y++) {
                 for (int z = fZ; z <= sZ; z++) {
-                    world.getBlockAt(x, y, z).setType(material);
+                    Objects.requireNonNull(world).getBlockAt(x, y, z).setType(material);
                     blocks.add(world.getBlockAt(x, y, z));
                 }
             }
@@ -82,22 +78,16 @@ public class Generator {
      * More Materials = more randomization
      */
     public static void generateClumps(List<Block> blockList, List<Material> materialList) {
-        // Define random class
         Random random = new Random();
-        // Define new blocks list so we can manipulate it
+        // Make new lists so we can manipulate them
         List<Block> blocks = new ArrayList<>(blockList);
-        // Define new shuffled Materials list
         List<Material> materials = new ArrayList<>(materialList);
         Collections.shuffle(materials);
-        // This loop will run until there are no blocks left to change
         while (blocks.size() > 0) {
-            // Get a random Material from the provided materials list
             Material randomMaterial = materials.get(random.nextInt(materials.size()));
-            // Gets the first Block from the list, to modify
             Block aBlock = blocks.get(0);
-            // Modifies the block
             aBlock.setType(randomMaterial);
-            // Get the blocks around that and change it to that same material
+            // Get the blocks around that and change it to that same material (this is the basis of "clumps")
             if (blocks.contains(aBlock.getRelative(BlockFace.NORTH))) {
                 aBlock.getRelative(BlockFace.NORTH).setType(randomMaterial);
                 blocks.remove(aBlock.getRelative(BlockFace.NORTH));
