@@ -20,7 +20,7 @@ If you've never heard of it, [Tumble](https://minecraft-archive.fandom.com/wiki/
 
 ## Setup
 
-1. Simply [download](https://github.com/MylesAndMore/tumble/releases) the plugin's JAR file and place it in your server's plugins directory.  
+1. Simply [download](https://github.com/MylesAndMore/Tumble/releases) the plugin's JAR file and place it in your server's plugins directory.  
 
     - *Note: Multiverse is also required for the plugin to run, you may download it [here](https://www.spigotmc.org/resources/multiverse-core.390/).*  
 
@@ -36,7 +36,7 @@ If you've never heard of it, [Tumble](https://minecraft-archive.fandom.com/wiki/
 
 Scroll down for more options to configure your game.  
 
-## Commands
+## Commands/Permissions
 
 - ```/tumble:reload```
 
@@ -59,6 +59,8 @@ Scroll down for more options to configure your game.
   - *Description:* Configures the auto start functions of Tumble.
   - *Usage:* ```/tumble:autostart <playerAmount> [enable|disable]```
   - *Permission:* ```tumble.autostart```
+- *Permission:* ```tumble.update```
+  - Players with this permission will receive a notification upon joining if Tumble is out of date.
 
 ## Configuration  
 
