@@ -1,9 +1,11 @@
 package com.MylesAndMore.Tumble;
 
 import com.MylesAndMore.Tumble.commands.*;
-import com.MylesAndMore.Tumble.plugin.Metrics;
 import com.MylesAndMore.Tumble.plugin.Constants;
 import com.MylesAndMore.Tumble.plugin.EventListener;
+
+import org.bstats.bukkit.Metrics;
+
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,9 +19,8 @@ public class Main extends JavaPlugin{
         this.getCommand("start").setExecutor(new StartGame());
         this.getCommand("winlocation").setExecutor(new SetWinnerLoc());
         this.getCommand("autostart").setExecutor(new SetAutoStart());
-        int pluginId = 16940;
-        Metrics metrics = new Metrics(this, 16940);
-        this.saveDefaultConfig(); // Saves the default config file (packaged in the JAR) if we haven't already\
+        new Metrics(this, 16940);
+        this.saveDefaultConfig(); // Saves the default config file (packaged in the JAR) if we haven't already
 
         // Check if worlds are null in config and throw warnings if so
         if (Constants.getGameWorld() == null) {
