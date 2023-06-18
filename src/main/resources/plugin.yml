@@ -1,6 +1,6 @@
-main: com.MylesAndMore.tumble.Main
+main: com.MylesAndMore.Tumble.Main
 name: Tumble
-version: 1.0.3
+version: 1.0.4
 description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
 api-version: 1.19
 load: STARTUP
@@ -47,4 +47,7 @@ permissions:
     default: op
   tumble.autostart:
     description: Allows you to set the autostart details of Tumble.
+    default: op
+  tumble.update:
+    description: Allows you to get a notification if Tumble is out of date.
     default: op

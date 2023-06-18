@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id "com.github.johnrengelman.shadow" version "7.1.0"
 }
 
 java {
@@ -8,17 +9,28 @@ java {
     }
 }
 
-group 'Tumble'
-version '1.0.3'
-
 repositories {
     mavenCentral() // Use Maven Central for resolving dependencies.
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = "https://repo.onarandombox.com/content/groups/public/" }
+    maven { url "https://repo.onarandombox.com/content/groups/public/" }
+    maven { url "https://repo.jeff-media.com/public/"}
 }
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
-    compileOnly 'com.onarandombox.multiversecore:Multiverse-Core:4.3.1'
+    compileOnly('org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT')
+    compileOnly('com.onarandombox.multiversecore:Multiverse-Core:4.3.1')
+    implementation('org.bstats:bstats-bukkit:3.0.2')
+    implementation('com.jeff_media:SpigotUpdateChecker:3.0.3')
+}
+
+// Disable generation of the normal JAR to reduce confusion and only generate the correctly shadowed JAR including bStats
+jar.enabled = false
+jar.finalizedBy(shadowJar)
+shadowJar {
+    archiveBaseName.set('Tumble')
+    archiveClassifier.set('')
+    archiveVersion.set('1.0.4')
+    relocate 'org.bstats', 'com.MylesAndMore.bstats'
+    relocate 'com.jeff_media.updatechecker', 'com.MylesAndMore.updatechecker'
 }
