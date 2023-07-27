@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly('org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT')
+    compileOnly('org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT')
     compileOnly('com.onarandombox.multiversecore:Multiverse-Core:4.3.1')
     implementation('org.bstats:bstats-bukkit:3.0.2')
     implementation('com.jeff_media:SpigotUpdateChecker:3.0.3')
@@ -30,7 +30,7 @@ jar.finalizedBy(shadowJar)
 shadowJar {
     archiveBaseName.set('Tumble')
     archiveClassifier.set('')
-    archiveVersion.set('1.0.4')
+    archiveVersion.set('1.0.4-1.12.2')
     relocate 'org.bstats', 'com.MylesAndMore.bstats'
     relocate 'com.jeff_media.updatechecker', 'com.MylesAndMore.updatechecker'
 }

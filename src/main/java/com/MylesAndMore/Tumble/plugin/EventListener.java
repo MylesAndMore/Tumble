@@ -11,7 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
@@ -110,7 +109,7 @@ public class EventListener implements Listener {
                     }
                     else {
                         // Give players a snowball when they've used one (infinite snowballs)
-                        Bukkit.getServer().getScheduler().runTask(Constants.getPlugin(), () -> player.getInventory().addItem(new ItemStack(Material.SNOWBALL, 1)));
+                        Bukkit.getServer().getScheduler().runTask(Constants.getPlugin(), () -> player.getInventory().addItem(new ItemStack(Material.SNOW_BALL, 1)));
                     }
                 }
             }
@@ -155,15 +154,6 @@ public class EventListener implements Listener {
         if (Constants.getGameWorld() == null) { return; }
         // Cancel movement if the game is starting (so players can't move before the game starts)
         if (Objects.equals(Game.getGame().getGameState(), "starting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void BlockDropItemEvent(BlockDropItemEvent event) {
-        if (Constants.getGameWorld() == null) { return; }
-        // If a block was going to drop an item (ex. snow dropping snowballs) in the game world, cancel it
-        if (event.getBlock().getWorld() == Bukkit.getWorld(Constants.getGameWorld())) {
             event.setCancelled(true);
         }
     }

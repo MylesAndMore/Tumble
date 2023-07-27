@@ -11,9 +11,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -51,7 +49,7 @@ public class Game {
      * @param type The type of game
      * @return true if the game succeeds creation, and false if not
      */
-    public boolean startGame(@NotNull String type) {
+    public boolean startGame(String type) {
         // Check if the game is starting or running
         if (Objects.equals(gameState, "starting")) { return false; }
         else if (Objects.equals(gameState, "running")) { return false; }
@@ -118,7 +116,7 @@ public class Game {
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Constants.getPlugin(), () -> {
             gameState = "waiting";
             displayActionbar(Constants.getPlayersInLobby(), ChatColor.GREEN + "Game will begin in 15 seconds!");
-            playSound(Constants.getPlayersInLobby(), Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
+            playSound(Constants.getPlayersInLobby(), Sound.BLOCK_NOTE_CHIME, SoundCategory.BLOCKS, 1, 1);
             Constants.getMVWorldManager().loadWorld(Constants.getGameWorld());
             // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
             autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Constants.getPlugin(), () -> startGame(Constants.getGameType()), 300);
@@ -131,7 +129,7 @@ public class Game {
     public void cancelStart() {
         Bukkit.getServer().getScheduler().cancelTask(Game.getGame().getAutoStartID());
         displayActionbar(Constants.getPlayersInLobby(), ChatColor.RED + "Game start cancelled!");
-        playSound(Constants.getPlayersInLobby(), Sound.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1, 1);
+        playSound(Constants.getPlayersInLobby(), Sound.BLOCK_NOTE_BASS, SoundCategory.BLOCKS, 1, 1);
         gameState = null;
         autoStartID = -1;
     }
@@ -196,22 +194,22 @@ public class Game {
                 Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), layers.getSafeMaterialList());
                 Generator.generateLayer(layer, 13, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRASS), layers.getMaterialList());
                 Generator.generateLayer(layer, 4, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.PODZOL), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.DIRT), layers.getMaterialList());
             }
             else {
                 // Multi-tiered square
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.SNOW_BLOCK), layers.getSafeMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRASS_BLOCK), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRASS), layers.getMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.PODZOL), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.DIRT), layers.getMaterialList());
             }
-            ItemStack shovel = new ItemStack(Material.IRON_SHOVEL);
+            ItemStack shovel = new ItemStack(Material.IRON_SPADE);
             shovel.addEnchantment(Enchantment.SILK_TOUCH, 1);
             if (Objects.equals(gameState, "running")) {
                 giveItems(Constants.getPlayersInGame(), shovel);
@@ -222,7 +220,7 @@ public class Game {
             // Schedule a process to give snowballs after 2m30s (so people can't island, the OG game had this); add 160t because of the countdown
             gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Constants.getPlugin(), () -> {
                 clearInventories(gamePlayers);
-                giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
+                giveItems(gamePlayers, new ItemStack(Material.SNOW_BALL));
                 displayActionbar(gamePlayers, ChatColor.DARK_RED + "Showdown!");
                 playSound(gamePlayers, Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.HOSTILE, 1, 1);
                 // End the round in another 2m30s
@@ -253,7 +251,7 @@ public class Game {
                 Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getSafeMaterialList());
                 Generator.generateLayer(layer, 13, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.STONE), layers.getMaterialList());
                 Generator.generateLayer(layer, 4, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
@@ -262,7 +260,7 @@ public class Game {
                 Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getSafeMaterialList());
                 Generator.generateLayer(layer, 13, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.STONE), layers.getMaterialList());
                 Generator.generateLayer(layer, 4, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
@@ -271,7 +269,7 @@ public class Game {
                 Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getSafeMaterialList());
                 Generator.generateLayer(layer, 13, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.STONE), layers.getMaterialList());
                 Generator.generateLayer(layer, 4, 1, Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
@@ -281,7 +279,7 @@ public class Game {
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getSafeMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRANITE), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.STONE), layers.getMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
@@ -290,7 +288,7 @@ public class Game {
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getSafeMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRANITE), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.STONE), layers.getMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
@@ -299,16 +297,16 @@ public class Game {
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getSafeMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
                 layer.setY(layer.getY() - 1);
-                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRANITE), layers.getMaterialList());
+                Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.STONE), layers.getMaterialList());
                 Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
                 layer.setY(layer.getY() - 1);
                 Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
             }
             if (Objects.equals(gameState, "running")) {
-                giveItems(Constants.getPlayersInGame(), new ItemStack(Material.SNOWBALL));
+                giveItems(Constants.getPlayersInGame(), new ItemStack(Material.SNOW_BALL));
             }
             else if (Objects.equals(gameState, "starting")) {
-                giveItems(Constants.getPlayersInLobby(), new ItemStack(Material.SNOWBALL));
+                giveItems(Constants.getPlayersInLobby(), new ItemStack(Material.SNOW_BALL));
             }
             // End the round in 5m
             gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Constants.getPlugin(), () -> roundEnd(null), 6160);
@@ -369,7 +367,7 @@ public class Game {
      * @param stay The stay duration (in ticks)
      * @param fadeOut The fadeOut duration (in ticks)
      */
-    private void displayTitles(List<Player> players, String title, @Nullable String subtitle, int fadeIn, int stay, int fadeOut) {
+    private void displayTitles(List<Player> players, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
         for (Player aPlayer : players) {
             aPlayer.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
         }
@@ -394,9 +392,9 @@ public class Game {
      * @param volume The volume of the sound
      * @param pitch The pitch of the sound
      */
-    private void playSound(@NotNull List<Player> players, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch) {
+    private void playSound(List<Player> players, Sound sound, SoundCategory category, float volume, float pitch) {
         for (Player aPlayer : players) {
-            aPlayer.playSound(aPlayer, sound, category, volume, pitch);
+            aPlayer.playSound(aPlayer.getLocation(), sound, category, volume, pitch);
         }
     }
 
@@ -425,12 +423,12 @@ public class Game {
         }
     }
 
-    private void roundEnd(@Nullable Player winner) {
+    private void roundEnd(Player winner) {
         // Cancel the tasks that auto-end the round
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         // Clear old layers (as a fill command, this would be /fill ~-20 ~-20 ~-20 ~20 ~ ~20 relative to spawn)
         Generator.generateCuboid(new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 20, gameSpawn.getZ() - 20), new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20), Material.AIR);
-        playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 5, 0);
+        playSound(gamePlayers, Sound.BLOCK_NOTE_PLING, SoundCategory.BLOCKS, 5, 0);
         // Check if there was a definite winner or not
         if (winner != null) {
             // Set the wins of the player to their current # of wins + 1

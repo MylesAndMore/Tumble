@@ -3,7 +3,6 @@ package com.MylesAndMore.Tumble.commands;
 import com.MylesAndMore.Tumble.plugin.Constants;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameRule;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -45,8 +44,7 @@ public class SetWorldConfig implements CommandExecutor {
                             Constants.getPlugin().getConfig().set("gameWorld", world);
                             Constants.getPlugin().saveConfig();
                             // Set the gamerule of doImmediateRespawn in the gameWorld for later
-                            Objects.requireNonNull(Bukkit.getWorld(world)).setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-                            Objects.requireNonNull(Bukkit.getWorld(world)).setGameRule(GameRule.KEEP_INVENTORY, true);
+                            Objects.requireNonNull(Bukkit.getWorld(world)).setGameRuleValue("KEEP_INVENTORY", "true");
                             sender.sendMessage(ChatColor.GREEN + "Game world successfully linked: " + ChatColor.GRAY + world);
                             sender.sendMessage(ChatColor.GREEN + "Please restart your server for the changes to take effect; " + ChatColor.RED + "reloading the plugin is insufficient!");
                         }
