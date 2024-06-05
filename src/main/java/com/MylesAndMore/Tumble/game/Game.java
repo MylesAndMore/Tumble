@@ -12,8 +12,8 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -396,7 +396,7 @@ public class Game {
      */
     private void playSound(@NotNull List<Player> players, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch) {
         for (Player aPlayer : players) {
-            aPlayer.playSound(aPlayer, sound, category, volume, pitch);
+            aPlayer.playSound(aPlayer.getLocation(), sound, category, volume, pitch);
         }
     }
 

@@ -202,7 +202,7 @@ public class Layers {
             matList.add(gen10);
             List<Material> gen12 = new ArrayList<>() {{
                 add(Material.DIRT);
-                add(Material.DIRT_PATH);
+                add(Material.GRASS_PATH);
                 add(Material.GRASS_BLOCK);
                 add(Material.OAK_SLAB);
                 add(Material.BRICK_WALL);
