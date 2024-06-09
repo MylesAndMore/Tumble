@@ -61,9 +61,7 @@ public class EventListener implements Listener {
     public void PlayerDeathEvent(PlayerDeathEvent event) {
         if (game.gamePlayers.contains(event.getEntity())) {
             game.playerDeath(event.getEntity());
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                event.getEntity().spigot().respawn();
-            }, 10);
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getEntity().spigot().respawn(), 10);
         }
     }
 

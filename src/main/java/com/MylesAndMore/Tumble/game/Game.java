@@ -219,6 +219,9 @@ public class Game {
 
     public void addPlayer(Player p) {
         gamePlayers.add(p);
+        if (ConfigManager.waitArea != null) {
+            p.teleport(ConfigManager.waitArea);
+        }
         if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
             autoStart();
         }
