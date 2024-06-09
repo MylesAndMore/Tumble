@@ -1,6 +1,5 @@
 package com.MylesAndMore.Tumble.game;
 
-import com.MylesAndMore.Tumble.commands.Config;
 import com.MylesAndMore.Tumble.plugin.ConfigManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
@@ -197,6 +196,12 @@ public class Game {
     public void killGame() {
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         HandlerList.unregisterAll(eventListener);
+        clearInventories(gamePlayers);
+        for (Player aPlayer : gamePlayers) {
+            if (aPlayer.getWorld().equals(arena.world)) {
+                aPlayer.teleport(Objects.requireNonNull(ConfigManager.lobby));
+            }
+        }
         arena.game = null;
     }
 
@@ -210,6 +215,7 @@ public class Game {
         if (gamePlayers.size() < 2) {
             gameEnd();
         }
+        p.getInventory().clear();
         p.teleport(ConfigManager.lobby);
     }
 

@@ -40,6 +40,7 @@ public class Leave implements CommandExecutor, TabCompleter {
         }
 
         game.removePlayer((Player) sender);
+        sender.sendMessage(ChatColor.GREEN + "Game left.");
         return true;
     }
 

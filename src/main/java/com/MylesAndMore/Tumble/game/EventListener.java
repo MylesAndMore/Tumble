@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import com.MylesAndMore.Tumble.plugin.ConfigManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
+import com.MylesAndMore.Tumble.plugin.GameType;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
@@ -73,6 +74,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void ProjectileLaunchEvent(ProjectileLaunchEvent event) {
+        if (game.roundType != GameType.SNOWBALLS) { return; }
         if (event.getEntity().getWorld() == gameWorld
                 && event.getEntity() instanceof Snowball
                 && event.getEntity().getShooter() instanceof Player player) {
@@ -90,7 +92,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void ProjectileHitEvent(ProjectileHitEvent event) {
-        if (event.getHitBlock() == null) { return; }
+        if (event.getHitBlock() == null && game.roundType != GameType.SNOWBALLS) { return; }
         // Removes blocks that snowballs thrown by players have hit in the game world
         if (event.getHitBlock().getWorld() == gameWorld) {
             if (event.getEntity() instanceof Snowball) {
@@ -142,6 +144,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerInteractEvent(PlayerInteractEvent event) {
+        if (game.roundType != GameType.SHOVELS) {return;}
         // Remove blocks when clicked in the game world (all gamemodes require this functionality)
         if (event.getAction() == Action.LEFT_CLICK_BLOCK
                 && Objects.requireNonNull(event.getClickedBlock()).getWorld() == gameWorld) {

@@ -35,6 +35,7 @@ public class ForceStop implements CommandExecutor, TabCompleter {
         }
 
         game.killGame();
+        sender.sendMessage(ChatColor.GREEN + "Game stopped.");
         return true;
     }
 

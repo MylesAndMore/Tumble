@@ -35,6 +35,7 @@ public class ForceStart implements CommandExecutor, TabCompleter {
         }
 
         game.startGame();
+        sender.sendMessage(ChatColor.GREEN + "Starting game");
         return true;
     }
 
