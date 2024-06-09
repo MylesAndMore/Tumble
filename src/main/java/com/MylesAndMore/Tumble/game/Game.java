@@ -1,5 +1,6 @@
 package com.MylesAndMore.Tumble.game;
 
+import com.MylesAndMore.Tumble.commands.Config;
 import com.MylesAndMore.Tumble.plugin.ConfigManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
@@ -224,11 +225,12 @@ public class Game {
      */
     public void autoStart() {
         // Wait for the player to load in
+        int waitDuration = ConfigManager.waitDuration;
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            displayActionbar(gamePlayers, ChatColor.GREEN + "Game will begin in 15 seconds!");
+            displayActionbar(gamePlayers, ChatColor.GREEN + "Game will begin in "+waitDuration+" seconds!");
             playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
             // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
-            autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::startGame, 300);
+            autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::startGame, waitDuration * 20L);
         }, 50);
     }
 
