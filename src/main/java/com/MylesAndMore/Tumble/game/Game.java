@@ -56,9 +56,6 @@ public class Game {
 
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
         autoStartID = -1;
-//        if (waitingPlayers.size() < 2) {
-//            return false;
-//        }
 
         eventListener = new EventListener(this);
         Bukkit.getServer().getPluginManager().registerEvents(eventListener, plugin);
@@ -175,6 +172,7 @@ public class Game {
             // Wait 10s (200t), then
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 // First, check to see if there is a separate location to tp the winner to
+                clearArena();
                 if (ConfigManager.winnerLobby != null && winner != null) {
                     winner.teleport(ConfigManager.winnerLobby);
                     // Remove the winner from the game so they don't get double-tp'd

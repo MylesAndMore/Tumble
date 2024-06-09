@@ -59,8 +59,11 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent event) {
-        if (event.getEntity().getWorld() == gameWorld) {
+        if (game.gamePlayers.contains(event.getEntity())) {
             game.playerDeath(event.getEntity());
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                event.getEntity().spigot().respawn();
+            }, 10);
         }
     }
 
@@ -92,7 +95,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void ProjectileHitEvent(ProjectileHitEvent event) {
-        if (event.getHitBlock() == null && game.roundType != GameType.SNOWBALLS) { return; }
+        if (event.getHitBlock() == null || game.roundType != GameType.SNOWBALLS) { return; }
         // Removes blocks that snowballs thrown by players have hit in the game world
         if (event.getHitBlock().getWorld() == gameWorld) {
             if (event.getEntity() instanceof Snowball) {
