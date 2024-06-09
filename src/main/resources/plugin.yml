@@ -3,51 +3,51 @@ name: Tumble
 version: 1.0.4
 description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
 api-version: 1.16
-load: STARTUP
+load: POSTWORLD
 author: MylesAndMore
 website: https://github.com/MylesAndMore/Tumble
-depend:
-  - Multiverse-Core
 commands:
+  join:
+    description: Joins a Tumble match.
+    usage: '§cUsage: /tumble:join <arenaName> [gameType]'
+    permission: tumble.join
+  leave:
+    description: Quits a Tumble match.
+    usage: '§cUsage: /tumble:leave [arenaName]'
+    permission: tumble.leave
+  forcestart:
+    description: Force starts a Tumble match.
+    usage: '§cUsage: /tumble:forcestart [arenaName]'
+    permission: tumble.forcestart
+  forcestop:
+    description: Force stops a Tumble match.
+    usage: '§cUsage: /tumble:forcestop [arenaName]'
+    permission: tumble.forcestop
+  config:
+    description: Modify arenas and settings
+    usage: '§cUsage: /tumble:config *not implemented yet*'
+    permission: tumble.config
   reload:
     description: Reloads the plugin's config.
     usage: '§cUsage: /tumble:reload'
     permission: tumble.reload
-  link:
-    description: Links a world on the server as a lobby/game world.
-    usage: '§cUsage: /tumble:link <world> (lobby|game)'
-    permission: tumble.link
-    aliases: [linkworld, link-world]
-  start:
-    description: Force starts a Tumble match with an optional game type.
-    usage: '§cUsage: /tumble:start [gameType]'
-    permission: tumble.start
-  winlocation:
-    description: Links the location to teleport the winning player of a game.
-    usage: '§cUsage: /tumble:winlocation [x] [y] [z]'
-    permission: tumble.winlocation
-    aliases: [win-location, winloc, win-loc]
-  autostart:
-    description: Configures the auto start functions of Tumble.
-    usage: '§cUsage: /tumble:autostart <playerAmount> [enable|disable]'
-    permission: tumble.autostart
-    aliases: [auto-start]
 permissions:
+  tumble.join:
+    description: Allows you to join a Tumble match.
+    default: true
+  tumble.leave:
+    description: Allows you to leave a Tumble match.
+    default: true
+  tumble.forcestart:
+    description: Allows you to force start a Tumble match.
+    default: op
+  tumble.forcestop:
+    description: Allows you to force stop a Tumble match.
+    default: op
+  tumble.config:
+    description: Allows you to get a notification if Tumble is out of date.
+    default: op
   tumble.reload:
     description: Allows you to reload the plugin's config.
     default: op
-  tumble.link:
-    description: Allows you to link a world on the server as a lobby/game world.
-    default: op
-  tumble.start:
-    description: Allows you to start a Tumble match.
-    default: op
-  tumble.winlocation:
-    description: Allows you to link a win location.
-    default: op
-  tumble.autostart:
-    description: Allows you to set the autostart details of Tumble.
-    default: op
-  tumble.update:
-    description: Allows you to get a notification if Tumble is out of date.
-    default: op
+

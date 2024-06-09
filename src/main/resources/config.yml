@@ -1,24 +1,39 @@
-# Customize the default game mode; options include: shovels, snowballs, mixed
-gameMode: mixed
-
-# Customize the auto start feature of Tumble; players can be up to 8
-autoStart:
-  enabled: false
-  players: 2
-
 # Hides player join/leave messages in public chat
 hideJoinLeaveMessages: false
 
-# Customize the message that displays when the player does not have permission to execute a command from this plugin
-permissionMessage: You do not have permission to perform this command!
+# Duration in seconds to wait for more players to join
+wait-duration: 15
+# Teleport players somewhere while waiting for the game to start
+# Keep in mind that these coordinates cannot be zero! Use something like 0.5 instead
+enable-wait-area: false
+wait-area:
+  x:
+  y:
+  z:
+  world:
 
-# Customize the place that the winner is teleported after a game ends
-# Keep in mind that these coordinates cannot be zero! The teleport will fail if any of them are; use something like 0.5 instead
-winnerTeleport: 
+# Place where everyone is teleported to after a game ends REQUIRED
+# Keep in mind that these coordinates cannot be zero! Use something like 0.5 instead
+lobby-spawn:
+  x: 0.5
+  y: 100
+  z: 0.5
+  world: world
+
+# Place that the winner is teleported after a game ends
+# Keep in mind that these coordinates cannot be zero! Use something like 0.5 instead
+enable-winner-lobby-spawn: false
+winner-lobby-spawn:
   x: 
   y: 
-  z: 
+  z:
+  world:
 
-# The plugin will populate these fields automatically
-lobbyWorld: 
-gameWorld:
+# Add/remove as you wish
+# Keep in mind that these coordinates cannot be zero! Use something like 0.5 instead
+arenas:
+  'test':
+    x: 0.5
+    y: 60
+    z: 0.5
+    world: world
