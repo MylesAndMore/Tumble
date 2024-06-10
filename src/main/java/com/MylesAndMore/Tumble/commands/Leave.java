@@ -27,16 +27,10 @@ public class Leave implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        Game game;
-        if (args.length < 1 || args[0] == null) {
-            game = ConfigManager.findGamePlayerIsIn((Player)sender);
-            if (game == null) {
-                sender.sendMessage(ChatColor.RED + "Missing arena name");
-                return false;
-            }
-        }
-        else {
-            game = ConfigManager.arenas.get(args[0]).game;
+        Game game = ConfigManager.findGamePlayerIsIn((Player)sender);
+        if (game == null) {
+            sender.sendMessage(ChatColor.RED + "You are not in a game.");
+            return false;
         }
 
         game.removePlayer((Player) sender);
@@ -46,9 +40,6 @@ public class Leave implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (args.length == 1) {
-            return ConfigManager.arenas.keySet().stream().toList();
-        }
         return new ArrayList<>();
     }
 }

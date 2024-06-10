@@ -13,7 +13,7 @@ commands:
     permission: tumble.join
   leave:
     description: Quits a Tumble match.
-    usage: '§cUsage: /tumble:leave [arenaName]'
+    usage: '§cUsage: /tumble:leave'
     permission: tumble.leave
   forcestart:
     description: Force starts a Tumble match.
@@ -24,8 +24,8 @@ commands:
     usage: '§cUsage: /tumble:forcestop [arenaName]'
     permission: tumble.forcestop
   config:
-    description: Modify arenas and settings
-    usage: '§cUsage: /tumble:config *not implemented yet*'
+    description: Modify arenas and worlds.
+    usage: '§cUsage: /tumble:config <add|set|disable|delete> <data>'
     permission: tumble.config
   reload:
     description: Reloads the plugin's config.

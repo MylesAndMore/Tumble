@@ -52,7 +52,7 @@ public class ConfigManager {
             Result<Location>res = readWorld(config.getConfigurationSection("lobby-spawn"));
             if (!res.success) {
                 plugin.getLogger().warning("Failed to load lobby: "+res.error);
-                plugin.getLogger().severe("^ THIS IS REQUIRED, PLEASE FIX TO AVOID UNDEFINED BEHAVIOR");
+                plugin.getLogger().severe("Lobby world is required. Run '/tumble:config set lobbyWorld' ASAP");
             }
 
             lobby = res.value;
@@ -134,6 +134,46 @@ public class ConfigManager {
         res.success = true;
         res.value = new Location(world,x,y,z);
         return res;
+    }
+
+    public static void WriteConfig() {
+        if (waitArea != null) {
+            WriteWorld(plugin.getConfig().getConfigurationSection("wait-area"), waitArea);
+            plugin.getConfig().set("enable-wait-area", true);
+        }
+        else {
+            plugin.getConfig().set("enable-wait-area", false);
+        }
+
+        if (lobby != null) {
+            WriteWorld(plugin.getConfig().getConfigurationSection("lobby-spawn"), lobby);
+        }
+
+        if (winnerLobby != null) {
+            WriteWorld(plugin.getConfig().getConfigurationSection("winner-spawn"), winnerLobby);
+            plugin.getConfig().set("enable-winner-lobby", true);
+        }
+        else {
+            plugin.getConfig().set("enable-winner-lobby", true);
+        }
+
+        for (String arenaName: arenas.keySet()) {
+            ConfigurationSection c = plugin.getConfig().getConfigurationSection("arenas."+arenaName);
+            if (c == null) {
+                 c = plugin.getConfig().createSection("arenas."+arenaName);
+            }
+            WriteWorld(c, arenas.get(arenaName).location);
+        }
+
+        plugin.saveConfig();
+
+    }
+
+    private static void WriteWorld(ConfigurationSection section, Location location) {
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
+        section.set("world", Objects.requireNonNull(location.getWorld()).getName());
     }
 
     /**

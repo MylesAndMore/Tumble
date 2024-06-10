@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class Arena {
     public Game game = null;
     public final World world;
-    public final Location location;
+    public Location location;
     public final String name;
 
     /**
