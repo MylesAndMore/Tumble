@@ -7,29 +7,29 @@ load: POSTWORLD
 author: MylesAndMore
 website: https://github.com/MylesAndMore/Tumble
 commands:
-  join:
+  tumble-join:
     description: Joins a Tumble match.
-    usage: '§cUsage: /tumble:join <arenaName> [gameType]'
+    usage: '§cUsage: /tumble-join <arenaName> [gameType]'
     permission: tumble.join
-  leave:
+  tumble-leave:
     description: Quits a Tumble match.
-    usage: '§cUsage: /tumble:leave'
+    usage: '§cUsage: /tumble-leave'
     permission: tumble.leave
-  forcestart:
+  tumble-forcestart:
     description: Force starts a Tumble match.
-    usage: '§cUsage: /tumble:forcestart [arenaName]'
+    usage: '§cUsage: /tumble-forcestart [arenaName]'
     permission: tumble.forcestart
-  forcestop:
+  tumble-forcestop:
     description: Force stops a Tumble match.
-    usage: '§cUsage: /tumble:forcestop [arenaName]'
+    usage: '§cUsage: /tumble-forcestop [arenaName]'
     permission: tumble.forcestop
-  config:
+  tumble-config:
     description: Modify arenas and worlds.
-    usage: '§cUsage: /tumble:config <add|set|disable|delete> <data>'
+    usage: '§cUsage: /tumble-config <add|set|disable|delete> <data>'
     permission: tumble.config
-  reload:
+  tumble-reload:
     description: Reloads the plugin's config.
-    usage: '§cUsage: /tumble:reload'
+    usage: '§cUsage: /tumble-reload'
     permission: tumble.reload
 permissions:
   tumble.join:

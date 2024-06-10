@@ -27,6 +27,7 @@ public class ConfigManager {
      * Reads config file and populates values above
      */
     public static void readConfig() {
+        plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
         
         // arenas
@@ -52,7 +53,7 @@ public class ConfigManager {
             Result<Location>res = readWorld(config.getConfigurationSection("lobby-spawn"));
             if (!res.success) {
                 plugin.getLogger().warning("Failed to load lobby: "+res.error);
-                plugin.getLogger().severe("Lobby world is required. Run '/tumble:config set lobbyWorld' ASAP");
+                plugin.getLogger().severe("Lobby world is required. Run '/tumble-config set lobbyWorld' ASAP");
             }
 
             lobby = res.value;
@@ -107,7 +108,7 @@ public class ConfigManager {
         double x = section.getDouble("x");
         double y = section.getDouble("y");
         double z = section.getDouble("x");
-        if (x==0 || y == 0 || z == 0) {
+        if (x == 0 || y == 0 || z == 0) {
             Result<Location> res = new Result<>();
             res.success = false;
             res.error = "Arena coordinates are missing or are zero. Coordinates cannot be zero.";
@@ -138,7 +139,7 @@ public class ConfigManager {
 
     public static void WriteConfig() {
         if (waitArea != null) {
-            WriteWorld(plugin.getConfig().getConfigurationSection("wait-area"), waitArea);
+            WriteWorld(Objects.requireNonNull(plugin.getConfig().getConfigurationSection("wait-area")), waitArea);
             plugin.getConfig().set("enable-wait-area", true);
         }
         else {
@@ -146,11 +147,11 @@ public class ConfigManager {
         }
 
         if (lobby != null) {
-            WriteWorld(plugin.getConfig().getConfigurationSection("lobby-spawn"), lobby);
+            WriteWorld(Objects.requireNonNull(plugin.getConfig().getConfigurationSection("lobby-spawn")), lobby);
         }
 
         if (winnerLobby != null) {
-            WriteWorld(plugin.getConfig().getConfigurationSection("winner-spawn"), winnerLobby);
+            WriteWorld(Objects.requireNonNull(plugin.getConfig().getConfigurationSection("winner-spawn")), winnerLobby);
             plugin.getConfig().set("enable-winner-lobby", true);
         }
         else {

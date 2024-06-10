@@ -17,12 +17,12 @@ public class Main extends JavaPlugin{
     public void onEnable() {
         plugin = this;
 
-        Objects.requireNonNull(this.getCommand("reload")).setExecutor(new Reload());
-        Objects.requireNonNull(this.getCommand("config")).setExecutor(new Config());
-        Objects.requireNonNull(this.getCommand("forcestart")).setExecutor(new ForceStart());
-        Objects.requireNonNull(this.getCommand("join")).setExecutor(new Join());
-        Objects.requireNonNull(this.getCommand("leave")).setExecutor(new Leave());
-        Objects.requireNonNull(this.getCommand("forcestop")).setExecutor(new ForceStop());
+        Objects.requireNonNull(this.getCommand("tumble-reload")).setExecutor(new Reload());
+        Objects.requireNonNull(this.getCommand("tumble-config")).setExecutor(new Config());
+        Objects.requireNonNull(this.getCommand("tumble-forcestart")).setExecutor(new ForceStart());
+        Objects.requireNonNull(this.getCommand("tumble-join")).setExecutor(new Join());
+        Objects.requireNonNull(this.getCommand("tumble-leave")).setExecutor(new Leave());
+        Objects.requireNonNull(this.getCommand("tumble-forcestop")).setExecutor(new ForceStop());
         new Metrics(this, 16940);
         // TODO: change command format
 
