@@ -33,7 +33,7 @@ winner-lobby-spawn:
 # Keep in mind that these coordinates cannot be zero! Use something like 0.5 instead
 arenas:
   'test':
-    x: 0.5
-    y: 60
-    z: 0.5
+    x: 100
+    y: 100
+    z: 100
     world: world

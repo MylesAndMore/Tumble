@@ -152,10 +152,10 @@ public class ConfigManager {
 
         if (winnerLobby != null) {
             WriteWorld(Objects.requireNonNull(plugin.getConfig().getConfigurationSection("winner-spawn")), winnerLobby);
-            plugin.getConfig().set("enable-winner-lobby", true);
+            plugin.getConfig().set("enable-winner-lobby-spawn", true);
         }
         else {
-            plugin.getConfig().set("enable-winner-lobby", true);
+            plugin.getConfig().set("enable-winner-lobby-spawn", true);
         }
 
         for (String arenaName: arenas.keySet()) {

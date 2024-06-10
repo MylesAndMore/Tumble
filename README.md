@@ -28,53 +28,43 @@ If you've never heard of it, [Tumble](https://minecraft.wiki/w/Tumble) is a twis
 
 3. Start your server. The plugin will generate a couple of warnings, these are normal.
 4. Ensure that you have imported your worlds using a plugin like Multiverse. This can be done with the command ```/mv import <your-world-name> normal```.
-
-[//]: # (TODO: finish this once config system is done)
-5. Now you need to tell Tumble which world is your lobby and which world is your game arena. You can do this with  ```/tumble:link <your-lobby-world> lobby``` and ```/tumble:link <your-game-world> game``` respectively.
-6. **VERY IMPORTANT:** The plugin will teleport players to the world spawn point of each world, and generate the game's blocks around the spawn point of the game world. Ensure that your spawn points are clear of any obstructions, and that a 20x20x20 cube is cleared out from the spawn of whatever game world you are using. **Any blocks in this area will be destroyed when the game begins.**
-7. You're done! You can now start games with the command ```/tumble:start```.
+5. Now you need to tell Tumble where your lobby is and where your game arena is. You can do this by going to the center positions and running  ```/tumble-config set lobbyWorld``` and ```/tumble-config add <arenaname>``` respectively.
+6. **VERY IMPORTANT:** The plugin will teleport players to the world and generate the game's blocks around the point you set. Ensure that your spawn points are clear of any obstructions, and that a 20x20x20 cube is cleared out **Any blocks in this area will be destroyed when the game begins.**
+7. You're done! You can now start games with the command ```/tumble-start <arenaname> mixed```.
 
 Scroll down for more options to configure your game.  
 
 ## Commands/Permissions
 
-- ```/tumble:reload```
-
-  - *Description:* Reloads the plugin's configuration.
-  - *Usage:* ```/tumble:reload```
-  - *Permission:* ```tumble.reload```
-- ```/tumble:link```
-  - *Description:* Links a world on the server as a lobby or game world.
-  - *Usage:* ```/tumble:link <world> (lobby|game)```
-  - *Permission:* ```tumble.link```
-- ```/tumble:start```
-  - *Description:* Force starts a Tumble match (with an optional game type).
-  - *Usage:* ```/tumble:start [game-type]```
-  - *Permission:* ```tumble.start```
-- ```/tumble:winlocation```
-  - *Description:* Sets the location to teleport the winning player of a game. Uses the player's location if no arguments are specified.
-  - *Usage:* ```/tumble:winlocation [x] [y] [z]```
-  - *Permission:* ```tumble.winlocation```
-- ```/tumble:autostart```
-  - *Description:* Configures the auto start functions of Tumble.
-  - *Usage:* ```/tumble:autostart <playerAmount> [enable|disable]```
-  - *Permission:* ```tumble.autostart```
-- *Permission:* ```tumble.update```
-  - Players with this permission will receive a notification upon joining if Tumble is out of date.
+- **tumble-join**:
+  - Description: Joins a Tumble match.
+  - Usage: `/tumble-join <arenaName> [gameType]`
+  - Permission: tumble.join
+- **tumble-leave**:
+  - Description: Quits a Tumble match.
+  - Usage: `/tumble-leave`
+  - Permission: tumble.leave
+- **tumble-forcestart**:
+  - Description: Force starts a Tumble match.
+  - Usage: `/tumble-forcestart [arenaName]`
+  - Permission: tumble.forcestart
+- **tumble-forcestop**:
+  - Description: Force stops a Tumble match.
+  - Usage: `/tumble-forcestop [arenaName]`
+  - Permission: tumble.forcestop
+- **tumble-config**:
+  - Description: Modify arenas and worlds.
+  - Usage: `/tumble-config <add|set|disable|delete> <data>`
+  - Permission: tumble.config
+- **tumble-reload**:
+  - Description: Reloads the plugin's config.
+  - Usage: `/tumble-reload`
+  - Permission: tumble.reload
 
 ## Configuration  
+Use `/tumble-config` for modifying the config in-game. See available options with the tab auto complete feature
 
-- ```gameMode```  
-  - Customize the default game mode of Tumble.  
-  - Acceptable options include: shovels, snowballs, mixed  
-  - *Default:* ```mixed```  
-
-- ```hideJoinLeaveMessages```  
-  - Hides join/leave messages in public chat.  
-  - *Default:* ```false```  
-
-- ```permissionMessage```  
-  - Customize the message that displays when the player does not have permission to execute a command from this plugin.  
+See the comments inside config,yml for manual editing
 
 ## Issues & Feedback  
 
