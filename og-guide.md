@@ -9,18 +9,21 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
 1. Download the worlds and unzip them into your server's main/root directory. **Ensure you download the Java and not the Bedrock versions**!  
 A huge thanks to *Catmanjoe* for porting these worlds! This game would not be the same without you!
 
-    - [Lobby (new edition)](https://mcpedl.com/mc-2017-new-mini-games-lobby-download-map/)  
-    - [Lobby (old edition)](https://mcpedl.com/minecraft-2016-classic-mini-games-lobby-map/)  
-    - [Arena](https://www.planetminecraft.com/project/minecraft-classic-tumble-mode-arena-download-java/)  
+    - [Lobby (2017)](https://www.theminecraftarchitect.com/mini-game-maps/2017-mini-game-lobby)  
+    - [Lobby (2016)](https://www.theminecraftarchitect.com/mini-game-maps/2016-mini-game-lobby)  
+    - [Normal Arena](https://www.planetminecraft.com/project/minecraft-classic-tumble-mode-arena-download-java/)  
+    - [Festive Arena (Download coming soon)]()
+    - [Halloween Arena (Download coming soon)]()
+    - [Birthday Arena (Download coming soon)]()
 2. Take note of the names of the world folders (you may rename them), we will need this in a moment.
 3. Start and join your server.
-4. Import both worlds into Multiverse. You can do this by running the command ```/mv import <your-world-name> normal``` for both worlds.
-5. Now you can link each world! Do this with  ```/tumble:link <your-lobby-world> lobby``` and ```/tumble:link <your-game-world> game``` respectively.  
-6. Teleport to your new lobby world by using ```/mvtp <your-lobby-world>```.  
-7. Set the correct spawn location in this world using ```/setworldspawn```. For me, the correct coordinates were ```/setworldspawn -341.5 58 -340.5```, but your results may vary.  
-8. Set the location that the winner will be teleported using ```/tumble:winloc```. Again, the correct coordinates were ```/tumble:winloc -362.5 76 -340.5``` in my case.  
-9. Now, teleport to the game world. Use ```/mvtp <your-game world>```.  
-10. Set the correct spawn point of this world. This is also where the game will generate its blocks. My preferred position is ```/setworldspawn 0 60 0```, but you may place the spawn whereever you like.  
+4. Set your lobby spawn by going to the location and running `/tumble-config set lobbySpawn`. In the 2017 console lobby this is at `-341.5 58 -340.5`
+5. If you want to have a separate lobby spawn for the winner, set it with `/tumble-config set winnerLobbySpawn`. In the 2017 console lobby this is at `-362.5 76 -340.5`
+6. Import your arena world into Multiverse. You can do this by running the command `/mv import <your-world-name> normal`
+7. Teleport to the arena world. Use `/mvtp <your-game world>`.
+8. Now you can create the arena! Do this by going to the spawn location and running `/tumble-config add <arena-name>`. In the console arena this is at `0 60 0`
+9. Repeat steps 4, 5 and 6 for each arena
+10. Join the game by using `/tumble-join <arena-name> Mixed`(or whichever game mode you want).
 
 You're done!
 

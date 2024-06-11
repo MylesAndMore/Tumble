@@ -225,6 +225,9 @@ public class Game {
         if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
             autoStart();
         }
+        else {
+            displayActionbar(Collections.singletonList(p), ChatColor.YELLOW + "Waiting for players");
+        }
     }
 
     /**
