@@ -53,6 +53,7 @@ public class EventListener implements Listener {
             event.setQuitMessage(null);
         }
         if (event.getPlayer().getWorld() == gameWorld) {
+            event.getPlayer().teleport(ConfigManager.lobby);
             game.removePlayer(event.getPlayer());
         }
     }

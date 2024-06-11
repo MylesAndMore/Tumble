@@ -6,6 +6,7 @@ api-version: 1.16
 load: POSTWORLD
 author: MylesAndMore
 website: https://github.com/MylesAndMore/Tumble
+softdepend: [Multiverse-Core]
 commands:
   tumble-join:
     description: Joins a Tumble match.
