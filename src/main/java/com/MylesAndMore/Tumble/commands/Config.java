@@ -35,7 +35,7 @@ public class Config implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "add" -> {
                 String arenaName = args[1];
-                ConfigManager.arenas.put(arenaName, new Arena(arenaName, ((Player)sender).getLocation()));
+                ConfigManager.arenas.put(arenaName, new Arena(arenaName, ((Player)sender).getLocation(), null));
                 sender.sendMessage(ChatColor.GREEN + "Arena added.");
             }
             case "set" -> {

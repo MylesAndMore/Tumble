@@ -131,7 +131,9 @@ public class Game {
      */
     private void roundEnd() {
         // Cancel the tasks that auto-end the round
+        gameState = GameState.ENDING;
         Bukkit.getServer().getScheduler().cancelTask(gameID);
+        gameID = -1;
         // Clear old layers (as a fill command, this would be /fill ~-20 ~-20 ~-20 ~20 ~ ~20 relative to spawn)
         playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 5, 0);
         // Check if there was a definite winner or not
@@ -162,6 +164,10 @@ public class Game {
      */
     private void gameEnd() {
         if (!gamePlayers.isEmpty()) {
+            Bukkit.getServer().getScheduler().cancelTask(gameID);
+            gameID = -1;
+            Bukkit.getServer().getScheduler().cancelTask(autoStartID);
+            autoStartID = -1;
             Player winner = getPlayerWithMostWins(gameWins);
             setGamemode(gamePlayers, GameMode.SPECTATOR);
             clearInventories(gamePlayers);
@@ -193,6 +199,9 @@ public class Game {
      */
     public void killGame() {
         Bukkit.getServer().getScheduler().cancelTask(gameID);
+        gameID = -1;
+        Bukkit.getServer().getScheduler().cancelTask(autoStartID);
+        autoStartID = -1;
         HandlerList.unregisterAll(eventListener);
         clearInventories(gamePlayers);
         for (Player aPlayer : gamePlayers) {
@@ -253,7 +262,7 @@ public class Game {
         // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
         playersAlive.remove(player);
         // If there are less than 2 players in the game (1 just died),
-        if (playersAlive.size() < 2) {
+        if (playersAlive.size() < 2 && gameState == GameState.RUNNING) {
             roundEnd();
         }
     }

@@ -34,6 +34,11 @@ public class ForceStop implements CommandExecutor, TabCompleter {
             game = ConfigManager.arenas.get(args[0]).game;
         }
 
+        if (game == null) {
+            sender.sendMessage(ChatColor.RED + "No game is currently running in this arena");
+            return false;
+        }
+
         game.killGame();
         sender.sendMessage(ChatColor.GREEN + "Game stopped.");
         return true;

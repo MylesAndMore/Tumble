@@ -1,5 +1,7 @@
 package com.MylesAndMore.Tumble.commands;
 
+import com.MylesAndMore.Tumble.game.Arena;
+import com.MylesAndMore.Tumble.plugin.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,8 +22,15 @@ public class Reload implements CommandExecutor, TabCompleter {
             sender.sendMessage(ChatColor.RED + "You do not have permission to perform this command!");
             return false;
         }
+
+        for (Arena a : ConfigManager.arenas.values()) {
+            if (a.game != null) {
+                a.game.killGame();
+            }
+        }
+
         plugin.onEnable();
-        sender.sendMessage(ChatColor.GREEN + "Tumble configuration reloaded successfully.");
+        sender.sendMessage(ChatColor.GREEN + "Tumble configuration reloaded. Check console for errors.");
         return true;
     }
 

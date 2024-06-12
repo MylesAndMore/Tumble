@@ -19,6 +19,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.util.Vector;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
@@ -131,8 +132,15 @@ public class EventListener implements Listener {
     public void PlayerMoveEvent(PlayerMoveEvent event) {
         // Cancel movement if the game is starting (so players can't move before the game starts)
         if (Objects.equals(game.gameState, GameState.STARTING)
-                && event.getPlayer().getWorld().equals(gameWorld)) {
+                && event.getPlayer().getWorld().equals(gameWorld)
+                && !equalPosition(event.getFrom(),event.getTo())) {
             event.setCancelled(true);
+        }
+        // kill player if they are below a Y level
+        if (event.getPlayer().getWorld().equals(gameWorld) && game.arena.killAtY != null) {
+            if (event.getPlayer().getLocation().getY() <= game.arena.killAtY) {
+                event.getPlayer().setHealth(0);
+            }
         }
     }
 
@@ -146,7 +154,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerInteractEvent(PlayerInteractEvent event) {
-        if (game.roundType != GameType.SHOVELS) {return;}
+//        if (game.roundType != GameType.SHOVELS) {return;}
         // Remove blocks when clicked in the game world (all gamemodes require this functionality)
         if (event.getAction() == Action.LEFT_CLICK_BLOCK
                 && Objects.requireNonNull(event.getClickedBlock()).getWorld() == gameWorld) {
@@ -182,8 +190,8 @@ public class EventListener implements Listener {
         if (event.getEntity().getWorld() == gameWorld) {
             if (event.getEntity() instanceof Player) {
                 if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK
-                        && event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
-                        && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+                        || event.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK
+                        || event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                     event.setCancelled(true);
                 }
             }
@@ -205,5 +213,15 @@ public class EventListener implements Listener {
         }
     }
 
-    // TODO: stop tile drops for pistons
+    // TODO: stop tile drops for pistons, stop player from getting stuck in the waiting area after they leave
+
+    public static boolean equalPosition(Location l1, @Nullable Location l2) {
+        if (l2 == null) {
+            return true;
+        }
+        return  (l1.getX() == l2.getX()) &&
+                (l1.getY() == l2.getY()) &&
+                (l1.getZ() == l2.getZ());
+    }
+
 }
