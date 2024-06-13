@@ -69,9 +69,9 @@ public class Game {
     private void roundStart() {
         gameState = GameState.STARTING;
         playersAlive = new ArrayList<>(gamePlayers);
+        scatterPlayers(gamePlayers);
         // Put all players in spectator to prevent them from getting kicked for flying
         setGamemode(gamePlayers, GameMode.SPECTATOR);
-        scatterPlayers(gamePlayers);
         clearInventories(gamePlayers);
         clearArena();
         prepareGameType(type);
