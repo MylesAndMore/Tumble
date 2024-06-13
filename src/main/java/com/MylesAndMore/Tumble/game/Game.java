@@ -60,7 +60,6 @@ public class Game {
         eventListener = new EventListener(this);
         Bukkit.getServer().getPluginManager().registerEvents(eventListener, plugin);
 
-        // clear area in case it did not get properly cleared
         roundStart();
     }
 

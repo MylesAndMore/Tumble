@@ -20,7 +20,7 @@ A huge thanks to *Catmanjoe* for porting these worlds! This game would not be th
 4. Set your lobby spawn by going to the location and running `/tumble-config set lobbySpawn`. In the 2017 console lobby this is at `-341.5 58 -340.5`
 5. If you want to have a separate lobby spawn for the winner, set it with `/tumble-config set winnerLobbySpawn`. In the 2017 console lobby this is at `-362.5 76 -340.5`
 6. Import your arena world into Multiverse. You can do this by running the command `/mv import <your-world-name> normal`
-7. Teleport to the arena world. Use `/mvtp <your-game world>`.
+7. Teleport to the arena world. Use `/mvtp <your-world-name>`.
 8. Now you can create the arena! Do this by going to the spawn location and running `/tumble-config add <arena-name>`. In the console arena this is at `0 60 0`
 9. Repeat steps 4, 5 and 6 for each arena
 10. Join the game by using `/tumble-join <arena-name> Mixed`(or whichever game mode you want).

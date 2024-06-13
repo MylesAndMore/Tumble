@@ -24,7 +24,6 @@ public class Main extends JavaPlugin{
         Objects.requireNonNull(this.getCommand("tumble-leave")).setExecutor(new Leave());
         Objects.requireNonNull(this.getCommand("tumble-forcestop")).setExecutor(new ForceStop());
         new Metrics(this, 16940);
-        // TODO: change command format
 
         this.saveDefaultConfig(); // Saves the default config file (packaged in the JAR) if we haven't already
         ConfigManager.readConfig();
