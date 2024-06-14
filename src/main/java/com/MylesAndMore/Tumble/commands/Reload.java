@@ -25,7 +25,7 @@ public class Reload implements CommandExecutor, TabCompleter {
 
         for (Arena a : ConfigManager.arenas.values()) {
             if (a.game != null) {
-                a.game.killGame();
+                a.game.gameEnd();
             }
         }
 

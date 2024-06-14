@@ -190,7 +190,6 @@ public class Layers {
                 add(Material.REDSTONE_BLOCK);
                 add(Material.REDSTONE_LAMP);
                 add(Material.TARGET);
-                add(Material.PISTON);
                 add(Material.SLIME_BLOCK);
                 add(Material.OBSERVER);
             }};

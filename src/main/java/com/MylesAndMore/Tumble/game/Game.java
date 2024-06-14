@@ -26,9 +26,10 @@ public class Game {
     public final GameType type;
     public final Arena arena;
     public final World gameWorld;
-    public final List<Player> gamePlayers = new ArrayList<>();
     private final Location gameSpawn;
+    public final List<Player> gamePlayers = new ArrayList<>();
     private final HashMap<Player, Integer> gameWins = new HashMap<>();
+    private final HashMap<Player, ItemStack[]> inventories = new HashMap<>();
     public GameState gameState = GameState.WAITING;
     public GameType roundType;
     private int gameID = -1;
@@ -47,7 +48,7 @@ public class Game {
     /**
      * Creates a new Game
      */
-    public void startGame() {
+    public void gameStart() {
 
         // Check if the game is starting or running
         if (gameState != GameState.WAITING) {
@@ -72,6 +73,7 @@ public class Game {
         scatterPlayers(gamePlayers);
         // Put all players in spectator to prevent them from getting kicked for flying
         setGamemode(gamePlayers, GameMode.SPECTATOR);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> setGamemode(gamePlayers, GameMode.SPECTATOR), 10);
         clearInventories(gamePlayers);
         clearArena();
         prepareGameType(type);
@@ -126,7 +128,7 @@ public class Game {
     }
 
     /**
-     * Round end stuff: Finds and displays winner, starts next round if necessary
+     * Ends round: Finds and displays winner, starts next round if necessary
      */
     private void roundEnd() {
         // Cancel the tasks that auto-end the round
@@ -159,60 +161,51 @@ public class Game {
     }
 
     /**
-     * Game end stuff: Displays overall winner and teleports players to lobby
+     * Ends game: Displays overall winner and teleports players to lobby
      */
-    private void gameEnd() {
+    public void gameEnd() {
         if (!gamePlayers.isEmpty()) {
-            Bukkit.getServer().getScheduler().cancelTask(gameID);
-            gameID = -1;
-            Bukkit.getServer().getScheduler().cancelTask(autoStartID);
-            autoStartID = -1;
-            Player winner = getPlayerWithMostWins(gameWins);
+
             setGamemode(gamePlayers, GameMode.SPECTATOR);
             clearInventories(gamePlayers);
+
+            Player winner = getPlayerWithMostWins(gameWins);
             if (winner != null) {
                 displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 5, 60, 5);
             }
             displayActionbar(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
+
             // Wait 10s (200t), then
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                // First, check to see if there is a separate location to tp the winner to
+
                 clearArena();
-                if (ConfigManager.winnerLobby != null && winner != null) {
-                    winner.teleport(ConfigManager.winnerLobby);
-                    // Remove the winner from the game so they don't get double-tp'd
-                    gamePlayers.remove(winner);
+
+                for (Player p : gamePlayers) {
+                    // Restore inventories
+                    if (inventories.containsKey(p)) {
+                        p.getInventory().setContents(inventories.get(p));
+                    }
+
+                    if (p == winner && ConfigManager.winnerLobby != null) {
+                        p.teleport(ConfigManager.winnerLobby);
+                    }
+                    else {
+                        p.teleport(Objects.requireNonNull(ConfigManager.lobby));
+                    }
                 }
-                // Send all players back to lobby (spawn)
-                for (Player aPlayer : gamePlayers) {
-                    aPlayer.teleport(Objects.requireNonNull(ConfigManager.lobby));
-                }
+
             }, 200);
         }
-        HandlerList.unregisterAll(eventListener);
-        arena.game = null;
-    }
-
-    /**
-     * Force stops a game
-     */
-    public void killGame() {
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
         autoStartID = -1;
         HandlerList.unregisterAll(eventListener);
-        clearInventories(gamePlayers);
-        for (Player aPlayer : gamePlayers) {
-            if (aPlayer.getWorld().equals(arena.world)) {
-                aPlayer.teleport(Objects.requireNonNull(ConfigManager.lobby));
-            }
-        }
         arena.game = null;
     }
 
     /**
-     * Removes a player from the game
+     * Removes a player from the game.
      * Called when a player leaves the server, or if they issue the leave command
      * @param p Player to remove
      */
@@ -222,13 +215,24 @@ public class Game {
             gameEnd();
         }
         p.getInventory().clear();
+        if (inventories.containsKey(p)) {
+            p.getInventory().setContents(inventories.get(p));
+        }
         p.teleport(ConfigManager.lobby);
     }
 
+    /**
+     * Adds a player to the wait area. Called from /tumble-join
+     * Precondition: the game is in state WAITING
+     * @param p Player to add
+     */
     public void addPlayer(Player p) {
         gamePlayers.add(p);
+        // save inventory
+        inventories.put(p, p.getInventory().getContents());
         if (ConfigManager.waitArea != null) {
             p.teleport(ConfigManager.waitArea);
+            p.getInventory().clear();
         }
         if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
             autoStart();
@@ -248,7 +252,7 @@ public class Game {
             displayActionbar(gamePlayers, ChatColor.GREEN + "Game will begin in "+waitDuration+" seconds!");
             playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
             // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
-            autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::startGame, waitDuration * 20L);
+            autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::gameStart, waitDuration * 20L);
         }, 50);
     }
 
@@ -288,9 +292,7 @@ public class Game {
                 new Location(gameWorld, (x + 11.5), y, (z + 11.5), 135, 0)));
         Collections.shuffle(scatterLocations);
         for (Player aPlayer : players) {
-            if (!aPlayer.teleport(scatterLocations.get(0))) {
-                plugin.getLogger().info("dbg: FAILED TELEPORT");
-            }
+            aPlayer.teleport(scatterLocations.get(0));
             scatterLocations.remove(0); // Remove that location so multiple players won't get the same one
         }
     }

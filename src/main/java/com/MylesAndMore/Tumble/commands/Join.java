@@ -74,9 +74,15 @@ public class Join implements CommandExecutor, TabCompleter {
             if (arena.game == null) {
                 game = arena.game = new Game(arena, type);
             }
-            else {
-                sender.sendMessage(ChatColor.RED + "A game of "+type+" is currently taking place in this arena, choose another arena or join it with /tumble:join "+arena.name+" "+type);
-                return false;
+            else
+            {
+                if (arena.game.type == type) {
+                    game = arena.game;
+                }
+                else {
+                    sender.sendMessage(ChatColor.RED + "A game of "+type+" is currently taking place in this arena, choose another arena or join it with /tumble:join "+arena.name+" "+type);
+                    return false;
+                }
             }
         }
 

@@ -34,7 +34,7 @@ public class ForceStart implements CommandExecutor, TabCompleter {
             game = ConfigManager.arenas.get(args[0]).game;
         }
 
-        game.startGame();
+        game.gameStart();
         sender.sendMessage(ChatColor.GREEN + "Starting game");
         return true;
     }

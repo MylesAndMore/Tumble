@@ -120,7 +120,7 @@ public class ConfigManager {
 
         double x = section.getDouble("x");
         double y = section.getDouble("y");
-        double z = section.getDouble("x");
+        double z = section.getDouble("z");
         if (x == 0 || y == 0 || z == 0) {
             return new Result<>("Arena coordinates are missing or are zero. Coordinates cannot be zero.");
         }
