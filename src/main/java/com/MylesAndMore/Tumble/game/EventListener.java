@@ -2,7 +2,8 @@ package com.MylesAndMore.Tumble.game;
 
 import java.util.Objects;
 
-import com.MylesAndMore.Tumble.plugin.ConfigManager;
+import com.MylesAndMore.Tumble.config.ArenaManager;
+import com.MylesAndMore.Tumble.config.ConfigManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
 import org.bukkit.*;
@@ -32,7 +33,7 @@ public class EventListener implements Listener {
     Game game;
     public EventListener(Game game) {
         this.game = game;
-        this.gameWorld = game.gameWorld;
+        this.gameWorld = game.arena.gameSpawn.getWorld();
     }
     
     @EventHandler
@@ -43,7 +44,7 @@ public class EventListener implements Listener {
         }
         if (event.getPlayer().getWorld() == gameWorld) {
             // Send the player back to the lobby if they try to join in the middle of a game
-            event.getPlayer().teleport(Objects.requireNonNull(ConfigManager.lobby));
+            event.getPlayer().teleport(Objects.requireNonNull(game.arena.lobby));
         }
     }
 
@@ -54,7 +55,7 @@ public class EventListener implements Listener {
             event.setQuitMessage(null);
         }
         if (event.getPlayer().getWorld() == gameWorld) {
-            event.getPlayer().teleport(ConfigManager.lobby);
+            event.getPlayer().teleport(game.arena.lobby);
             game.removePlayer(event.getPlayer());
         }
     }
@@ -101,7 +102,7 @@ public class EventListener implements Listener {
             if (event.getEntity() instanceof Snowball) {
                 if (event.getEntity().getShooter() instanceof Player p) {
                     if (event.getHitBlock() != null) {
-                        if (event.getHitBlock().getLocation().distanceSquared(Objects.requireNonNull(game.arena.location)) < 579) {
+                        if (event.getHitBlock().getLocation().distanceSquared(Objects.requireNonNull(game.arena.gameSpawn)) < 579) {
                             p.playEffect(
                                 event.getHitBlock().getLocation(),
                                 Effect.STEP_SOUND,
@@ -209,7 +210,7 @@ public class EventListener implements Listener {
     public void PlayerRespwanEvent(PlayerRespawnEvent event) {
         // Make sure players respawn in the correct location
         if (game.gamePlayers.contains(event.getPlayer())) {
-            event.setRespawnLocation(game.arena.location);
+            event.setRespawnLocation(game.arena.gameSpawn);
         }
     }
 

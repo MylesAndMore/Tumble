@@ -1,8 +1,9 @@
 package com.MylesAndMore.Tumble.commands;
 
 import com.MylesAndMore.Tumble.game.Arena;
-import com.MylesAndMore.Tumble.plugin.ConfigManager;
-import org.bukkit.ChatColor;
+import com.MylesAndMore.Tumble.config.LanguageManager;
+import com.MylesAndMore.Tumble.config.ArenaManager;
+import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,23 +15,29 @@ import java.util.List;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
-public class Reload implements CommandExecutor, TabCompleter {
+public class Reload implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
-    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!sender.hasPermission("tumble.reload")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to perform this command!");
-            return false;
-        }
+    public String getCommandName() {
+        return "reload";
+    }
 
-        for (Arena a : ConfigManager.arenas.values()) {
+    @Override
+    public String getPermission() {
+        return "tumble.reload";
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+
+        for (Arena a : ArenaManager.arenas.values()) {
             if (a.game != null) {
                 a.game.gameEnd();
             }
         }
 
         plugin.onEnable();
-        sender.sendMessage(ChatColor.GREEN + "Tumble configuration reloaded. Check console for errors.");
+        sender.sendMessage(LanguageManager.fromKey("reload-success"));
         return true;
     }
 

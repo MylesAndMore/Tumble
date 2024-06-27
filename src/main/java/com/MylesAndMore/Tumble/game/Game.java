@@ -1,6 +1,8 @@
 package com.MylesAndMore.Tumble.game;
 
-import com.MylesAndMore.Tumble.plugin.ConfigManager;
+import com.MylesAndMore.Tumble.config.ArenaManager;
+import com.MylesAndMore.Tumble.config.ConfigManager;
+import com.MylesAndMore.Tumble.config.LanguageManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
 import net.md_5.bungee.api.ChatMessageType;
@@ -25,7 +27,6 @@ public class Game {
 
     public final GameType type;
     public final Arena arena;
-    public final World gameWorld;
     private final Location gameSpawn;
     public final List<Player> gamePlayers = new ArrayList<>();
     private final HashMap<Player, Integer> gameWins = new HashMap<>();
@@ -40,8 +41,7 @@ public class Game {
     public Game(@NotNull Arena arena, @NotNull GameType type) {
         this.arena = arena;
         this.type = type;
-        this.gameWorld = arena.world;
-        this.gameSpawn = arena.location;
+        this.gameSpawn = arena.gameSpawn;
 
     }
 
@@ -60,6 +60,10 @@ public class Game {
 
         eventListener = new EventListener(this);
         Bukkit.getServer().getPluginManager().registerEvents(eventListener, plugin);
+
+        for (Player p : gamePlayers) {
+            inventories.put(p, p.getInventory().getContents());
+        }
 
         roundStart();
     }
@@ -111,7 +115,7 @@ public class Game {
                 gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     clearInventories(gamePlayers);
                     giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
-                    displayActionbar(gamePlayers, ChatColor.DARK_RED + "Showdown!");
+                    displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("showdown"));
                     playSound(gamePlayers, Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.HOSTILE, 1, 1);
                     // End the round in another 2m30s
                     gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundEnd, 3000);
@@ -150,12 +154,12 @@ public class Game {
             }
             // If that player doesn't have three wins, nobody else does, so we need another round
             else {
-                displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + winner.getName() + " has won the round!", 5, 60, 5);
+                displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("round-over"), LanguageManager.fromKeyNoPrefix("round-winner").replace("%winner%", winner.getDisplayName()), 5, 60, 5);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
             }
         }
         else {
-            displayTitles(gamePlayers, ChatColor.RED + "Round over!", ChatColor.GOLD + "Draw!", 5, 60, 5);
+            displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("round-over"), LanguageManager.fromKeyNoPrefix("round-draw"), 5, 60, 5);
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
         }
     }
@@ -171,9 +175,9 @@ public class Game {
 
             Player winner = getPlayerWithMostWins(gameWins);
             if (winner != null) {
-                displayTitles(gamePlayers, ChatColor.RED + "Game over!", ChatColor.GOLD + winner.getName() + " has won the game!", 5, 60, 5);
+                displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("game-over"), LanguageManager.fromKeyNoPrefix("game-winner").replace("%winner%",winner.getDisplayName()), 5, 60, 5);
             }
-            displayActionbar(gamePlayers, ChatColor.BLUE + "Returning to lobby in ten seconds...");
+            displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("lobby-in-10"));
 
             // Wait 10s (200t), then
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -186,11 +190,11 @@ public class Game {
                         p.getInventory().setContents(inventories.get(p));
                     }
 
-                    if (p == winner && ConfigManager.winnerLobby != null) {
-                        p.teleport(ConfigManager.winnerLobby);
+                    if (p == winner && arena.winnerLobby != null) {
+                        p.teleport(arena.winnerLobby);
                     }
                     else {
-                        p.teleport(Objects.requireNonNull(ConfigManager.lobby));
+                        p.teleport(Objects.requireNonNull(arena.lobby));
                     }
                 }
 
@@ -218,7 +222,7 @@ public class Game {
         if (inventories.containsKey(p)) {
             p.getInventory().setContents(inventories.get(p));
         }
-        p.teleport(ConfigManager.lobby);
+        p.teleport(arena.lobby);
     }
 
     /**
@@ -229,16 +233,15 @@ public class Game {
     public void addPlayer(Player p) {
         gamePlayers.add(p);
         // save inventory
-        inventories.put(p, p.getInventory().getContents());
-        if (ConfigManager.waitArea != null) {
-            p.teleport(ConfigManager.waitArea);
+        if (arena.waitArea != null) {
+            p.teleport(arena.waitArea);
             p.getInventory().clear();
         }
         if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
             autoStart();
         }
         else {
-            displayActionbar(Collections.singletonList(p), ChatColor.YELLOW + "Waiting for players");
+            displayActionbar(Collections.singletonList(p), LanguageManager.fromKeyNoPrefix("waiting-for-players"));
         }
     }
 
@@ -249,7 +252,7 @@ public class Game {
         // Wait for the player to load in
         int waitDuration = ConfigManager.waitDuration;
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            displayActionbar(gamePlayers, ChatColor.GREEN + "Game will begin in "+waitDuration+" seconds!");
+            displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("time-till-start").replace("%wait%",waitDuration+""));
             playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
             // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
             autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::gameStart, waitDuration * 20L);
@@ -280,6 +283,7 @@ public class Game {
         double x = gameSpawn.getX();
         double y = gameSpawn.getY();
         double z = gameSpawn.getZ();
+        World gameWorld = gameSpawn.getWorld();
         // Create the scatter locations based off the game's spawn
         List<Location> scatterLocations = new ArrayList<>(List.of(
                 new Location(gameWorld, (x - 14.5), y, (z + 0.5), -90, 0),
@@ -303,16 +307,16 @@ public class Game {
      */
     private void countdown(Runnable doAfter) {
         playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
-        displayTitles(gamePlayers, ChatColor.DARK_GREEN + "3", null, 3, 10, 7);
+        displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-3"), null, 3, 10, 7);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
-            displayTitles(gamePlayers, ChatColor.YELLOW + "2", null, 3, 10, 7);
+            displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-2"), null, 3, 10, 7);
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
-                displayTitles(gamePlayers, ChatColor.DARK_RED + "1", null, 3, 10, 7);
+                displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-1"), null, 3, 10, 7);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 2);
-                    displayTitles(gamePlayers, ChatColor.GREEN + "Go!", null, 1, 5, 1);
+                    displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-go"), null, 1, 5, 1);
                     doAfter.run();
                 }, 20);
             }, 20);

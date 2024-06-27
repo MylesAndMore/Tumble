@@ -1,0 +1,23 @@
+arenas:
+  'test':
+    kill-at-y: 5
+    game-spawn:
+      x: 100
+      y: 100
+      z: 100
+      world: world
+    lobby:
+      x: 0.5
+      y: 100
+      z: 0.5
+      world: world
+    winner-lobby:
+      x: 0.5
+      y: 100
+      z: 0.5
+      world: world
+    wait-arena:
+      x: 0.5
+      y: 100
+      z: 0.5
+      world: world

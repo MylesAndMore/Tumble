@@ -1,10 +1,12 @@
 package com.MylesAndMore.Tumble.commands;
 
 import com.MylesAndMore.Tumble.game.Arena;
-import com.MylesAndMore.Tumble.plugin.ConfigManager;
+import com.MylesAndMore.Tumble.config.LanguageManager;
+import com.MylesAndMore.Tumble.config.ArenaManager;
 import com.MylesAndMore.Tumble.game.Game;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
+import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,35 +21,41 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Join implements CommandExecutor, TabCompleter {
+public class Join implements SubCommand, CommandExecutor, TabCompleter {
+
+    @Override
+    public String getCommandName() {
+        return "join";
+    }
+
+    @Override
+    public String getPermission() {
+        return "tumble.join";
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "This cannot be run by the console");
+            sender.sendMessage(LanguageManager.fromKey("not-for-console"));
             return false;
         }
 
-        if (!sender.hasPermission("tumble.join")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to perform this command!");
-            return false;
-        }
-
-        if (ConfigManager.findGamePlayerIsIn((Player)sender) != null) {
-            sender.sendMessage(ChatColor.RED + "You are already in a game! Leave it to join another one");
+        if (ArenaManager.findGamePlayerIsIn((Player)sender) != null) {
+            sender.sendMessage(LanguageManager.fromKey("already-in-game"));
         }
 
         if (args.length < 1 || args[0] == null) {
-            sender.sendMessage(ChatColor.RED + "Missing arena name");
+            sender.sendMessage(LanguageManager.fromKey("missing-arena-parameter"));
             return false;
         }
         String arenaName = args[0];
-        if (!ConfigManager.arenas.containsKey(arenaName))
+        if (!ArenaManager.arenas.containsKey(arenaName))
         {
-            sender.sendMessage(ChatColor.RED + "This arena does not exist");
+            sender.sendMessage(LanguageManager.fromKey("invalid-arena").replace("%arena%", arenaName));
             return false;
         }
-        Arena arena = ConfigManager.arenas.get(arenaName);
+        Arena arena = ArenaManager.arenas.get(arenaName);
 
         Game game;
         if (args.length < 2 || args[1] == null) {
@@ -66,7 +74,7 @@ public class Join implements CommandExecutor, TabCompleter {
                 case "snowballs", "snowball" -> type = GameType.SNOWBALLS;
                 case "mix", "mixed"          -> type = GameType.MIXED;
                 default                      -> {
-                    sender.sendMessage(ChatColor.RED + "Invalid game type");
+                    sender.sendMessage(LanguageManager.fromKey("invalid-type"));
                     return false;
                 }
             }
@@ -80,26 +88,30 @@ public class Join implements CommandExecutor, TabCompleter {
                     game = arena.game;
                 }
                 else {
-                    sender.sendMessage(ChatColor.RED + "A game of "+type+" is currently taking place in this arena, choose another arena or join it with /tumble:join "+arena.name+" "+type);
+                    sender.sendMessage(LanguageManager.fromKey("another-type-in-arena")
+                            .replace("%type%",type.toString())
+                            .replace("%arena%",arenaName));
                     return false;
                 }
             }
         }
 
         if (game.gameState != GameState.WAITING) {
-            sender.sendMessage(ChatColor.RED + "This game is still in progress, wait until it finishes or join another game");
+            sender.sendMessage(LanguageManager.fromKey("game-in-progress"));
             return false;
         }
 
         game.addPlayer((Player)sender);
-        sender.sendMessage(ChatColor.GREEN + "Joined game " + arena.name + " - " + game.type);
+        sender.sendMessage(LanguageManager.fromKey("join-success")
+                .replace("%type%", game.type.toString())
+                .replace("%arena%", arena.name));
         return true;
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 1) {
-            return ConfigManager.arenas.keySet().stream().toList();
+            return ArenaManager.arenas.keySet().stream().toList();
         }
         if (args.length == 2) {
             return Arrays.stream(GameType.values()).map(Objects::toString).collect(Collectors.toList());

@@ -1,8 +1,9 @@
 package com.MylesAndMore.Tumble.commands;
 
 import com.MylesAndMore.Tumble.game.Game;
-import com.MylesAndMore.Tumble.plugin.ConfigManager;
-import org.bukkit.ChatColor;
+import com.MylesAndMore.Tumble.config.LanguageManager;
+import com.MylesAndMore.Tumble.config.ArenaManager;
+import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,41 +14,47 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ForceStop implements CommandExecutor, TabCompleter {
+public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
+
+    @Override
+    public String getCommandName() {
+        return "forcestop";
+    }
+
+    @Override
+    public String getPermission() {
+        return "tumble.forcestop";
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        if (!sender.hasPermission("tumble.forcestop")) {
-            sender.sendMessage(ChatColor.RED + "You do not have permission to perform this command!");
-            return false;
-        }
-
         Game game;
         if (args.length < 1 || args[0] == null) {
-            game = ConfigManager.findGamePlayerIsIn((Player)sender);
+            game = ArenaManager.findGamePlayerIsIn((Player)sender);
             if (game == null) {
-                sender.sendMessage(ChatColor.RED + "Missing arena name");
+                sender.sendMessage(LanguageManager.fromKey("missing-arena-parameter"));
                 return false;
             }
         }
         else {
-            game = ConfigManager.arenas.get(args[0]).game;
+            game = ArenaManager.arenas.get(args[0]).game;
         }
 
         if (game == null) {
-            sender.sendMessage(ChatColor.RED + "No game is currently running in this arena");
+            sender.sendMessage(LanguageManager.fromKey("no-game-in-arena"));
             return false;
         }
 
         game.gameEnd();
-        sender.sendMessage(ChatColor.GREEN + "Game stopped.");
+        sender.sendMessage(LanguageManager.fromKey("forcestop-success"));
         return true;
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 1) {
-            return ConfigManager.arenas.keySet().stream().toList();
+            return ArenaManager.arenas.keySet().stream().toList();
         }
         return new ArrayList<>();
     }

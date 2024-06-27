@@ -7,31 +7,14 @@ load: POSTWORLD
 author: MylesAndMore
 website: https://github.com/MylesAndMore/Tumble
 softdepend: [Multiverse-Core]
+
 commands:
-  tumble-join:
+  tumble:
     description: Joins a Tumble match.
-    usage: '§cUsage: /tumble-join <arenaName> [gameType]'
+    usage: '§cUsage: /tumble'
     permission: tumble.join
-  tumble-leave:
-    description: Quits a Tumble match.
-    usage: '§cUsage: /tumble-leave'
-    permission: tumble.leave
-  tumble-forcestart:
-    description: Force starts a Tumble match.
-    usage: '§cUsage: /tumble-forcestart [arenaName]'
-    permission: tumble.forcestart
-  tumble-forcestop:
-    description: Force stops a Tumble match.
-    usage: '§cUsage: /tumble-forcestop [arenaName]'
-    permission: tumble.forcestop
-  tumble-config:
-    description: Modify arenas and worlds.
-    usage: '§cUsage: /tumble-config <add|set|disable|delete> <data>'
-    permission: tumble.config
-  tumble-reload:
-    description: Reloads the plugin's config.
-    usage: '§cUsage: /tumble-reload'
-    permission: tumble.reload
+    aliases: tmbl
+
 permissions:
   tumble.join:
     description: Allows you to join a Tumble match.
