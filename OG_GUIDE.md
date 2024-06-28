@@ -13,7 +13,8 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
     - [Festive Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
     - [Halloween Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
     - [Birthday Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
-Tip: set a specific directory to store your worlds in with the `world-container` setting in `bukkit.yml`
+
+    Tip: set a specific directory to store your worlds in with the `world-container` setting in `bukkit.yml`
 
 1. Set `level-name` in server.properities to `lobby`
 2. Take note of the names of the world folders, we will need this in a moment.
