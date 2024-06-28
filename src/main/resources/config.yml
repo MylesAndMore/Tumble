@@ -1,5 +1,5 @@
 # Hides player join/leave messages in public chat
-hideJoinLeaveMessages: false
+hide-join-leave-messages: false
 
 # Duration in seconds to wait for more players to join
 wait-duration: 15

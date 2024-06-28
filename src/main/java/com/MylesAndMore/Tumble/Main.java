@@ -18,9 +18,9 @@ public class Main extends JavaPlugin{
     @Override
     public void onEnable() {
         plugin = this;
-        new ArenaManager();
-        new ConfigManager();
-        new LanguageManager();
+        ArenaManager.loadConfig();
+        ConfigManager.loadConfig();
+        LanguageManager.loadConfig();
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);

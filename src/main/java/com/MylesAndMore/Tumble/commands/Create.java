@@ -33,6 +33,7 @@ public class Create implements SubCommand, CommandExecutor, TabCompleter {
 
         String arenaName = args[0];
         ArenaManager.arenas.put(arenaName, new Arena(arenaName));
+        ArenaManager.WriteConfig();
         sender.sendMessage(LanguageManager.fromKey("create-success"));
         return true;
     }

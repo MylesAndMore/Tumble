@@ -27,7 +27,7 @@ public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         Game game;
         if (args.length < 1 || args[0] == null) {
@@ -38,7 +38,12 @@ public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
             }
         }
         else {
-            game = ArenaManager.arenas.get(args[0]).game;
+            String arenaName = args[0];
+            if (!ArenaManager.arenas.containsKey(arenaName)) {
+                sender.sendMessage(LanguageManager.fromKey("invalid-arena").replace("%arena%",arenaName));
+                return false;
+            }
+            game = ArenaManager.arenas.get(arenaName).game;
         }
 
         if (game == null) {

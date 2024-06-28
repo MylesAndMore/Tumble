@@ -24,7 +24,7 @@ public class ArenaManager {
     private static FileConfiguration config;
     public static HashMap<String, Arena> arenas;
 
-    public ArenaManager() {
+    public static void loadConfig() {
         String fileName = "arenas.yml";
         // create config
         File customConfigFile = new File(plugin.getDataFolder(), fileName);
@@ -50,8 +50,6 @@ public class ArenaManager {
      * Reads config file and populates values above
      */
     public static void readConfig() {
-        plugin.reloadConfig();
-
         // arenas
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
         if (arenasSection == null) {

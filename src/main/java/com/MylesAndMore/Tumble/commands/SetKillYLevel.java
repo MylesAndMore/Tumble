@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
-public class SetKillYCordinate implements SubCommand, CommandExecutor, TabCompleter {
+public class SetKillYLevel implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
     public String getCommandName() {
@@ -46,6 +46,7 @@ public class SetKillYCordinate implements SubCommand, CommandExecutor, TabComple
         Arena arena = ArenaManager.arenas.get(arenaName);
 
         arena.killAtY = ((int) ((Player) sender).getLocation().getY());
+        ArenaManager.WriteConfig();
         sender.sendMessage(LanguageManager.fromKey("set-success"));
         return true;
     }

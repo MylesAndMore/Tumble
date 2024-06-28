@@ -10,12 +10,13 @@ public class ConfigManager {
     public static boolean HideLeaveJoin;
     public static int waitDuration;
 
-    public ConfigManager() {
+    public static void loadConfig() {
         config = plugin.getConfig();
+        readConfig();
     }
 
     public static void readConfig() {
-        HideLeaveJoin = config.getBoolean("hideJoinLeaveMessages", false);
+        HideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
         waitDuration = config.getInt("wait-duration", 15);
     }
 

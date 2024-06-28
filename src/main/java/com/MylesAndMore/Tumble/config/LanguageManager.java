@@ -5,7 +5,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
@@ -14,7 +13,7 @@ import static com.MylesAndMore.Tumble.Main.plugin;
 public class LanguageManager {
     private static FileConfiguration config;
 
-    public LanguageManager() {
+    public static void loadConfig() {
         String fileName = "language.yml";
         // create config
         File customConfigFile = new File(plugin.getDataFolder(), fileName);

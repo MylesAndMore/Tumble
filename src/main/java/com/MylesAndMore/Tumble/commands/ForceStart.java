@@ -38,7 +38,17 @@ public class ForceStart implements SubCommand, CommandExecutor, TabCompleter {
             }
         }
         else {
-            game = ArenaManager.arenas.get(args[0]).game;
+            String arenaName = args[0];
+            if (!ArenaManager.arenas.containsKey(arenaName)) {
+                sender.sendMessage(LanguageManager.fromKey("invalid-arena").replace("%arena%",arenaName));
+                return false;
+            }
+            game = ArenaManager.arenas.get(arenaName).game;
+        }
+
+        if (game == null) {
+            sender.sendMessage(LanguageManager.fromKey("no-game-in-arena"));
+            return false;
         }
 
         game.gameStart();

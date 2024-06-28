@@ -21,7 +21,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
             CmdNameAsKey(new Reload()),
             CmdNameAsKey(new Remove()),
             CmdNameAsKey(new SetGameSpawn()),
-            CmdNameAsKey(new SetKillYCordinate()),
+            CmdNameAsKey(new SetKillYLevel()),
             CmdNameAsKey(new SetLobby()),
             CmdNameAsKey(new SetWaitArea()),
             CmdNameAsKey(new SetWinnerLobby())

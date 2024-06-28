@@ -17,7 +17,7 @@ forcestart-success: "&aStarting game."
 forcestop-success: "&aGame stopped."
 join-success: "&aJoined game &d%arena% - %type%"
 leave-success: "&aLeft game &d%arena% - %type%"
-reload-success: "&aConfiguration reloaded. &eCheck console for errors."
+reload-success: "&aConfig files reloaded. &eCheck console for errors."
 remove-success: "&aArena removed."
 set-success: "&aLocation set."
 

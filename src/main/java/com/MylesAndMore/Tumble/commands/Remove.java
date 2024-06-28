@@ -38,6 +38,7 @@ public class Remove implements SubCommand, CommandExecutor, TabCompleter {
         }
 
         ArenaManager.arenas.remove(arenaName);
+        ArenaManager.WriteConfig();
         sender.sendMessage(LanguageManager.fromKey("set-success"));
         return true;
     }
