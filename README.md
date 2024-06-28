@@ -5,7 +5,7 @@
 - [ ] no config validation
 
 ### todo
-- [ ] finish og-guide
+- [x] finish og-guide
 - [ ] improve inventory saving
 - [ ] improve Game.leave() method
 - [ ] perhaps replace spectator mode with survival flight
@@ -39,7 +39,7 @@ If you've never heard of it, [Tumble](https://minecraft.wiki/w/tumble) is a twis
 
 1. [Download](https://github.com/MylesAndMore/tmbl/releases) the plugin's JAR file and place it in your server's plugins directory.
 2. Place the worlds for your lobby and arenas in your plugins worlds directory.
-    - If you would like an experience similar to the original game, see [my guide](https://github.com/MylesAndMore/tmbl/blob/main/OG-GUIDE.md) for using the original worlds.  
+    - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.  
 
 3. Start your server.
 4. Import your worlds using a plugin like Multiverse. ```/mv import myWorld normal```.
