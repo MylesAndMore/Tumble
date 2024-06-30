@@ -18,14 +18,13 @@ public class Main extends JavaPlugin{
     @Override
     public void onEnable() {
         plugin = this;
-        ArenaManager.loadConfig();
-        ConfigManager.loadConfig();
-        LanguageManager.loadConfig();
+
+        LanguageManager.init();
+        ArenaManager.init();
+        ConfigManager.init();
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);
-
-        this.saveDefaultConfig(); // Saves the default config file (packaged in the JAR) if we haven't already
 
         Bukkit.getServer().getLogger().info("[Tumble] Tumble successfully enabled!");
     }

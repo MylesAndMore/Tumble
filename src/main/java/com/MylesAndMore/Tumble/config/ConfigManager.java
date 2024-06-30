@@ -2,16 +2,15 @@ package com.MylesAndMore.Tumble.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import static com.MylesAndMore.Tumble.Main.plugin;
-
 public class ConfigManager {
-    private static FileConfiguration config;
+    private static final CustomConfig customConfig = new CustomConfig("config.yml");
+    private static final FileConfiguration config = customConfig.getConfig();
 
     public static boolean HideLeaveJoin;
     public static int waitDuration;
 
-    public static void loadConfig() {
-        config = plugin.getConfig();
+    public static void init() {
+        customConfig.saveDefaultConfig();
         readConfig();
     }
 
@@ -19,6 +18,5 @@ public class ConfigManager {
         HideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
         waitDuration = config.getInt("wait-duration", 15);
     }
-
 
 }

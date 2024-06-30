@@ -7,42 +7,24 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 public class ArenaManager {
-    private static FileConfiguration config;
+
     public static HashMap<String, Arena> arenas;
 
-    public static void loadConfig() {
-        String fileName = "arenas.yml";
-        // create config
-        File customConfigFile = new File(plugin.getDataFolder(), fileName);
-        if (!customConfigFile.exists()) {
-            customConfigFile.getParentFile().mkdirs();
-            plugin.saveResource(fileName, false);
-        }
+    private static final CustomConfig customConfig = new CustomConfig("arenas.yml");
+    private static final FileConfiguration config = customConfig.getConfig();
 
-        config = new YamlConfiguration();
-        try {
-            config.load(customConfigFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-        /* User Edit:
-            Instead of the above Try/Catch, you can also use
-            YamlConfiguration.loadConfiguration(customConfigFile)
-        */
+    public static void init() {
+        customConfig.saveDefaultConfig();
         readConfig();
     }
 
@@ -50,6 +32,7 @@ public class ArenaManager {
      * Reads config file and populates values above
      */
     public static void readConfig() {
+
         // arenas
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
         if (arenasSection == null) {
@@ -96,15 +79,43 @@ public class ArenaManager {
         }
     }
 
+    public static void WriteConfig() {
+        config.set("arenas", null); // clear everything
+
+        for (Arena arena: arenas.values()) {
+            WriteWorld("arenas." + arena.name + ".game-spawn", arena.gameSpawn);
+            WriteWorld("arenas." + arena.name + ".lobby", arena.lobby);
+            WriteWorld("arenas." + arena.name + ".winner-lobby", arena.winnerLobby);
+            WriteWorld("arenas." + arena.name + ".wait-area", arena.waitArea);
+        }
+
+        customConfig.saveConfig();
+
+    }
+
+    /**
+     * Searches all arenas for a game that player p is in
+     * @param p Player to search for
+     * @return the game the player is in, or null if not found
+     */
+    public static Game findGamePlayerIsIn(Player p) {
+        for (Arena a : arenas.values()) {
+            if (a.game != null && a.game.gamePlayers.contains(p)) {
+                return a.game;
+            }
+        }
+        return null;
+    }
+
     /**
      * tries to convert a config section in the following format to a world
      * section:
-     *   x: 
-     *   y: 
+     *   x:
+     *   y:
      *   z:
      *   world:
      * @param section the section in the yaml with x, y, z, and world as its children
-     * @return result of either: 
+     * @return result of either:
      *   success = true and a world
      *   success = false and an error string
      */
@@ -134,43 +145,21 @@ public class ArenaManager {
         return new Result<>(new Location(world,x,y,z));
     }
 
-    public static void WriteConfig() {
-
-        for (Arena arena: arenas.values()) {
-            WriteWorld("arenas."+arena.name+".game-spawn", arena.gameSpawn);
-            WriteWorld("arenas."+arena.name+".lobby", arena.lobby);
-            WriteWorld("arenas."+arena.name+".winner-lobby", arena.winnerLobby);
-            WriteWorld("arenas."+arena.name+".wait-area", arena.waitArea);
+    private static void WriteWorld(String path, @Nullable Location location) {
+        if (location == null) {
+            return;
         }
 
-        plugin.saveConfig();
-
-    }
-
-    private static void WriteWorld(String path, Location location) {
         ConfigurationSection section = config.getConfigurationSection(path);
 
         if (section == null) {
-            section = plugin.getConfig().createSection(path);
+            section = config.createSection(path);
         }
 
         section.set("x", location.getX());
         section.set("y", location.getY());
         section.set("z", location.getZ());
         section.set("world", Objects.requireNonNull(location.getWorld()).getName());
-    }
 
-    /**
-     * Searches all arenas for a game that player p is in
-     * @param p Player to search for
-     * @return the game the player is in, or null if not found
-     */
-    public static Game findGamePlayerIsIn(Player p) {
-        for (Arena a : arenas.values()) {
-            if (a.game != null && a.game.gamePlayers.contains(p)) {
-                return a.game;
-            }
-        }
-        return null;
     }
 }
