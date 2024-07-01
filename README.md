@@ -1,16 +1,9 @@
 ## temporary stuff (not ready for merge)
-### known issues
-- [x] file writing not fully implemented (just need to call ArenaManager.write() somewhere)
-- [ ] issues with join command
-- [ ] no config validation
-
 ### todo
-- [x] finish og-guide
+- [ ] separate waiting state code
+- [ ] fix join command
 - [ ] improve inventory saving
 - [ ] improve Game.leave() method
-- [ ] perhaps replace spectator mode with survival flight
-- [ ] clean up and make config managers uniform in structure
-- [ ] improve language flow
 - [ ] put javadoc comments everywhere
 
 # Tumble  

@@ -1,8 +1,5 @@
 package com.MylesAndMore.Tumble.game;
 
-import com.MylesAndMore.Tumble.config.ArenaManager;
-import com.MylesAndMore.Tumble.config.ConfigManager;
-import com.MylesAndMore.Tumble.config.LanguageManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
 import net.md_5.bungee.api.ChatMessageType;
@@ -18,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-import static com.MylesAndMore.Tumble.Main.plugin;
+import static com.MylesAndMore.Tumble.Main.*;
 
 /**
  * Everything relating to the Tumble game
@@ -62,7 +59,9 @@ public class Game {
         Bukkit.getServer().getPluginManager().registerEvents(eventListener, plugin);
 
         for (Player p : gamePlayers) {
-            inventories.put(p, p.getInventory().getContents());
+            if (!inventories.containsKey(p)) {
+                inventories.put(p, p.getInventory().getContents());
+            }
         }
 
         roundStart();
@@ -115,7 +114,7 @@ public class Game {
                 gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     clearInventories(gamePlayers);
                     giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
-                    displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("showdown"));
+                    displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("showdown"));
                     playSound(gamePlayers, Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.HOSTILE, 1, 1);
                     // End the round in another 2m30s
                     gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundEnd, 3000);
@@ -154,12 +153,12 @@ public class Game {
             }
             // If that player doesn't have three wins, nobody else does, so we need another round
             else {
-                displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("round-over"), LanguageManager.fromKeyNoPrefix("round-winner").replace("%winner%", winner.getDisplayName()), 5, 60, 5);
+                displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("round-over"), languageManager.fromKeyNoPrefix("round-winner").replace("%winner%", winner.getDisplayName()), 5, 60, 5);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
             }
         }
         else {
-            displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("round-over"), LanguageManager.fromKeyNoPrefix("round-draw"), 5, 60, 5);
+            displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("round-over"), languageManager.fromKeyNoPrefix("round-draw"), 5, 60, 5);
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
         }
     }
@@ -175,9 +174,9 @@ public class Game {
 
             Player winner = getPlayerWithMostWins(gameWins);
             if (winner != null) {
-                displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("game-over"), LanguageManager.fromKeyNoPrefix("game-winner").replace("%winner%",winner.getDisplayName()), 5, 60, 5);
+                displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("game-over"), languageManager.fromKeyNoPrefix("game-winner").replace("%winner%",winner.getDisplayName()), 5, 60, 5);
             }
-            displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("lobby-in-10"));
+            displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("lobby-in-10"));
 
             // Wait 10s (200t), then
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
@@ -214,15 +213,28 @@ public class Game {
      * @param p Player to remove
      */
     public void removePlayer(Player p) {
-        gamePlayers.remove(p);
-        if (gamePlayers.size() < 2) {
-            gameEnd();
+
+        if (gameState == GameState.WAITING) {
+            gamePlayers.remove(p);
+            if (gamePlayers.size() < 2) {
+                displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("waiting-for-players"));
+            }
+
+            if (arena.waitArea != null) {
+                p.teleport(arena.lobby);
+            }
         }
-        p.getInventory().clear();
-        if (inventories.containsKey(p)) {
-            p.getInventory().setContents(inventories.get(p));
+        else {
+            gamePlayers.remove(p);
+            if (gamePlayers.size() < 2) {
+                gameEnd();
+            }
+            p.getInventory().clear();
+            if (inventories.containsKey(p)) {
+                p.getInventory().setContents(inventories.get(p));
+            }
+            p.teleport(arena.lobby);
         }
-        p.teleport(arena.lobby);
     }
 
     /**
@@ -234,6 +246,7 @@ public class Game {
         gamePlayers.add(p);
         // save inventory
         if (arena.waitArea != null) {
+            inventories.put(p,p.getInventory().getContents());
             p.teleport(arena.waitArea);
             p.getInventory().clear();
         }
@@ -241,7 +254,7 @@ public class Game {
             autoStart();
         }
         else {
-            displayActionbar(Collections.singletonList(p), LanguageManager.fromKeyNoPrefix("waiting-for-players"));
+            displayActionbar(Collections.singletonList(p), languageManager.fromKeyNoPrefix("waiting-for-players"));
         }
     }
 
@@ -250,9 +263,9 @@ public class Game {
      */
     public void autoStart() {
         // Wait for the player to load in
-        int waitDuration = ConfigManager.waitDuration;
+        int waitDuration = configManager.waitDuration;
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("time-till-start").replace("%wait%",waitDuration+""));
+            displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("time-till-start").replace("%wait%",waitDuration+""));
             playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
             // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
             autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::gameStart, waitDuration * 20L);
@@ -307,16 +320,16 @@ public class Game {
      */
     private void countdown(Runnable doAfter) {
         playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
-        displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-3"), null, 3, 10, 7);
+        displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("count-3"), null, 3, 10, 7);
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
-            displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-2"), null, 3, 10, 7);
+            displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("count-2"), null, 3, 10, 7);
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 1);
-                displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-1"), null, 3, 10, 7);
+                displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("count-1"), null, 3, 10, 7);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     playSound(gamePlayers, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.NEUTRAL, 5, 2);
-                    displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("count-go"), null, 1, 5, 1);
+                    displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("count-go"), null, 1, 5, 1);
                     doAfter.run();
                 }, 20);
             }, 20);
@@ -405,9 +418,7 @@ public class Game {
      * @param pitch The pitch of the sound
      */
     private void playSound(@NotNull List<Player> players, @NotNull Sound sound, @NotNull SoundCategory category, float volume, float pitch) {
-        for (Player aPlayer : players) {
-            aPlayer.playSound(aPlayer.getLocation(), sound, category, volume, pitch);
-        }
+        players.forEach(player -> player.playSound(player.getLocation(), sound, category, volume, pitch));
     }
 
     /**

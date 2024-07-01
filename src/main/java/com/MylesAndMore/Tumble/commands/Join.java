@@ -1,8 +1,6 @@
 package com.MylesAndMore.Tumble.commands;
 
 import com.MylesAndMore.Tumble.game.Arena;
-import com.MylesAndMore.Tumble.config.LanguageManager;
-import com.MylesAndMore.Tumble.config.ArenaManager;
 import com.MylesAndMore.Tumble.game.Game;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
@@ -21,6 +19,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.MylesAndMore.Tumble.Main.arenaManager;
+import static com.MylesAndMore.Tumble.Main.languageManager;
+
 public class Join implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
@@ -37,25 +38,25 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(LanguageManager.fromKey("not-for-console"));
+            sender.sendMessage(languageManager.fromKey("not-for-console"));
             return false;
         }
 
-        if (ArenaManager.findGamePlayerIsIn((Player)sender) != null) {
-            sender.sendMessage(LanguageManager.fromKey("already-in-game"));
+        if (arenaManager.findGamePlayerIsIn((Player)sender) != null) {
+            sender.sendMessage(languageManager.fromKey("already-in-game"));
         }
 
         if (args.length < 1 || args[0] == null) {
-            sender.sendMessage(LanguageManager.fromKey("missing-arena-parameter"));
+            sender.sendMessage(languageManager.fromKey("missing-arena-parameter"));
             return false;
         }
         String arenaName = args[0];
-        if (!ArenaManager.arenas.containsKey(arenaName))
+        if (!arenaManager.arenas.containsKey(arenaName))
         {
-            sender.sendMessage(LanguageManager.fromKey("invalid-arena").replace("%arena%", arenaName));
+            sender.sendMessage(languageManager.fromKey("invalid-arena").replace("%arena%", arenaName));
             return false;
         }
-        Arena arena = ArenaManager.arenas.get(arenaName);
+        Arena arena = arenaManager.arenas.get(arenaName);
 
         Game game;
         if (args.length < 2 || args[1] == null) {
@@ -74,7 +75,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
                 case "snowballs", "snowball" -> type = GameType.SNOWBALLS;
                 case "mix", "mixed"          -> type = GameType.MIXED;
                 default                      -> {
-                    sender.sendMessage(LanguageManager.fromKey("invalid-type"));
+                    sender.sendMessage(languageManager.fromKey("invalid-type"));
                     return false;
                 }
             }
@@ -88,7 +89,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
                     game = arena.game;
                 }
                 else {
-                    sender.sendMessage(LanguageManager.fromKey("another-type-in-arena")
+                    sender.sendMessage(languageManager.fromKey("another-type-in-arena")
                             .replace("%type%",type.toString())
                             .replace("%arena%",arenaName));
                     return false;
@@ -97,12 +98,12 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
         }
 
         if (game.gameState != GameState.WAITING) {
-            sender.sendMessage(LanguageManager.fromKey("game-in-progress"));
+            sender.sendMessage(languageManager.fromKey("game-in-progress"));
             return false;
         }
 
         game.addPlayer((Player)sender);
-        sender.sendMessage(LanguageManager.fromKey("join-success")
+        sender.sendMessage(languageManager.fromKey("join-success")
                 .replace("%type%", game.type.toString())
                 .replace("%arena%", arena.name));
         return true;
@@ -111,7 +112,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 1) {
-            return ArenaManager.arenas.keySet().stream().toList();
+            return arenaManager.arenas.keySet().stream().toList();
         }
         if (args.length == 2) {
             return Arrays.stream(GameType.values()).map(Objects::toString).collect(Collectors.toList());

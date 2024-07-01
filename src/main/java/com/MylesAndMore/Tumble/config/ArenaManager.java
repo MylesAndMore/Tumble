@@ -2,6 +2,7 @@ package com.MylesAndMore.Tumble.config;
 
 import com.MylesAndMore.Tumble.game.Arena;
 import com.MylesAndMore.Tumble.game.Game;
+import com.MylesAndMore.Tumble.plugin.CustomConfig;
 import com.MylesAndMore.Tumble.plugin.Result;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -18,20 +20,17 @@ import static com.MylesAndMore.Tumble.Main.plugin;
 
 public class ArenaManager {
 
-    public static HashMap<String, Arena> arenas;
+    public HashMap<String, Arena> arenas;
 
-    private static final CustomConfig customConfig = new CustomConfig("arenas.yml");
-    private static final FileConfiguration config = customConfig.getConfig();
+    private final CustomConfig arenasYml = new CustomConfig("arenas.yml");
+    private final FileConfiguration config = arenasYml.getConfig();
 
-    public static void init() {
-        customConfig.saveDefaultConfig();
+    public ArenaManager() {
+        arenasYml.saveDefaultConfig();
         readConfig();
     }
 
-    /**
-     * Reads config file and populates values above
-     */
-    public static void readConfig() {
+    public void readConfig() {
 
         // arenas
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
@@ -79,17 +78,28 @@ public class ArenaManager {
         }
     }
 
-    public static void WriteConfig() {
+    public void WriteConfig() {
         config.set("arenas", null); // clear everything
 
         for (Arena arena: arenas.values()) {
-            WriteWorld("arenas." + arena.name + ".game-spawn", arena.gameSpawn);
-            WriteWorld("arenas." + arena.name + ".lobby", arena.lobby);
-            WriteWorld("arenas." + arena.name + ".winner-lobby", arena.winnerLobby);
-            WriteWorld("arenas." + arena.name + ".wait-area", arena.waitArea);
+            if (arena.killAtY != null) {
+                config.set("arenas." + arena.name + ".kill-at-y", arena.killAtY);
+            }
+            if (arena.gameSpawn != null) {
+                WriteWorld("arenas." + arena.name + ".game-spawn", arena.gameSpawn);
+            }
+            if (arena.lobby != null) {
+                WriteWorld("arenas." + arena.name + ".lobby", arena.lobby);
+            }
+            if (arena.winnerLobby != null) {
+                WriteWorld("arenas." + arena.name + ".winner-lobby", arena.winnerLobby);
+            }
+            if (arena.waitArea != null) {
+                WriteWorld("arenas." + arena.name + ".wait-area", arena.waitArea);
+            }
         }
 
-        customConfig.saveConfig();
+        arenasYml.saveConfig();
 
     }
 
@@ -98,7 +108,7 @@ public class ArenaManager {
      * @param p Player to search for
      * @return the game the player is in, or null if not found
      */
-    public static Game findGamePlayerIsIn(Player p) {
+    public Game findGamePlayerIsIn(Player p) {
         for (Arena a : arenas.values()) {
             if (a.game != null && a.game.gamePlayers.contains(p)) {
                 return a.game;
@@ -119,7 +129,7 @@ public class ArenaManager {
      *   success = true and a world
      *   success = false and an error string
      */
-    private static Result<Location> readWorld(@Nullable ConfigurationSection section) {
+    private Result<Location> readWorld(@Nullable ConfigurationSection section) {
 
         if (section == null) {
             return new Result<>("Section missing from config");
@@ -145,10 +155,7 @@ public class ArenaManager {
         return new Result<>(new Location(world,x,y,z));
     }
 
-    private static void WriteWorld(String path, @Nullable Location location) {
-        if (location == null) {
-            return;
-        }
+    private void WriteWorld(String path, @NotNull Location location) {
 
         ConfigurationSection section = config.getConfigurationSection(path);
 

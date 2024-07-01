@@ -2,8 +2,6 @@ package com.MylesAndMore.Tumble.game;
 
 import java.util.Objects;
 
-import com.MylesAndMore.Tumble.config.ArenaManager;
-import com.MylesAndMore.Tumble.config.ConfigManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
 import org.bukkit.*;
@@ -22,6 +20,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import static com.MylesAndMore.Tumble.Main.configManager;
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 /**
@@ -39,7 +38,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         // Hide/show join message accordingly
-        if (ConfigManager.HideLeaveJoin) {
+        if (configManager.HideLeaveJoin) {
             event.setJoinMessage(null);
         }
         if (event.getPlayer().getWorld() == gameWorld) {
@@ -51,7 +50,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         // Hide/show leave message accordingly
-        if (ConfigManager.HideLeaveJoin) {
+        if (configManager.HideLeaveJoin) {
             event.setQuitMessage(null);
         }
         if (event.getPlayer().getWorld() == gameWorld) {

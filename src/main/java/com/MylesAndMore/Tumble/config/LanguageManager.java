@@ -1,27 +1,42 @@
 package com.MylesAndMore.Tumble.config;
 
+import com.MylesAndMore.Tumble.plugin.CustomConfig;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.Configuration;
+
+import java.util.Objects;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 public class LanguageManager {
-    private static final CustomConfig customConfig = new CustomConfig("language.yml");
-    private static final FileConfiguration config = customConfig.getConfig();
+    private final CustomConfig languageYml = new CustomConfig("language.yml");
+    private final Configuration config = languageYml.getConfig();
+    private final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
 
-    public static void init() {
-        customConfig.saveDefaultConfig();
+    public LanguageManager() {
+        languageYml.saveDefaultConfig();
+        validate();
     }
 
-    public static String fromKey(String key) {
+    public void validate() {
+        boolean invalid = false;
+        for (String key : defaultConfig.getKeys(true)) {
+            if (!config.contains(key,true)) {
+                plugin.getLogger().warning("language.yml is missing key '" + key + "'.");
+                invalid = true;
+            }
+        }
+        if (invalid) {
+            plugin.getLogger().severe("Errors were found in language.yml, default values will be used.");
+        }
+    }
+
+    public String fromKey(String key) {
         return fromKeyNoPrefix("prefix") + fromKeyNoPrefix(key);
     }
 
-    public static String fromKeyNoPrefix(String key) {
-        String tmp = config.getString(key, "LANG_ERR");
-        if (tmp.equals("LANG_ERR")) {
-            plugin.getLogger().severe("There was an error getting key '"+ key +"' from language.yml");
-        }
-        return ChatColor.translateAlternateColorCodes('&',tmp);
+    public String fromKeyNoPrefix(String key) {
+        String val = config.getString(key, "LANG_ERR");
+        return ChatColor.translateAlternateColorCodes('&',val);
     }
 }

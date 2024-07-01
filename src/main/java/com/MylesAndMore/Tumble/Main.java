@@ -15,13 +15,17 @@ import java.util.Objects;
 public class Main extends JavaPlugin{
     public static Main plugin;
 
+    public static LanguageManager languageManager;
+    public static ArenaManager arenaManager;
+    public static ConfigManager configManager;
+
     @Override
     public void onEnable() {
         plugin = this;
 
-        LanguageManager.init();
-        ArenaManager.init();
-        ConfigManager.init();
+        languageManager = new LanguageManager();
+        arenaManager = new ArenaManager();
+        configManager = new ConfigManager();
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);

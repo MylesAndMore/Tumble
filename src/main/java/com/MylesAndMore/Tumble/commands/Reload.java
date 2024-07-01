@@ -1,8 +1,6 @@
 package com.MylesAndMore.Tumble.commands;
 
 import com.MylesAndMore.Tumble.game.Arena;
-import com.MylesAndMore.Tumble.config.LanguageManager;
-import com.MylesAndMore.Tumble.config.ArenaManager;
 import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.MylesAndMore.Tumble.Main.plugin;
+import static com.MylesAndMore.Tumble.Main.*;
 
 public class Reload implements SubCommand, CommandExecutor, TabCompleter {
 
@@ -30,14 +28,14 @@ public class Reload implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        for (Arena a : ArenaManager.arenas.values()) {
+        for (Arena a : arenaManager.arenas.values()) {
             if (a.game != null) {
                 a.game.gameEnd();
             }
         }
 
         plugin.onEnable();
-        sender.sendMessage(LanguageManager.fromKey("reload-success"));
+        sender.sendMessage(languageManager.fromKey("reload-success"));
         return true;
     }
 
