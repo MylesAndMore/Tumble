@@ -36,7 +36,16 @@ public class LanguageManager {
     }
 
     public String fromKeyNoPrefix(String key) {
-        String val = config.getString(key, "LANG_ERR");
+        String val = config.getString(key);
+
+        if (val == null) {
+            val = defaultConfig.getString(key);
+        }
+
+        if (val == null) {
+            val = "LANG_ERR";
+        }
+
         return ChatColor.translateAlternateColorCodes('&',val);
     }
 }

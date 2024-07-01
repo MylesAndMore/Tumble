@@ -1,11 +1,3 @@
-## temporary stuff (not ready for merge)
-### todo
-- [ ] separate waiting state code
-- [ ] fix join command
-- [ ] improve inventory saving
-- [ ] improve Game.leave() method
-- [ ] put javadoc comments everywhere
-
 # Tumble  
 
 ## Overview  

@@ -19,12 +19,12 @@ public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
     public String getCommandName() {
-        return "forcestop";
+        return "forceStop";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.forcestop";
+        return "tumble.forceStop";
     }
 
     @Override
@@ -52,7 +52,7 @@ public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
             return false;
         }
 
-        game.gameEnd();
+        game.stopGame();
         sender.sendMessage(languageManager.fromKey("forcestop-success"));
         return true;
     }

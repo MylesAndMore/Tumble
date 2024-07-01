@@ -30,7 +30,7 @@ public class Reload implements SubCommand, CommandExecutor, TabCompleter {
 
         for (Arena a : arenaManager.arenas.values()) {
             if (a.game != null) {
-                a.game.gameEnd();
+                a.game.stopGame();
             }
         }
 

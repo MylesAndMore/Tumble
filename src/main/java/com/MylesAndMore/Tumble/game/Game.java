@@ -166,7 +166,8 @@ public class Game {
     /**
      * Ends game: Displays overall winner and teleports players to lobby
      */
-    public void gameEnd() {
+    private void gameEnd() {
+
         if (!gamePlayers.isEmpty()) {
 
             setGamemode(gamePlayers, GameMode.SPECTATOR);
@@ -199,6 +200,16 @@ public class Game {
 
             }, 200);
         }
+        Bukkit.getServer().getScheduler().cancelTask(gameID);
+        gameID = -1;
+        Bukkit.getServer().getScheduler().cancelTask(autoStartID);
+        autoStartID = -1;
+        HandlerList.unregisterAll(eventListener);
+        arena.game = null;
+    }
+
+    public void stopGame() {
+        gamePlayers.forEach(this::removePlayer);
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);

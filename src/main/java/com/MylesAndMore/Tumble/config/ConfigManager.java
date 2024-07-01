@@ -8,13 +8,12 @@ import java.util.Objects;
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 public class ConfigManager {
+    public boolean HideLeaveJoin;
+    public int waitDuration;
+
     private final CustomConfig configYml = new CustomConfig("config.yml");
     private final Configuration config = configYml.getConfig();
     private final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
-
-
-    public boolean HideLeaveJoin;
-    public int waitDuration;
 
     public ConfigManager() {
         configYml.saveDefaultConfig();

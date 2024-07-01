@@ -10,9 +10,8 @@ softdepend: [Multiverse-Core]
 
 commands:
   tumble:
-    description: Joins a Tumble match.
-    usage: '§cUsage: /tumble'
-    permission: tumble.join
+    description: Base command for Rumble
+    usage: "/tmbl <subCommand> ..."
     aliases: tmbl
 
 permissions:
@@ -22,16 +21,24 @@ permissions:
   tumble.leave:
     description: Allows you to leave a Tumble match.
     default: true
-  tumble.forcestart:
-    description: Allows you to force start a Tumble match.
+  tumble.forceStart:
     default: op
-  tumble.forcestop:
-    description: Allows you to force stop a Tumble match.
-    default: op
-  tumble.config:
-    description: Allows you to get a notification if Tumble is out of date.
+  tumble.forceStop:
     default: op
   tumble.reload:
-    description: Allows you to reload the plugin's config.
+    default: op
+  tumble.create:
+    default: op
+  tumble.remove:
+    default: op
+  tumble.setGameSpawn:
+    default: op
+  tumble.setKillYLevel:
+    default: op
+  tumble.setLobby:
+    default: op
+  tumble.setWaitArea:
+    default: op
+  tumble.setWinnerLobby:
     default: op
 

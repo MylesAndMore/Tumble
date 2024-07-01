@@ -5,7 +5,6 @@ import com.MylesAndMore.Tumble.game.Game;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
 import com.MylesAndMore.Tumble.plugin.SubCommand;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -37,7 +36,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player p)) {
             sender.sendMessage(languageManager.fromKey("not-for-console"));
             return false;
         }
@@ -61,7 +60,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
         Game game;
         if (args.length < 2 || args[1] == null) {
             if (arena.game == null) {
-                sender.sendMessage(ChatColor.RED + "no game is currently taking place in this arena, specify the game type to start one");
+                sender.sendMessage(languageManager.fromKey("specify-game-type"));
                 return false;
             }
             else {
@@ -94,6 +93,14 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
                             .replace("%arena%",arenaName));
                     return false;
                 }
+            }
+        }
+
+        if (game.arena.gameSpawn == null) {
+            if (p.isOp()) {
+                sender.sendMessage(languageManager.fromKey("arena-not-ready-op"));
+            } else {
+                sender.sendMessage(languageManager.fromKey("arena-not-ready"));
             }
         }
 
