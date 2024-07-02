@@ -42,6 +42,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
             return false;
         }
 
+        // pass command action through to subCommand
         subCmd.onCommand(sender, command, args[0], removeFirst(args));
         return true;
     }
@@ -49,6 +50,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 1) {
+            // show only subCommands the user has permission for
             ArrayList<String> PermittedSubCmds = new ArrayList<>();
             for (SubCommand subCmd: subCommands.values()) {
                 if (sender.hasPermission(subCmd.getPermission())) {
@@ -63,6 +65,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
                 return Collections.emptyList();
             }
 
+            // pass tab complete through to subCommand
             if (subCommands.get(args[0]) instanceof TabCompleter tcmp) {
                 return tcmp.onTabComplete(sender, command, args[0], removeFirst(args));
             }
@@ -74,13 +77,23 @@ public class Tumble implements CommandExecutor, TabCompleter {
         return Collections.emptyList();
     }
 
+    /**
+     * Create a copy of an array with the first element removed
+     * @param arr the source array
+     * @return the source without the first element
+     */
     private String[] removeFirst(String[] arr) {
         ArrayList<String> tmp = new ArrayList<>(List.of(arr));
         tmp.remove(0);
         return tmp.toArray(new String[0]);
     }
 
-    private static Map.Entry<String, SubCommand> CmdNameAsKey(SubCommand s) {
-        return Map.entry(s.getCommandName(),s);
+    /**
+     * Creates a map entry with the name of the subCommand as the key and the subCommand itself as the value
+     * @param cmd The subCommand to use
+     * @return A map entry from the subCommand
+     */
+    private static Map.Entry<String, SubCommand> CmdNameAsKey(SubCommand cmd) {
+        return Map.entry(cmd.getCommandName(),cmd);
     }
 }

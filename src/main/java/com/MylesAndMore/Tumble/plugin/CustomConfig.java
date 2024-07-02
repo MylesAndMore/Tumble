@@ -12,11 +12,19 @@ import java.util.logging.Level;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
+/**
+ * Allows additional configs to be created with the same saving methods as the default config
+ * Most code is copied from {@link org.bukkit.plugin.java.JavaPlugin}
+ */
 public class CustomConfig {
     private FileConfiguration newConfig = null;
     private final File configFile;
     private final String fileName;
 
+    /**
+     * Create a new CustomConfig
+     * @param fileName Name of the YAML file to create
+     */
     public CustomConfig(String fileName) {
         this.fileName = fileName;
         this.configFile = new File(plugin.getDataFolder(), fileName);

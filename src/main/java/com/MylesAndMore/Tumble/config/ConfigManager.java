@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
+/**
+ * Manages config.yml and stores its options
+ */
 public class ConfigManager {
     public boolean HideLeaveJoin;
     public int waitDuration;
@@ -15,12 +18,18 @@ public class ConfigManager {
     private final Configuration config = configYml.getConfig();
     private final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
 
+    /**
+     * Create a config manager
+     */
     public ConfigManager() {
         configYml.saveDefaultConfig();
         validate();
         readConfig();
     }
 
+    /**
+     * Check keys of config.yml against the defaults
+     */
     public void validate() {
         boolean invalid = false;
         for (String key : defaultConfig.getKeys(true)) {
@@ -34,6 +43,9 @@ public class ConfigManager {
         }
     }
 
+    /**
+     * Reads options in from config.yml
+     */
     public void readConfig() {
         HideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
         waitDuration = config.getInt("wait-duration", 15);

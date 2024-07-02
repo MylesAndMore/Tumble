@@ -32,6 +32,7 @@ public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
 
         Game game;
         if (args.length < 1 || args[0] == null) {
+            // no arena passed in, try to infer from game player is in
             game = arenaManager.findGamePlayerIsIn((Player)sender);
             if (game == null) {
                 sender.sendMessage(languageManager.fromKey("missing-arena-parameter"));

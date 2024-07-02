@@ -24,12 +24,16 @@ import static com.MylesAndMore.Tumble.Main.configManager;
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 /**
- * Tumble event listener for all plugin and game-related events.
+ * An event listener for a game of tumble.
  */
 public class EventListener implements Listener {
-
     World gameWorld;
     Game game;
+
+    /**
+     * Create a new EventListener
+     * @param game The game that the EventListener belongs to.
+     */
     public EventListener(Game game) {
         this.game = game;
         this.gameWorld = game.arena.gameSpawn.getWorld();

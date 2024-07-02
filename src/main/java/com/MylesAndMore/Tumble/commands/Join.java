@@ -59,6 +59,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
 
         Game game;
         if (args.length < 2 || args[1] == null) {
+            // try to infer game type from game taking place in the arena
             if (arena.game == null) {
                 sender.sendMessage(languageManager.fromKey("specify-game-type"));
                 return false;
@@ -80,10 +81,12 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             }
 
             if (arena.game == null) {
+                // no game is taking place in this arena, start one
                 game = arena.game = new Game(arena, type);
             }
             else
             {
+                // a game is taking place in this arena, check that it is the right type
                 if (arena.game.type == type) {
                     game = arena.game;
                 }
@@ -96,6 +99,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             }
         }
 
+        // check to make sure the arena has a game spawn
         if (game.arena.gameSpawn == null) {
             if (p.isOp()) {
                 sender.sendMessage(languageManager.fromKey("arena-not-ready-op"));

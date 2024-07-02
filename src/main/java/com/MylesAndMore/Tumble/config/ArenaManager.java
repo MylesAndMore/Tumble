@@ -18,6 +18,9 @@ import java.util.Objects;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
+/**
+ * Manages arenas.yml and stores list of arenas
+ */
 public class ArenaManager {
 
     public HashMap<String, Arena> arenas;
@@ -25,11 +28,17 @@ public class ArenaManager {
     private final CustomConfig arenasYml = new CustomConfig("arenas.yml");
     private final FileConfiguration config = arenasYml.getConfig();
 
+    /**
+     * Create an ArenaManager
+     */
     public ArenaManager() {
         arenasYml.saveDefaultConfig();
         readConfig();
     }
 
+    /**
+     * Read arenas from arenas.ynl and populate this.arenas
+     */
     public void readConfig() {
 
         // arenas
@@ -78,6 +87,9 @@ public class ArenaManager {
         }
     }
 
+    /**
+     * Write arenas from this.arenas to arenas.yml
+     */
     public void WriteConfig() {
         config.set("arenas", null); // clear everything
 
@@ -118,16 +130,16 @@ public class ArenaManager {
     }
 
     /**
-     * tries to convert a config section in the following format to a world
+     * Tries to convert a config section in the following format to a world
      * section:
      *   x:
      *   y:
      *   z:
      *   world:
-     * @param section the section in the yaml with x, y, z, and world as its children
-     * @return result of either:
-     *   success = true and a world
-     *   success = false and an error string
+     * @param section The section in the yaml with x, y, z, and world as its children
+     * @return Result of either:
+     *   Result#success = true and Result#value OR
+     *   Result#success = false and Result#error
      */
     private Result<Location> readWorld(@Nullable ConfigurationSection section) {
 
@@ -155,6 +167,16 @@ public class ArenaManager {
         return new Result<>(new Location(world,x,y,z));
     }
 
+    /**
+     * Write a location into the config using the following format:
+     * section:
+     *   x:
+     *   y:
+     *   z:
+     *   world:
+     * @param path The path of the section to write
+     * @param location The location to write
+     */
     private void WriteWorld(String path, @NotNull Location location) {
 
         ConfigurationSection section = config.getConfigurationSection(path);

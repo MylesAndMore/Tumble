@@ -35,15 +35,41 @@ public class Game {
     private List<Player> playersAlive;
     private EventListener eventListener;
 
+    /**
+     * Create a new Game
+     * @param arena The arena the game is taking place in
+     * @param type The game type
+     */
     public Game(@NotNull Arena arena, @NotNull GameType type) {
         this.arena = arena;
         this.type = type;
         this.gameSpawn = arena.gameSpawn;
-
     }
 
     /**
-     * Creates a new Game
+     * Adds a player to the wait area. Called from /tmbl join
+     * Precondition: the game is in state WAITING
+     * @param p Player to add
+     */
+    public void addPlayer(Player p) {
+        gamePlayers.add(p);
+
+        if (arena.waitArea != null) {
+            inventories.put(p,p.getInventory().getContents());
+            p.teleport(arena.waitArea);
+            p.getInventory().clear();
+        }
+        if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
+            autoStart();
+        }
+        else {
+            displayActionbar(Collections.singletonList(p), languageManager.fromKeyNoPrefix("waiting-for-players"));
+        }
+    }
+
+    /**
+     * Starts the game
+     * Called from /tmbl forceStart or after the wait counter finishes
      */
     public void gameStart() {
 
@@ -52,12 +78,15 @@ public class Game {
             return;
         }
 
+        // cancel wait timer
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
         autoStartID = -1;
 
+        // register event listener
         eventListener = new EventListener(this);
         Bukkit.getServer().getPluginManager().registerEvents(eventListener, plugin);
 
+        // save inventories (if not already done)
         for (Player p : gamePlayers) {
             if (!inventories.containsKey(p)) {
                 inventories.put(p, p.getInventory().getContents());
@@ -68,20 +97,26 @@ public class Game {
     }
 
     /**
-     * Starts a new round
+     * Starts a round
      */
     private void roundStart() {
         gameState = GameState.STARTING;
         playersAlive = new ArrayList<>(gamePlayers);
+
         scatterPlayers(gamePlayers);
         // Put all players in spectator to prevent them from getting kicked for flying
         setGamemode(gamePlayers, GameMode.SPECTATOR);
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> setGamemode(gamePlayers, GameMode.SPECTATOR), 10);
+        // do it again in case they were not in the world yet
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            setGamemode(gamePlayers, GameMode.SPECTATOR);
+        }, 10);
+
         clearInventories(gamePlayers);
         clearArena();
         prepareGameType(type);
+
+        // Begin the countdown sequence
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            // Begin the countdown sequence
             countdown(() -> {
                 setGamemode(gamePlayers, GameMode.SURVIVAL);
                 gameState = GameState.RUNNING;
@@ -91,41 +126,44 @@ public class Game {
 
     /**
      * Type specific setup: Generating layers and giving items
-     * @param type can be either "shovels", "snowballs", or "mixed"
+     * @param type game type,
      */
     private void prepareGameType(GameType type) {
-        roundType = type; // note: may need deepcopy this for it to work properly
-        if (roundType.equals(GameType.MIXED)) {
-            // Randomly select either shovels or snowballs and re-run the method
-            Random random = new Random();
-            switch (random.nextInt(2)) {
-                case 0 -> roundType = GameType.SHOVELS;
-                case 1 -> roundType = GameType.SNOWBALLS;
-            }
-        }
-
-        switch (roundType) {
+        roundType = type;
+        switch (type) {
             case SHOVELS -> {
                 Generator.generateLayersShovels(gameSpawn.clone());
+
                 ItemStack shovel = new ItemStack(Material.IRON_SHOVEL);
                 shovel.addEnchantment(Enchantment.SILK_TOUCH, 1);
                 giveItems(gamePlayers, shovel);
-                // Schedule a process to give snowballs after 2m30s (so people can't island, the OG game had this); add 160t because of the countdown
+
+                // Schedule a process to give snowballs after 2m30s (so people can't island, the OG game had this);
+                // add 160t because of the countdown
                 gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     clearInventories(gamePlayers);
                     giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
                     displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("showdown"));
                     playSound(gamePlayers, Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.HOSTILE, 1, 1);
+
                     // End the round in another 2m30s
                     gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundEnd, 3000);
                 }, 3160);
             }
             case SNOWBALLS -> {
                 Generator.generateLayersSnowballs(gameSpawn.clone());
+
                 giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
 
                 // End the round in 5m
                 gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundEnd, 6160);
+            }
+            case MIXED -> {
+                Random random = new Random();
+                switch (random.nextInt(2)) {
+                    case 0 -> prepareGameType(GameType.SHOVELS);
+                    case 1 -> prepareGameType(GameType.SNOWBALLS);
+                }
             }
         }
     }
@@ -138,8 +176,9 @@ public class Game {
         gameState = GameState.ENDING;
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
-        // Clear old layers (as a fill command, this would be /fill ~-20 ~-20 ~-20 ~20 ~ ~20 relative to spawn)
+
         playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 5, 0);
+
         // Check if there was a definite winner or not
         if (!playersAlive.isEmpty()) {
             Player winner = playersAlive.get(0);
@@ -148,11 +187,11 @@ public class Game {
                 gameWins.put(winner, 0);
             }
             gameWins.put(winner, gameWins.get(winner)+1);
+
             if (gameWins.get(winner) == 3) {
                 gameEnd();
             }
-            // If that player doesn't have three wins, nobody else does, so we need another round
-            else {
+            else { // If that player doesn't have three wins, nobody else does, so we need another round
                 displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("round-over"), languageManager.fromKeyNoPrefix("round-winner").replace("%winner%", winner.getDisplayName()), 5, 60, 5);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
             }
@@ -173,33 +212,35 @@ public class Game {
             setGamemode(gamePlayers, GameMode.SPECTATOR);
             clearInventories(gamePlayers);
 
+            // display winner
             Player winner = getPlayerWithMostWins(gameWins);
             if (winner != null) {
                 displayTitles(gamePlayers, languageManager.fromKeyNoPrefix("game-over"), languageManager.fromKeyNoPrefix("game-winner").replace("%winner%",winner.getDisplayName()), 5, 60, 5);
             }
+
             displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("lobby-in-10"));
 
             // Wait 10s (200t), then
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
                 clearArena();
 
+                // teleport player back and restore inventory
                 for (Player p : gamePlayers) {
-                    // Restore inventories
-                    if (inventories.containsKey(p)) {
-                        p.getInventory().setContents(inventories.get(p));
-                    }
-
                     if (p == winner && arena.winnerLobby != null) {
                         p.teleport(arena.winnerLobby);
                     }
                     else {
                         p.teleport(Objects.requireNonNull(arena.lobby));
                     }
+
+                    if (inventories.containsKey(p)) {
+                        p.getInventory().setContents(inventories.get(p));
+                    }
                 }
 
             }, 200);
         }
+
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
@@ -208,8 +249,13 @@ public class Game {
         arena.game = null;
     }
 
+    /**
+     * Stops the game, usually while it is still going
+     * called if too many players leave, or from /tmbl forceStop
+     */
     public void stopGame() {
         gamePlayers.forEach(this::removePlayer);
+
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
@@ -224,48 +270,37 @@ public class Game {
      * @param p Player to remove
      */
     public void removePlayer(Player p) {
+        gamePlayers.remove(p);
 
+        // check if the game has not started yet
         if (gameState == GameState.WAITING) {
-            gamePlayers.remove(p);
+
+            // inform player that there are no longer enough players to start
             if (gamePlayers.size() < 2) {
                 displayActionbar(gamePlayers, languageManager.fromKeyNoPrefix("waiting-for-players"));
             }
 
+            // teleport player back and restore inventory
             if (arena.waitArea != null) {
+                p.getInventory().clear();
                 p.teleport(arena.lobby);
+                if (inventories.containsKey(p)) {
+                    p.getInventory().setContents(inventories.get(p));
+                }
             }
         }
         else {
-            gamePlayers.remove(p);
+            // stop the game if there are not enough players
             if (gamePlayers.size() < 2) {
-                gameEnd();
+                stopGame();
             }
+
+            // teleport player back and restore inventory
             p.getInventory().clear();
+            p.teleport(arena.lobby);
             if (inventories.containsKey(p)) {
                 p.getInventory().setContents(inventories.get(p));
             }
-            p.teleport(arena.lobby);
-        }
-    }
-
-    /**
-     * Adds a player to the wait area. Called from /tumble-join
-     * Precondition: the game is in state WAITING
-     * @param p Player to add
-     */
-    public void addPlayer(Player p) {
-        gamePlayers.add(p);
-        // save inventory
-        if (arena.waitArea != null) {
-            inventories.put(p,p.getInventory().getContents());
-            p.teleport(arena.waitArea);
-            p.getInventory().clear();
-        }
-        if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
-            autoStart();
-        }
-        else {
-            displayActionbar(Collections.singletonList(p), languageManager.fromKeyNoPrefix("waiting-for-players"));
         }
     }
 
