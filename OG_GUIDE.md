@@ -7,7 +7,7 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
 ## Steps  
 
 1. Download this plugin and [Multiverse-Core](https://www.spigotmc.org/resources/multiverse-core.390/). Place them in your plugins directory
-1. Download the worlds and unzip them into your server's worlds directory.
+2. Download the worlds and unzip them into your server's worlds directory.
     - [Lobby](https://www.theminecraftarchitect.com/mini-game-maps/2017-mini-game-lobby) (Rename folder to 'lobby' after unzipping)
     - [Normal Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
     - [Festive Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
@@ -16,12 +16,12 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
 
     Tip: set a specific directory to store your worlds in with the `world-container` setting in `bukkit.yml`
 
-1. Set `level-name` in server.properities to `lobby`
-2. Take note of the names of the world folders, we will need this in a moment.
-3. Start and join your server.
-4. Import your arena worlds. This can be done with the multiverse command `/mv import <your-world-name> normal`
+3. Set `level-name` in server.properities to `lobby`
+4. Take note of the names of the world folders, we will need this in a moment.
+5. Start and join your server.
+6. Import your arena worlds. This can be done with the multiverse command `/mv import <your-world-name> normal`
 
-5. Paste the arena config below into `plugins/tumble/arenas.yml`:
+7. Paste the arena config below into `plugins/tumble/arenas.yml`:
    ```yaml
    arenas:
      basic:
@@ -93,9 +93,9 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
          Z: -340.5
          world: lobby
    ```
-6. Reload the plugin with `/tmbl reload`.
+8. Reload the plugin with `/tmbl reload`.
 
-7. Join the game by using `/tmbl join basic Mixed`
+9. Join the game using `/tmbl join basic mixed`
 (swap the arena and game type for whichever one you want to play).
 
 You're done! Happy playing!

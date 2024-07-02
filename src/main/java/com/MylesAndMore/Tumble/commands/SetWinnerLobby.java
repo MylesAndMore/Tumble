@@ -18,12 +18,12 @@ import static com.MylesAndMore.Tumble.Main.languageManager;
 public class SetWinnerLobby implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public String getCommandName() {
-        return "setWinnerLobby";
+        return "setwinnerlobby";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.setWinnerLobby";
+        return "tumble.setwinnerlobby";
     }
 
     @Override

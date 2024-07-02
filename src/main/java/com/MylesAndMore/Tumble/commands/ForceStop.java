@@ -19,12 +19,12 @@ public class ForceStop implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
     public String getCommandName() {
-        return "forceStop";
+        return "forcestop";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.forceStop";
+        return "tumble.forcestop";
     }
 
     @Override

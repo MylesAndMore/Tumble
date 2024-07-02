@@ -19,12 +19,12 @@ public class ForceStart implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
     public String getCommandName() {
-        return "forceStart";
+        return "forcestart";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.forceStart";
+        return "tumble.forcestart";
     }
 
     @Override

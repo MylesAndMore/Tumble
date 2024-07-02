@@ -18,12 +18,12 @@ import static com.MylesAndMore.Tumble.Main.languageManager;
 public class SetGameSpawn implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public String getCommandName() {
-        return "setGameSpawn";
+        return "setgamespawn";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.setGameSpawn";
+        return "tumble.setgamespawn";
     }
 
     @Override

@@ -19,12 +19,12 @@ public class SetKillYLevel implements SubCommand, CommandExecutor, TabCompleter 
 
     @Override
     public String getCommandName() {
-        return "setKillYLevel";
+        return "setkillylevel";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.setKillYLevel";
+        return "tumble.setkillylevel";
     }
 
     @Override

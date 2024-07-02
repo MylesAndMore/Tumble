@@ -21,9 +21,9 @@ permissions:
   tumble.leave:
     description: Allows you to leave a Tumble match.
     default: true
-  tumble.forceStart:
+  tumble.forcestart:
     default: op
-  tumble.forceStop:
+  tumble.forcestop:
     default: op
   tumble.reload:
     default: op
@@ -31,14 +31,14 @@ permissions:
     default: op
   tumble.remove:
     default: op
-  tumble.setGameSpawn:
+  tumble.setgamespawn:
     default: op
-  tumble.setKillYLevel:
+  tumble.setkillylevel:
     default: op
-  tumble.setLobby:
+  tumble.setlobby:
     default: op
-  tumble.setWaitArea:
+  tumble.setwaitarea:
     default: op
-  tumble.setWinnerLobby:
+  tumble.setwinnerlobby:
     default: op
 

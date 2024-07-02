@@ -18,12 +18,12 @@ import static com.MylesAndMore.Tumble.Main.languageManager;
 public class SetLobby implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public String getCommandName() {
-        return "setLobby";
+        return "setlobby";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.setLobby";
+        return "tumble.setlobby";
     }
 
     @Override

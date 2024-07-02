@@ -6,7 +6,8 @@ Tumble is a Spigot/Paper plugin that aims to recreate the Tumble minigame from t
 
 ## What *is* Tumble?
 
-If you've never heard of it, [Tumble](https://minecraft.wiki/w/tumble) is a twist on the classic Minecraft minigame of spleef, where the objective is to break the blocks under your opponents. But in Tumble, you play on randomly generated layers of blocks, using shovels, snowballs, or both to try and eliminate your opponents.
+If you've never heard of it, [Tumble](https://minecraft.wiki/w/tumble) is a twist on the classic Minecraft minigame of spleef, where the objective is to break the blocks under your opponents. 
+But in Tumble, you play on randomly generated layers of blocks, using shovels, snowballs, or both to try and eliminate your opponents.
 
 ## Features  
 
@@ -29,6 +30,7 @@ If you've never heard of it, [Tumble](https://minecraft.wiki/w/tumble) is a twis
 3. Start your server.
 4. Import your worlds using a plugin like Multiverse. ```/mv import myWorld normal```.
 5. Create your first arena `/tmbl create myArena`
+6. Set the spawn point of the arena `/tmbl setgamespawn myArena`
    - **Note**: The layers will generate relative to this location. Ensure that the area is clear, 20 blocks in each direction.
 
 7. You're done! You can now join the game ```/tmbl join myArena mixed```.
@@ -46,11 +48,11 @@ Scroll down for more options to configure your game.
 | `/tmbl reload`                      | Reload the plugin's configs.                                                       | `tumble.reload`         |
 | `/tmbl create <arenaName>`          | Create a new arena                                                                 | `tumble.create`         |
 | `/tmbl remove <arenaName>`          | Remove an arena                                                                    | `tumble.remove`         |
-| `/tmbl setGameSpawn <arenaName>`    | Set game spawn to your current position                                            | `tumble.setGameSpawn`   |
-| `/tmbl setKillYLevel <arenaName>`   | Set the arena's Y-level to kill players at to current Y coordinate                 | `tumble.setKillYLevel`  |
-| `/tmbl setLobby <arenaName>`        | Set the arena's lobby to current location                                          | `tumble.setLobby`       |
-| `/tmbl setWaitArea <arenaName>`     | Set the arena's wait area to the current location                                  | `tumble.setWaitArea`    |
-| `/tmbl setWinnerLobby <arenaName>`  | Set the arena's lobby to the current location                                      | `tumble.setWinnerLobby` |
+| `/tmbl setgamespawn <arenaName>`    | Set game spawn to your current position                                            | `tumble.setgamespawn`   |
+| `/tmbl setkillylevel <arenaName>`   | Set the arena's Y-level to kill players at to current Y coordinate                 | `tumble.setkillylevel`  |
+| `/tmbl setlobby <arenaName>`        | Set the arena's lobby to current location                                          | `tumble.setlobby`       |
+| `/tmbl setwaitarea <arenaName>`     | Set the arena's wait area to the current location                                  | `tumble.setwaitarea`    |
+| `/tmbl setwinnerlobby <arenaName>`  | Set the arena's lobby to the current location                                      | `tumble.setwinnerlobby` |
 
 
 ## Configuration  

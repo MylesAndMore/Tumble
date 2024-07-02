@@ -18,12 +18,12 @@ import static com.MylesAndMore.Tumble.Main.languageManager;
 public class SetWaitArea implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public String getCommandName() {
-        return "setWaitArea";
+        return "setwaitarea";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.setWaitArea";
+        return "tumble.setwaitarea";
     }
 
     @Override
