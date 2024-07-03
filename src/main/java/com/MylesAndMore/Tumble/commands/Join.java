@@ -106,6 +106,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             } else {
                 sender.sendMessage(languageManager.fromKey("arena-not-ready"));
             }
+            return false;
         }
 
         if (game.gameState != GameState.WAITING) {

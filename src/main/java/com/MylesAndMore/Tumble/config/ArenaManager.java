@@ -3,7 +3,6 @@ package com.MylesAndMore.Tumble.config;
 import com.MylesAndMore.Tumble.game.Arena;
 import com.MylesAndMore.Tumble.game.Game;
 import com.MylesAndMore.Tumble.plugin.CustomConfig;
-import com.MylesAndMore.Tumble.plugin.Result;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,7 +10,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -44,46 +42,38 @@ public class ArenaManager {
         // arenas
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
         if (arenasSection == null) {
-            plugin.getLogger().warning("Section 'arenas' is missing from config");
+            plugin.getLogger().warning("config.yml is missing key 'arenas'");
             return;
         }
         arenas = new HashMap<>();
         for (String arenaName: arenasSection.getKeys(false)) {
-
-            ConfigurationSection anArenaSection = arenasSection.getConfigurationSection(arenaName);
-            if (anArenaSection == null) {
-                plugin.getLogger().warning("Failed to load arena "+arenaName+": Error loading config section");
-                continue;
-            }
-
             Arena arena = new Arena(arenaName);
+
+            if (config.contains("arenas." + arenaName + ".kill-at-y", true)) {
+                arena.killAtY = config.getInt("arenas." + arenaName + ".kill-at-y");
+            }
+            if (config.contains("arenas." + arenaName + ".game-spawn")) {
+                arena.gameSpawn = readWorld("arenas." + arenaName + ".game-spawn");
+            }
+            if (config.contains("arenas." + arenaName + ".lobby")) {
+                arena.lobby = readWorld("arenas." + arenaName + ".lobby");
+            }
+            if (config.contains("arenas." + arenaName + ".winner-lobby")) {
+                arena.winnerLobby = readWorld("arenas." + arenaName + ".winner-lobby");
+            }
+            if (config.contains("arenas." + arenaName + ".wait-area")) {
+                arena.waitArea = readWorld("arenas." + arenaName + ".wait-area");
+            }
+
+            // validate
+            if (arena.gameSpawn == null) {
+                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a game spawn, before you can join you must set it with '/tmbl setgamespawn'.");
+            }
+            if (arena.gameSpawn == null) {
+                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a lobby location. The spawn point of the default world will be used.");
+            }
+
             arenas.put(arena.name, arena);
-
-            int killAtY = anArenaSection.getInt("kill-at-y", 0);
-            if (killAtY != 0) {
-                arena.killAtY = killAtY;
-            }
-
-            Result<Location> res = readWorld(anArenaSection.getConfigurationSection("game-spawn"));
-            if (res.success) {
-                arena.gameSpawn = res.value;
-            }
-
-            Result<Location> lobbyRes = readWorld(anArenaSection.getConfigurationSection("lobby"));
-            if (lobbyRes.success) {
-                arena.lobby = lobbyRes.value;
-            }
-
-            Result<Location> winnerLobbyRes = readWorld(anArenaSection.getConfigurationSection("winner-lobby"));
-            if (winnerLobbyRes.success) {
-                arena.winnerLobby = winnerLobbyRes.value;
-            }
-
-            Result<Location> waitAreaRes = readWorld(anArenaSection.getConfigurationSection("wait-area"));
-            if (waitAreaRes.success) {
-                arena.waitArea = waitAreaRes.value;
-            }
-
         }
     }
 
@@ -136,35 +126,40 @@ public class ArenaManager {
      *   y:
      *   z:
      *   world:
-     * @param section The section in the yaml with x, y, z, and world as its children
+     * @param path The section in the yaml with x, y, z, and world as its children
      * @return Result of either:
      *   Result#success = true and Result#value OR
      *   Result#success = false and Result#error
      */
-    private Result<Location> readWorld(@Nullable ConfigurationSection section) {
+    private Location readWorld(String path) {
 
+        ConfigurationSection section = config.getConfigurationSection(path);
         if (section == null) {
-            return new Result<>("Section missing from config");
+            plugin.getLogger().warning("arenas.yml: Error loading location at '" + path + "' - " + "Section is null");
+            return null;
         }
 
         double x = section.getDouble("x");
         double y = section.getDouble("y");
         double z = section.getDouble("z");
         if (x == 0 || y == 0 || z == 0) {
-            return new Result<>("Arena coordinates are missing or are zero. Coordinates cannot be zero.");
+            plugin.getLogger().warning("arenas.yml: Error loading location at '" + path + "' - " + "Arena coordinates are missing or are zero. Coordinates cannot be zero.");
+            return null;
         }
 
         String worldName = section.getString("world");
         if (worldName == null) {
-            return new Result<>("World name is missing");
+            plugin.getLogger().warning("arenas.yml: Error loading location at '" + path +"' - " + "World name is missing");
+            return null;
         }
 
         World world = Bukkit.getWorld(worldName);
         if (world == null) {
-            return new Result<>("Failed to load world " + worldName);
+            plugin.getLogger().warning("arenas.yml: Error loading location at '" + path + "' - " + "Failed to load world '" + worldName + "'");
+            return null;
         }
 
-        return new Result<>(new Location(world,x,y,z));
+        return new Location(world,x,y,z);
     }
 
     /**

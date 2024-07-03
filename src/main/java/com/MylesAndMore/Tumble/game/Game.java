@@ -43,7 +43,7 @@ public class Game {
     public Game(@NotNull Arena arena, @NotNull GameType type) {
         this.arena = arena;
         this.type = type;
-        this.gameSpawn = arena.gameSpawn;
+        this.gameSpawn = Objects.requireNonNull(arena.gameSpawn);
     }
 
     /**

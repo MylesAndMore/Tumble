@@ -24,8 +24,8 @@ public class Main extends JavaPlugin{
         plugin = this;
 
         languageManager = new LanguageManager();
-        arenaManager = new ArenaManager();
         configManager = new ConfigManager();
+        arenaManager = new ArenaManager();
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);
