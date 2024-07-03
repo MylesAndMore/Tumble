@@ -1,6 +1,7 @@
 package com.MylesAndMore.Tumble.commands;
 
 import com.MylesAndMore.Tumble.game.Game;
+import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -50,6 +51,10 @@ public class ForceStart implements SubCommand, CommandExecutor, TabCompleter {
 
         if (game == null) {
             sender.sendMessage(languageManager.fromKey("no-game-in-arena"));
+            return false;
+        }
+
+        if (game.gameState != GameState.WAITING) {
             return false;
         }
 

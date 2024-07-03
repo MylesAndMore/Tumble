@@ -146,13 +146,13 @@ public class Layers {
             List<Material> gen3 = new ArrayList<>() {{
                 add(Material.PACKED_ICE);
                 add(Material.PACKED_ICE);
-                add(Material.NOTE_BLOCK);
+                add(Material.JUKEBOX);
                 add(Material.TNT);
                 add(Material.LIGHT_BLUE_CONCRETE);
                 add(Material.GLASS);
                 add(Material.PACKED_ICE);
                 add(Material.PACKED_ICE);
-                add(Material.NOTE_BLOCK);
+                add(Material.JUKEBOX);
                 add(Material.TNT);
                 add(Material.LIGHT_BLUE_CONCRETE);
                 add(Material.GLASS);

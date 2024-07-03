@@ -61,10 +61,10 @@ Configuration for this plugin is stored in three files.
 ### config.yml
 Stores common settings
 
-| Option                     | Type            | Default value |
-|----------------------------|-----------------|---------------|
-| `hide-join-leave-messages` | `boolean`       | `false`       |
-| `wait-duration`            | `int` (seconds) | `15`          |
+| Option                     | Type              | Default value |
+|----------------------------|-------------------|---------------|
+| `hide-join-leave-messages` | Boolean           | `false`       |
+| `wait-duration`            | Integer (seconds) | `15`          |
 
 
 ### arenas.yml
@@ -90,9 +90,9 @@ Locations are stored using the following format:
 
 Each arena can also contain the following option:
 
-| Option      | Type   | Description                                                     |
-|-------------|--------|-----------------------------------------------------------------|
-| `kill-at-y` | double | When a player falls below this Y-level, they will be eliminated |
+| Option      | Type    | Description                                                     |
+|-------------|---------|-----------------------------------------------------------------|
+| `kill-at-y` | Integer | When a player falls below this Y-level, they will be eliminated |
 
 ### language.yml
 Most of this plugin's strings are configurable through this file. (Excluding from some console errors)

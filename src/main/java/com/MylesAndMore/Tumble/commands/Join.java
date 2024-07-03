@@ -59,16 +59,17 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
 
         Game game;
         if (args.length < 2 || args[1] == null) {
-            // try to infer game type from game taking place in the arena
+            // no type specified: try to infer game type from game taking place in the arena
             if (arena.game == null) {
+                // cant infer if no game is taking place
                 sender.sendMessage(languageManager.fromKey("specify-game-type"));
                 return false;
             }
-            else {
-                game = arena.game;
-            }
+
+            game = arena.game;
         }
         else {
+            // type specified
             GameType type;
             switch (args[1]) {
                 case "shovels", "shovel"     -> type = GameType.SHOVELS;

@@ -226,6 +226,8 @@ public class Game {
 
                 // teleport player back and restore inventory
                 for (Player p : gamePlayers) {
+                    p.getInventory().clear();
+                    p.setGameMode(GameMode.SURVIVAL);
                     if (p == winner && arena.winnerLobby != null) {
                         p.teleport(arena.winnerLobby);
                     }
@@ -283,6 +285,7 @@ public class Game {
             // teleport player back and restore inventory
             if (arena.waitArea != null) {
                 p.getInventory().clear();
+                p.setGameMode(GameMode.SURVIVAL);
                 p.teleport(arena.lobby);
                 if (inventories.containsKey(p)) {
                     p.getInventory().setContents(inventories.get(p));
@@ -297,6 +300,7 @@ public class Game {
 
             // teleport player back and restore inventory
             p.getInventory().clear();
+            p.setGameMode(GameMode.SURVIVAL);
             p.teleport(arena.lobby);
             if (inventories.containsKey(p)) {
                 p.getInventory().setContents(inventories.get(p));

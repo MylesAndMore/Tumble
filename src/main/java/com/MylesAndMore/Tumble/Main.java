@@ -5,6 +5,7 @@ import com.MylesAndMore.Tumble.config.ArenaManager;
 
 import com.MylesAndMore.Tumble.config.ConfigManager;
 import com.MylesAndMore.Tumble.config.LanguageManager;
+import com.MylesAndMore.Tumble.game.Arena;
 import org.bstats.bukkit.Metrics;
 
 import org.bukkit.Bukkit;
@@ -31,5 +32,15 @@ public class Main extends JavaPlugin{
         new Metrics(this, 16940);
 
         Bukkit.getServer().getLogger().info("[Tumble] Tumble successfully enabled!");
+    }
+
+    @Override
+    public void onDisable() {
+        // stop running games
+        for (Arena a : arenaManager.arenas.values()) {
+            if (a.game != null) {
+                a.game.stopGame();
+            }
+        }
     }
 }
