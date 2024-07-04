@@ -20,17 +20,19 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * Manages arenas.yml and stores list of arenas
  */
 public class ArenaManager {
-
     public HashMap<String, Arena> arenas;
 
-    private final CustomConfig arenasYml = new CustomConfig("arenas.yml");
-    private final FileConfiguration config = arenasYml.getConfig();
+    private final CustomConfig arenasYml;
+    private final FileConfiguration config;
 
     /**
      * Create an ArenaManager
      */
     public ArenaManager() {
+        arenasYml = new CustomConfig("arenas.yml");
         arenasYml.saveDefaultConfig();
+        config = arenasYml.getConfig();
+
         readConfig();
     }
 
@@ -38,14 +40,13 @@ public class ArenaManager {
      * Read arenas from arenas.ynl and populate this.arenas
      */
     public void readConfig() {
+        arenas = new HashMap<>();
 
-        // arenas
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
         if (arenasSection == null) {
-            plugin.getLogger().warning("config.yml is missing key 'arenas'");
+            plugin.getLogger().warning("arenas.yml is missing key 'arenas'");
             return;
         }
-        arenas = new HashMap<>();
         for (String arenaName: arenasSection.getKeys(false)) {
             Arena arena = new Arena(arenaName);
 

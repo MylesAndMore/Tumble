@@ -59,6 +59,7 @@ public class CustomConfig {
     public void saveDefaultConfig() {
         if (!configFile.exists()) {
             plugin.saveResource(fileName, false);
+            reloadConfig();
         }
     }
 }

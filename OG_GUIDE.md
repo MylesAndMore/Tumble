@@ -39,7 +39,7 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
        winner-lobby:
          x: -362.5
          y: 76
-         Z: -340.5
+         z: -340.5
          world: lobby
      birthday:
        kill-at-y: 27
@@ -56,7 +56,7 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
        winner-lobby:
          x: -362.5
          y: 76
-         Z: -340.5
+         z: -340.5
          world: lobby
      festive:
        kill-at-y: 20
@@ -73,7 +73,7 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
        winner-lobby:
          x: -362.5
          y: 76
-         Z: -340.5
+         z: -340.5
          world: lobby
      halloween:
        kill-at-y: 23
@@ -90,7 +90,7 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
        winner-lobby:
          x: -362.5
          y: 76
-         Z: -340.5
+         z: -340.5
          world: lobby
    ```
 8. Reload the plugin with `/tmbl reload`.

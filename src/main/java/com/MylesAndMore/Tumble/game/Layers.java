@@ -206,7 +206,7 @@ public class Layers {
             }};
             matList.add(gen12);
             List<Material> gen14 = new ArrayList<>() {{
-                add(Material.LECTERN);
+                add(Material.OAK_PLANKS);
                 add(Material.OBSIDIAN);
                 add(Material.SPONGE);
                 add(Material.BEEHIVE);

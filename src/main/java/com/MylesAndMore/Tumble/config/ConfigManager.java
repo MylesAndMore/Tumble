@@ -14,15 +14,18 @@ public class ConfigManager {
     public boolean HideLeaveJoin;
     public int waitDuration;
 
-    private final CustomConfig configYml = new CustomConfig("config.yml");
-    private final Configuration config = configYml.getConfig();
-    private final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
+    private final Configuration config;
+    private final Configuration defaultConfig;
 
     /**
      * Create a config manager
      */
     public ConfigManager() {
+        CustomConfig configYml = new CustomConfig("config.yml");
         configYml.saveDefaultConfig();
+        config = configYml.getConfig();
+        defaultConfig = Objects.requireNonNull(config.getDefaults());
+
         validate();
         readConfig();
     }
