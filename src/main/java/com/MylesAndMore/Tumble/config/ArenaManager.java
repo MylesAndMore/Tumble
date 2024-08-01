@@ -20,26 +20,18 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * Manages arenas.yml and stores list of arenas
  */
 public class ArenaManager {
-    public HashMap<String, Arena> arenas;
+    public static HashMap<String, Arena> arenas;
 
-    private final CustomConfig arenasYml;
-    private final FileConfiguration config;
+    private static CustomConfig arenasYml;
+    private static FileConfiguration config;
 
     /**
-     * Create an ArenaManager
+     * Read arenas from arenas.yml and populate this.arenas
      */
-    public ArenaManager() {
+    public static void readConfig() {
         arenasYml = new CustomConfig("arenas.yml");
         arenasYml.saveDefaultConfig();
         config = arenasYml.getConfig();
-
-        readConfig();
-    }
-
-    /**
-     * Read arenas from arenas.ynl and populate this.arenas
-     */
-    public void readConfig() {
         arenas = new HashMap<>();
 
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
@@ -81,7 +73,7 @@ public class ArenaManager {
     /**
      * Write arenas from this.arenas to arenas.yml
      */
-    public void WriteConfig() {
+    public static void WriteConfig() {
         config.set("arenas", null); // clear everything
 
         for (Arena arena: arenas.values()) {
@@ -111,7 +103,7 @@ public class ArenaManager {
      * @param p Player to search for
      * @return the game the player is in, or null if not found
      */
-    public Game findGamePlayerIsIn(Player p) {
+    public static Game findGamePlayerIsIn(Player p) {
         for (Arena a : arenas.values()) {
             if (a.game != null && a.game.gamePlayers.contains(p)) {
                 return a.game;
@@ -132,7 +124,7 @@ public class ArenaManager {
      *   Result#success = true and Result#value OR
      *   Result#success = false and Result#error
      */
-    private Location readWorld(String path) {
+    private static Location readWorld(String path) {
 
         ConfigurationSection section = config.getConfigurationSection(path);
         if (section == null) {
@@ -173,7 +165,7 @@ public class ArenaManager {
      * @param path The path of the section to write
      * @param location The location to write
      */
-    private void WriteWorld(String path, @NotNull Location location) {
+    private static void WriteWorld(String path, @NotNull Location location) {
 
         ConfigurationSection section = config.getConfigurationSection(path);
 

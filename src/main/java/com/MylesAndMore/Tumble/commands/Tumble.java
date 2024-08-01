@@ -1,5 +1,6 @@
 package com.MylesAndMore.Tumble.commands;
 
+import com.MylesAndMore.Tumble.config.LanguageManager;
 import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,9 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-
-import static com.MylesAndMore.Tumble.Main.languageManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class Tumble implements CommandExecutor, TabCompleter {
 
@@ -31,14 +33,14 @@ public class Tumble implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!subCommands.containsKey(args[0])) {
-            sender.sendMessage(languageManager.fromKey("unknown-command"));
+            sender.sendMessage(LanguageManager.fromKey("unknown-command"));
             return true;
         }
 
         var subCmd = subCommands.get(args[0]);
 
         if (!sender.hasPermission(subCmd.getPermission())) {
-            sender.sendMessage(languageManager.fromKey("no-permission").replace("%permission%", subCmd.getPermission()));
+            sender.sendMessage(LanguageManager.fromKey("no-permission").replace("%permission%", subCmd.getPermission()));
             return false;
         }
 

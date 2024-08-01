@@ -12,13 +12,10 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * Manages language.yml and allows retrieval of keys
  */
 public class LanguageManager {
-    private final Configuration config;
-    private final Configuration defaultConfig;
+    private static Configuration config;
+    private static Configuration defaultConfig;
 
-    /**
-     * Creates a new LanguageManager
-     */
-    public LanguageManager() {
+    public static void readConfig() {
         CustomConfig languageYml = new CustomConfig("language.yml");
         languageYml.saveDefaultConfig();
         config = languageYml.getConfig();
@@ -30,7 +27,7 @@ public class LanguageManager {
     /**
      * Check keys of language.yml against the defaults
      */
-    public void validate() {
+    public static void validate() {
         boolean invalid = false;
         for (String key : defaultConfig.getKeys(true)) {
             if (!config.contains(key,true)) {
@@ -49,7 +46,7 @@ public class LanguageManager {
      * @param key The key representing the message
      * @return The message from the key
      */
-    public String fromKey(String key) {
+    public static String fromKey(String key) {
         return fromKeyNoPrefix("prefix") + fromKeyNoPrefix(key);
     }
 
@@ -59,7 +56,7 @@ public class LanguageManager {
      * @param key The key representing the message
      * @return The message from the key
      */
-    public String fromKeyNoPrefix(String key) {
+    public static String fromKeyNoPrefix(String key) {
         String val = config.getString(key);
 
         if (val == null) {

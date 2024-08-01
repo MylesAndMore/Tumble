@@ -1,5 +1,7 @@
 package com.MylesAndMore.Tumble.commands;
 
+import com.MylesAndMore.Tumble.config.ArenaManager;
+import com.MylesAndMore.Tumble.config.LanguageManager;
 import com.MylesAndMore.Tumble.game.Game;
 import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
@@ -11,9 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.MylesAndMore.Tumble.Main.arenaManager;
-import static com.MylesAndMore.Tumble.Main.languageManager;
 
 public class Leave implements SubCommand, CommandExecutor, TabCompleter {
 
@@ -31,18 +30,18 @@ public class Leave implements SubCommand, CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if (!(sender instanceof Player)) {
-            sender.sendMessage(languageManager.fromKey("not-for-console"));
+            sender.sendMessage(LanguageManager.fromKey("not-for-console"));
             return false;
         }
 
-        Game game = arenaManager.findGamePlayerIsIn((Player)sender);
+        Game game = ArenaManager.findGamePlayerIsIn((Player)sender);
         if (game == null) {
-            sender.sendMessage(languageManager.fromKey("no-game-in-arena"));
+            sender.sendMessage(LanguageManager.fromKey("no-game-in-arena"));
             return false;
         }
 
         game.removePlayer((Player) sender);
-        sender.sendMessage(languageManager.fromKey("leave-success")
+        sender.sendMessage(LanguageManager.fromKey("leave-success")
                 .replace("%arena%", game.arena.name)
                 .replace("%type%", game.type.toString()));
         return true;

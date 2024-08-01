@@ -16,17 +16,13 @@ import java.util.Objects;
 public class Main extends JavaPlugin{
     public static Main plugin;
 
-    public static LanguageManager languageManager;
-    public static ArenaManager arenaManager;
-    public static ConfigManager configManager;
-
     @Override
     public void onEnable() {
         plugin = this;
 
-        languageManager = new LanguageManager();
-        configManager = new ConfigManager();
-        arenaManager = new ArenaManager();
+        LanguageManager.readConfig();
+        ConfigManager.readConfig();
+        ArenaManager.readConfig();
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);
@@ -37,7 +33,7 @@ public class Main extends JavaPlugin{
     @Override
     public void onDisable() {
         // stop running games
-        for (Arena a : arenaManager.arenas.values()) {
+        for (Arena a : ArenaManager.arenas.values()) {
             if (a.game != null) {
                 a.game.stopGame();
             }

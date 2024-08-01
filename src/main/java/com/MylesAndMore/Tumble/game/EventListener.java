@@ -1,10 +1,12 @@
 package com.MylesAndMore.Tumble.game;
 
-import java.util.Objects;
-
+import com.MylesAndMore.Tumble.config.ConfigManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
@@ -15,12 +17,12 @@ import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.util.Vector;
-
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
-import static com.MylesAndMore.Tumble.Main.configManager;
+import java.util.Objects;
+
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 /**
@@ -41,7 +43,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         // Hide/show join message accordingly
-        if (configManager.HideLeaveJoin) {
+        if (ConfigManager.HideLeaveJoin) {
             event.setJoinMessage(null);
         }
     }
@@ -49,7 +51,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         // Hide/show leave message accordingly
-        if (configManager.HideLeaveJoin) {
+        if (ConfigManager.HideLeaveJoin) {
             event.setQuitMessage(null);
         }
 
