@@ -24,7 +24,7 @@ But in Tumble, you play on randomly generated layers of blocks, using shovels, s
 ## Setup
 
 1. [Download](https://github.com/MylesAndMore/tmbl/releases) the plugin's JAR file and place it in your server's plugins directory.
-2. Place the worlds for your lobby and arenas in your plugins worlds directory.
+2. Place the worlds for your lobby and arenas in your server's worlds directory.
     - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.  
 
 3. Start your server.
