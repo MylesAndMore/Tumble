@@ -87,6 +87,7 @@ Locations are stored using the following format:
       z: 0.5
       world: worldName
 ```
+If a location is not specified, players will not be teleported by the plugin.
 
 Each arena can also contain the following option:
 

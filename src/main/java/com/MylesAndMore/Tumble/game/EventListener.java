@@ -29,7 +29,7 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * An event listener for a game of Tumble.
  */
 public class EventListener implements Listener {
-    Game game;
+    final Game game;
 
     /**
      * Create a new EventListener for a game.
@@ -43,7 +43,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         // Hide/show join message accordingly
-        if (ConfigManager.HideLeaveJoin) {
+        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideLeaveJoin) {
             event.setJoinMessage(null);
         }
     }
@@ -51,7 +51,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         // Hide/show leave message accordingly
-        if (ConfigManager.HideLeaveJoin) {
+        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideLeaveJoin) {
             event.setQuitMessage(null);
         }
 
@@ -63,6 +63,11 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent event) {
+        // Hide death messages if configured
+        if (event.getEntity().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideDeathMessages) {
+            event.setDeathMessage(null);
+        }
+
         // Inform the game that the player died and respawn them
         if (game.gamePlayers.contains(event.getEntity()) && game.gameState == GameState.RUNNING) {
             game.playerDeath(event.getEntity());
@@ -203,7 +208,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void PlayerRespwanEvent(PlayerRespawnEvent event) {
+    public void PlayerRespawnEvent(PlayerRespawnEvent event) {
         // Make sure players respawn in the correct location
         if (game.gamePlayers.contains(event.getPlayer())) {
             event.setRespawnLocation(game.arena.gameSpawn);

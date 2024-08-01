@@ -212,26 +212,12 @@ public class Game {
             }
 
             displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("lobby-in-10"));
-
-            // Wait 10s (200t), then
+            // Wait 10s (200t), then clear the arena and teleport players back
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                 clearArena();
-
-                // teleport player back and restore inventory
                 for (Player p : gamePlayers) {
-                    p.getInventory().clear();
-                    p.setGameMode(GameMode.SURVIVAL);
-                    if (p == winner && arena.winnerLobby != null) {
-                        p.teleport(arena.winnerLobby);
-                    } else {
-                        p.teleport(Objects.requireNonNull(arena.lobby));
-                    }
-
-                    if (inventories.containsKey(p)) {
-                        p.getInventory().setContents(inventories.get(p));
-                    }
+                    sendToLobby(p, p == winner);
                 }
-
             }, 200);
         }
 
@@ -248,7 +234,9 @@ public class Game {
      * Called if too many players leave, or from /tumble forceStop
      */
     public void stopGame() {
-        gamePlayers.forEach(this::removePlayer);
+        // A new list must be created to avoid removing elements while iterating
+        List<Player> players = new ArrayList<>(gamePlayers);
+        players.forEach(this::removePlayer);
 
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
@@ -268,46 +256,32 @@ public class Game {
 
         // Check if the game has not started yet
         if (gameState == GameState.WAITING) {
-
             // Inform player that there are no longer enough players to start
             if (gamePlayers.size() < 2) {
                 displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("waiting-for-players"));
             }
 
-            // Teleport player back and restore inventory
-            if (arena.waitArea != null) {
-                p.getInventory().clear();
-                p.setGameMode(GameMode.SURVIVAL);
-                p.teleport(arena.lobby);
-                if (inventories.containsKey(p)) {
-                    p.getInventory().setContents(inventories.get(p));
-                }
-            }
+            sendToLobby(p, false);
         } else {
-            // Stop the game if there are not enough players
+            // Stop the game if there are no longer enough players
             if (gamePlayers.size() < 2) {
                 stopGame();
             }
 
-            p.getInventory().clear();
-            p.setGameMode(GameMode.SURVIVAL);
-            p.teleport(arena.lobby);
-            if (inventories.containsKey(p)) {
-                p.getInventory().setContents(inventories.get(p));
-            }
+            sendToLobby(p, false); // You can never win if you quit, remember that kids!!
         }
     }
 
     /**
-     * Initiates an automatic start of a Tumble game
+     * Attempts to initiate an automatic start of a Tumble game
      */
     public void autoStart() {
-        // Wait for the player to load in
         int waitDuration = ConfigManager.waitDuration;
+        if (waitDuration <= 0) { return; }
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("time-till-start").replace("%wait%",waitDuration+""));
             playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_CHIME, SoundCategory.BLOCKS, 1, 1);
-            // Schedule a process to start the game in 300t (15s) and save the PID so we can cancel it later if needed
+            // Schedule a process to start the game in the specified waitDuration and save the PID so we can cancel it later if needed
             autoStartID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::gameStart, waitDuration * 20L);
         }, 50);
     }
@@ -470,5 +444,28 @@ public class Game {
                 new Location(gameSpawn.getWorld(), gameSpawn.getX() - 20, gameSpawn.getY() - 20, gameSpawn.getZ() - 20),
                 new Location(gameSpawn.getWorld(), gameSpawn.getX() + 20, gameSpawn.getY(), gameSpawn.getZ() + 20),
                 Material.AIR);
+    }
+
+    /**
+     * Teleports a player to the lobby and restores their inventory
+     * @param p Player to teleport
+     * @param winner Whether the player is the winner
+     */
+    private void sendToLobby(Player p, boolean winner) {
+        p.getInventory().clear();
+        p.setGameMode(GameMode.SURVIVAL);
+        if (winner && arena.winnerLobby != null) {
+            p.teleport(arena.winnerLobby);
+        } else {
+            // Use default world spawn if lobby is not set
+            if (arena.lobby == null) {
+                p.teleport(Objects.requireNonNull(Bukkit.getWorlds().get(0)).getSpawnLocation());
+            } else {
+                p.teleport(Objects.requireNonNull(arena.lobby));
+            }
+        }
+        if (inventories.containsKey(p)) {
+            p.getInventory().setContents(inventories.get(p));
+        }
     }
 }

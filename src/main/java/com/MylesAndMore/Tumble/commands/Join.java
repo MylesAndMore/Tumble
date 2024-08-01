@@ -56,6 +56,16 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
         }
         Arena arena = ArenaManager.arenas.get(arenaName);
 
+        // Check to make sure this arena has a game spawn
+        if (arena.gameSpawn == null) {
+            if (p.isOp()) {
+                sender.sendMessage(LanguageManager.fromKey("arena-not-ready-op"));
+            } else {
+                sender.sendMessage(LanguageManager.fromKey("arena-not-ready"));
+            }
+            return false;
+        }
+
         Game game;
         if (args.length < 2 || args[1] == null) {
             // No type specified: try to infer game type from game taking place in the arena
@@ -80,10 +90,10 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             }
 
             if (arena.game == null) {
-                // no game is taking place in this arena, start one
+                // No game is taking place in this arena, start one
                 game = arena.game = new Game(arena, type);
             } else {
-                // a game is taking place in this arena, check that it is the right type
+                // A game is taking place in this arena, check that it is the right type
                 if (arena.game.type == type) {
                     game = arena.game;
                 }
@@ -96,16 +106,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             }
         }
 
-        // Check to make sure the arena has a game spawn
-        if (game.arena.gameSpawn == null) {
-            if (p.isOp()) {
-                sender.sendMessage(LanguageManager.fromKey("arena-not-ready-op"));
-            } else {
-                sender.sendMessage(LanguageManager.fromKey("arena-not-ready"));
-            }
-            return false;
-        }
-
+        // Make sure the game isn't in progress before adding the player
         if (game.gameState != GameState.WAITING) {
             sender.sendMessage(LanguageManager.fromKey("game-in-progress"));
             return false;

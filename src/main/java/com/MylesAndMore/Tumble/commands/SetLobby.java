@@ -45,7 +45,7 @@ public class SetLobby implements SubCommand, CommandExecutor, TabCompleter {
         Arena arena = ArenaManager.arenas.get(arenaName);
 
         arena.lobby = ((Player)sender).getLocation();
-        ArenaManager.WriteConfig();
+        ArenaManager.writeConfig();
         sender.sendMessage(LanguageManager.fromKey("set-success"));
         return true;
     }
