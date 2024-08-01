@@ -58,44 +58,51 @@ public class ArenaManager {
                 arena.waitArea = readWorld("arenas." + arenaName + ".wait-area");
             }
 
-            // validate
-            if (arena.gameSpawn == null) {
-                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a game spawn, before you can join you must set it with '/tmbl setgamespawn'.");
-            }
-            if (arena.gameSpawn == null) {
-                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a lobby location. The spawn point of the default world will be used.");
-            }
-
             arenas.put(arena.name, arena);
         }
+        validate(); // Validate arenas
     }
 
     /**
      * Write arenas from this.arenas to arenas.yml
      */
-    public static void WriteConfig() {
-        config.set("arenas", null); // clear everything
+    public static void writeConfig() {
+        config.set("arenas", null); // Clear everything
 
         for (Arena arena: arenas.values()) {
             if (arena.killAtY != null) {
                 config.set("arenas." + arena.name + ".kill-at-y", arena.killAtY);
             }
             if (arena.gameSpawn != null) {
-                WriteWorld("arenas." + arena.name + ".game-spawn", arena.gameSpawn);
+                writeWorld("arenas." + arena.name + ".game-spawn", arena.gameSpawn);
             }
             if (arena.lobby != null) {
-                WriteWorld("arenas." + arena.name + ".lobby", arena.lobby);
+                writeWorld("arenas." + arena.name + ".lobby", arena.lobby);
             }
             if (arena.winnerLobby != null) {
-                WriteWorld("arenas." + arena.name + ".winner-lobby", arena.winnerLobby);
+                writeWorld("arenas." + arena.name + ".winner-lobby", arena.winnerLobby);
             }
             if (arena.waitArea != null) {
-                WriteWorld("arenas." + arena.name + ".wait-area", arena.waitArea);
+                writeWorld("arenas." + arena.name + ".wait-area", arena.waitArea);
             }
         }
 
+        validate();
         arenasYml.saveConfig();
+    }
 
+    /**
+     * Check that all arenas are valid
+     */
+    public static void validate() {
+        for (Arena arena: arenas.values()) {
+            if (arena.gameSpawn == null) {
+                plugin.getLogger().severe("arenas.yml: Arena '" + arena.name + "' is missing a game spawn, before it is usable you must set a spawn with '/tumble setgamespawn'.");
+            }
+            if (arena.lobby == null) {
+                plugin.getLogger().warning("arenas.yml: Arena '" + arena.name + "' is missing a lobby location. The spawn point of the default world will be used.");
+            }
+        }
     }
 
     /**
@@ -123,7 +130,6 @@ public class ArenaManager {
      * @return The location specified by the section, or null if the location is not valid
      */
     private static Location readWorld(String path) {
-
         ConfigurationSection section = config.getConfigurationSection(path);
         if (section == null) {
             plugin.getLogger().warning("arenas.yml: Error loading location at '" + path + "' - " + "Section is null");
@@ -163,8 +169,7 @@ public class ArenaManager {
      * @param path The path of the section to write
      * @param location The location to write
      */
-    private static void WriteWorld(String path, @NotNull Location location) {
-
+    private static void writeWorld(String path, @NotNull Location location) {
         ConfigurationSection section = config.getConfigurationSection(path);
 
         if (section == null) {

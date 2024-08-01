@@ -29,17 +29,16 @@ public class ForceStart implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-
         Game game;
+
         if (args.length < 1 || args[0] == null) {
-            // no arena passed in, try to infer from game player is in
+            // No arena passed in, try to infer from game player is in
             game = ArenaManager.findGamePlayerIsIn((Player)sender);
             if (game == null) {
                 sender.sendMessage(LanguageManager.fromKey("missing-arena-parameter"));
                 return false;
             }
-        }
-        else {
+        } else {
             String arenaName = args[0];
             if (!ArenaManager.arenas.containsKey(arenaName)) {
                 sender.sendMessage(LanguageManager.fromKey("invalid-arena").replace("%arena%",arenaName));

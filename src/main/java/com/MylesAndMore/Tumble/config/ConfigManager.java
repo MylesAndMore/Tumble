@@ -11,7 +11,8 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * Manages config.yml and stores its options
  */
 public class ConfigManager {
-    public static boolean HideLeaveJoin;
+    public static boolean hideLeaveJoin;
+    public static boolean hideDeathMessages;
     public static int waitDuration;
 
     private static Configuration config;
@@ -25,8 +26,10 @@ public class ConfigManager {
         configYml.saveDefaultConfig();
         config = configYml.getConfig();
         defaultConfig = Objects.requireNonNull(config.getDefaults());
-        HideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
+        hideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
+        hideDeathMessages = config.getBoolean("hide-death-messages", false);
         waitDuration = config.getInt("wait-duration", 15);
+
         validate();
     }
 

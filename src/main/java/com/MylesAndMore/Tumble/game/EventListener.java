@@ -26,10 +26,10 @@ import java.util.Objects;
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 /**
- * An event listener for a game of tumble.
+ * An event listener for a game of Tumble.
  */
 public class EventListener implements Listener {
-    Game game;
+    final Game game;
 
     /**
      * Create a new EventListener for a game.
@@ -43,7 +43,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         // Hide/show join message accordingly
-        if (ConfigManager.HideLeaveJoin) {
+        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideLeaveJoin) {
             event.setJoinMessage(null);
         }
     }
@@ -51,11 +51,11 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         // Hide/show leave message accordingly
-        if (ConfigManager.HideLeaveJoin) {
+        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideLeaveJoin) {
             event.setQuitMessage(null);
         }
 
-        // remove player from game if they leave during a game
+        // Remove player from game if they leave during a game
         if (game.gamePlayers.contains(event.getPlayer())) {
             game.removePlayer(event.getPlayer());
         }
@@ -63,7 +63,12 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent event) {
-        // inform the game that the player died and respawn them
+        // Hide death messages if configured
+        if (event.getEntity().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideDeathMessages) {
+            event.setDeathMessage(null);
+        }
+
+        // Inform the game that the player died and respawn them
         if (game.gamePlayers.contains(event.getEntity()) && game.gameState == GameState.RUNNING) {
             game.playerDeath(event.getEntity());
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> event.getEntity().spigot().respawn(), 10);
@@ -109,8 +114,7 @@ public class EventListener implements Listener {
                             event.getHitBlock().getType());
                     event.getHitBlock().setType(Material.AIR);
                 }
-            }
-            else if (event.getHitEntity() != null) {
+            } else if (event.getHitEntity() != null) {
                 if (event.getHitEntity() instanceof Player hitPlayer) {
                     // Also cancel any knockback
                     Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> hitPlayer.setVelocity(new Vector()));
@@ -134,7 +138,7 @@ public class EventListener implements Listener {
         if (Objects.equals(game.gameState, GameState.STARTING) && !equalPosition(event.getFrom(),event.getTo())) {
             event.setCancelled(true);
         }
-        // kill player if they are below a Y level
+        // Kill player if they are below configured Y level
         if (game.arena.killAtY != null && game.gameState == GameState.RUNNING) {
             if (event.getPlayer().getLocation().getY() <= game.arena.killAtY) {
                 event.getPlayer().setHealth(0);
@@ -204,7 +208,7 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void PlayerRespwanEvent(PlayerRespawnEvent event) {
+    public void PlayerRespawnEvent(PlayerRespawnEvent event) {
         // Make sure players respawn in the correct location
         if (game.gamePlayers.contains(event.getPlayer())) {
             event.setRespawnLocation(game.arena.gameSpawn);
@@ -226,5 +230,4 @@ public class EventListener implements Listener {
                 (l1.getY() == l2.getY()) &&
                 (l1.getZ() == l2.getZ());
     }
-
 }

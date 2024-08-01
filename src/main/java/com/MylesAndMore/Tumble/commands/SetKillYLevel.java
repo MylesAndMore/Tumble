@@ -46,7 +46,7 @@ public class SetKillYLevel implements SubCommand, CommandExecutor, TabCompleter 
         Arena arena = ArenaManager.arenas.get(arenaName);
 
         arena.killAtY = ((int) ((Player) sender).getLocation().getY());
-        ArenaManager.WriteConfig();
+        ArenaManager.writeConfig();
         sender.sendMessage(LanguageManager.fromKey("set-success"));
         return true;
     }

@@ -44,7 +44,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        // pass command action through to subCommand
+        // Pass command action through to subCommand
         subCmd.onCommand(sender, command, args[0], removeFirst(args));
         return true;
     }
@@ -52,7 +52,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 1) {
-            // show only subCommands the user has permission for
+            // Show only subCommands the user has permission for
             ArrayList<String> PermittedSubCmds = new ArrayList<>();
             for (SubCommand subCmd: subCommands.values()) {
                 if (sender.hasPermission(subCmd.getPermission())) {
@@ -67,11 +67,10 @@ public class Tumble implements CommandExecutor, TabCompleter {
                 return Collections.emptyList();
             }
 
-            // pass tab complete through to subCommand
+            // Pass tab complete through to subCommand
             if (subCommands.get(args[0]) instanceof TabCompleter tcmp) {
                 return tcmp.onTabComplete(sender, command, args[0], removeFirst(args));
-            }
-            else {
+            } else {
                 return null;
             }
         }

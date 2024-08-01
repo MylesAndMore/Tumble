@@ -7,6 +7,8 @@ import org.bukkit.block.BlockFace;
 
 import java.util.*;
 
+// TODO: clean up generator (when layers refactor is done)
+
 /**
  * Holds the methods that generate blocks in-game such as cylinders, cuboids, and block clumps.
  */
@@ -23,31 +25,28 @@ public class Generator {
         // Choose a random type of generation; a circular layer, a square layer, or a multi-tiered layer of either variety
         if (random.nextInt(4) == 0) {
             // Circular layer
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), LayerManager.getRandom());
-        }
-        else if (random.nextInt(4) == 1) {
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
+        } else if (random.nextInt(4) == 1) {
             // Square layer
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.SNOW_BLOCK), LayerManager.getRandom());
-        }
-        else if (random.nextInt(4) == 2) {
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
+        } else if (random.nextInt(4) == 2) {
             // Multi-tiered circle
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRASS_BLOCK), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.PODZOL), LayerManager.getRandom());
-        }
-        else {
+            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
+        } else {
             // Multi-tiered square
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.SNOW_BLOCK), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRASS_BLOCK), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.PODZOL), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
         }
     }
 
@@ -57,80 +56,78 @@ public class Generator {
      */
     public static void generateLayersSnowballs(Location layer) {
         Random random = new Random();
+        Layers layers = new Layers();
 
         layer.setY(layer.getY() - 1);
         // Similar generation to shovels, except there are three layers
         if (random.nextInt(4) == 0) {
             // Circular layer
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), LayerManager.getRandom());
-        }
-        else if (random.nextInt(4) == 1) {
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
+        } else if (random.nextInt(4) == 1) {
             // Square layer
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), LayerManager.getRandom());
-        }
-        else if (random.nextInt(4) == 2) {
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
+        } else if (random.nextInt(4) == 2) {
             // Multi-tiered circle
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
 
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
 
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.GRANITE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), LayerManager.getRandom());
-        }
-        else {
+            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
+        } else {
             // Multi-tiered square
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRANITE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.LIME_GLAZED_TERRACOTTA), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
 
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRANITE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.LIME_GLAZED_TERRACOTTA), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
             layer.setY(layer.getY() - 6);
 
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.GRANITE), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
             layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.LIME_GLAZED_TERRACOTTA), LayerManager.getRandom());
+            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
         }
     }
 
