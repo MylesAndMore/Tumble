@@ -27,6 +27,7 @@ public class ConfigManager {
         defaultConfig = Objects.requireNonNull(config.getDefaults());
         HideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
         waitDuration = config.getInt("wait-duration", 15);
+
         validate();
     }
 

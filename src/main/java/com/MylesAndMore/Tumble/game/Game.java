@@ -48,7 +48,7 @@ public class Game {
     }
 
     /**
-     * Adds a player to the wait area. Called from /tmbl join
+     * Adds a player to the wait area. Called from /tumble join
      * Precondition: the game is in state WAITING
      * @param p Player to add
      */
@@ -62,15 +62,14 @@ public class Game {
         }
         if (gamePlayers.size() >= 2 && gameState == GameState.WAITING) {
             autoStart();
-        }
-        else {
+        } else {
             displayActionbar(Collections.singletonList(p), LanguageManager.fromKeyNoPrefix("waiting-for-players"));
         }
     }
 
     /**
      * Starts the game
-     * Called from /tmbl forceStart or after the wait counter finishes
+     * Called from /tumble forceStart or after the wait counter finishes
      */
     public void gameStart() {
 
@@ -79,15 +78,15 @@ public class Game {
             return;
         }
 
-        // cancel wait timer
+        // Cancel wait timer
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
         autoStartID = -1;
 
-        // register event listener
+        // Register event listener
         eventListener = new EventListener(this);
         Bukkit.getServer().getPluginManager().registerEvents(eventListener, plugin);
 
-        // save inventories (if not already done)
+        // Save inventories (if not already done)
         for (Player p : gamePlayers) {
             if (!inventories.containsKey(p)) {
                 inventories.put(p, p.getInventory().getContents());
@@ -107,22 +106,18 @@ public class Game {
         scatterPlayers(gamePlayers);
         // Put all players in spectator to prevent them from getting kicked for flying
         setGamemode(gamePlayers, GameMode.SPECTATOR);
-        // do it again in case they were not in the world yet
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            setGamemode(gamePlayers, GameMode.SPECTATOR);
-        }, 10);
+        // Do it again in a bit in case they were not in the world yet
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> setGamemode(gamePlayers, GameMode.SPECTATOR), 10);
 
         clearInventories(gamePlayers);
         clearArena();
         prepareGameType(type);
 
         // Begin the countdown sequence
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            countdown(() -> {
-                setGamemode(gamePlayers, GameMode.SURVIVAL);
-                gameState = GameState.RUNNING;
-            });
-        }, 100);
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> countdown(() -> {
+            setGamemode(gamePlayers, GameMode.SURVIVAL);
+            gameState = GameState.RUNNING;
+        }), 100);
     }
 
     /**
@@ -140,7 +135,7 @@ public class Game {
                 giveItems(gamePlayers, shovel);
 
                 // Schedule a process to give snowballs after 2m30s (so people can't island, the OG game had this);
-                // add 160t because of the countdown
+                // Also add 160t because of the countdown
                 gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     clearInventories(gamePlayers);
                     giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
@@ -191,13 +186,11 @@ public class Game {
 
             if (gameWins.get(winner) == 3) {
                 gameEnd();
-            }
-            else { // If that player doesn't have three wins, nobody else does, so we need another round
+            } else { // If that player doesn't have three wins, nobody else does, so we need another round
                 displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("round-over"), LanguageManager.fromKeyNoPrefix("round-winner").replace("%winner%", winner.getDisplayName()), 5, 60, 5);
                 Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
             }
-        }
-        else {
+        } else {
             displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("round-over"), LanguageManager.fromKeyNoPrefix("round-draw"), 5, 60, 5);
             Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, this::roundStart, 100);
         }
@@ -207,13 +200,12 @@ public class Game {
      * Ends game: Displays overall winner and teleports players to lobby
      */
     private void gameEnd() {
-
         if (!gamePlayers.isEmpty()) {
 
             setGamemode(gamePlayers, GameMode.SPECTATOR);
             clearInventories(gamePlayers);
 
-            // display winner
+            // Display winner
             Player winner = getPlayerWithMostWins(gameWins);
             if (winner != null) {
                 displayTitles(gamePlayers, LanguageManager.fromKeyNoPrefix("game-over"), LanguageManager.fromKeyNoPrefix("game-winner").replace("%winner%",winner.getDisplayName()), 5, 60, 5);
@@ -231,8 +223,7 @@ public class Game {
                     p.setGameMode(GameMode.SURVIVAL);
                     if (p == winner && arena.winnerLobby != null) {
                         p.teleport(arena.winnerLobby);
-                    }
-                    else {
+                    } else {
                         p.teleport(Objects.requireNonNull(arena.lobby));
                     }
 
@@ -254,7 +245,7 @@ public class Game {
 
     /**
      * Stops the game, usually while it is still going
-     * called if too many players leave, or from /tmbl forceStop
+     * Called if too many players leave, or from /tumble forceStop
      */
     public void stopGame() {
         gamePlayers.forEach(this::removePlayer);
@@ -275,15 +266,15 @@ public class Game {
     public void removePlayer(Player p) {
         gamePlayers.remove(p);
 
-        // check if the game has not started yet
+        // Check if the game has not started yet
         if (gameState == GameState.WAITING) {
 
-            // inform player that there are no longer enough players to start
+            // Inform player that there are no longer enough players to start
             if (gamePlayers.size() < 2) {
                 displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("waiting-for-players"));
             }
 
-            // teleport player back and restore inventory
+            // Teleport player back and restore inventory
             if (arena.waitArea != null) {
                 p.getInventory().clear();
                 p.setGameMode(GameMode.SURVIVAL);
@@ -292,14 +283,12 @@ public class Game {
                     p.getInventory().setContents(inventories.get(p));
                 }
             }
-        }
-        else {
-            // stop the game if there are not enough players
+        } else {
+            // Stop the game if there are not enough players
             if (gamePlayers.size() < 2) {
                 stopGame();
             }
 
-            // teleport player back and restore inventory
             p.getInventory().clear();
             p.setGameMode(GameMode.SURVIVAL);
             p.teleport(arena.lobby);
@@ -329,7 +318,7 @@ public class Game {
      */
     public void playerDeath(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
-        // remove that player (who just died) from the roundPlayersArray, effectively eliminating them,
+        // Remove that player (who just died) from the alive players, effectively eliminating them,
         playersAlive.remove(player);
         // If there are less than 2 players in the game (1 just died),
         if (playersAlive.size() < 2 && gameState == GameState.RUNNING) {
@@ -337,7 +326,7 @@ public class Game {
         }
     }
 
-    // utility functions
+    // -- Utility functions --
 
     /**
      * Teleports a list of players to the specified scatter locations in the gameWorld

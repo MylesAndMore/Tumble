@@ -11,73 +11,73 @@ But in Tumble, you play on randomly generated layers of blocks, using shovels, s
 
 ## Features  
 
-- Choose from three different game modes present in the original game: shovels, snowballs, and mixed  
-- Four types of random layer generation  
+- Choose from three different game modes present in the original game: shovels, snowballs, and mixed
+- Four types of random layer generation
 - 15 unique, themed layer varieties
 - Quick and easy setup and use
-- Support for 2-8 players  
-- Highly customizable  
-- Open-source codebase  
+- Support for 2-8 players
 - Multiple arenas and concurrent games
-- Heavily configurable
+- Highly customizable, heavily configurable
+- Open-source codebase
 
 ## Setup
 
-1. [Download](https://github.com/MylesAndMore/tmbl/releases) the plugin's JAR file and place it in your server's plugins directory.
+1. [Download](https://github.com/MylesAndMore/tumble/releases) the plugin's JAR file and place it in your server's plugins directory.
 2. Place the worlds for your lobby and arenas in your server's worlds directory.
     - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.  
 
 3. Start your server.
 4. Import your worlds using a plugin like Multiverse. ```/mv import myWorld normal```.
-5. Create your first arena `/tmbl create myArena`
-6. Set the spawn point of the arena `/tmbl setgamespawn myArena`
+5. Create your first arena `/tumble create myArena`
+6. Set the spawn point of the arena `/tumble setgamespawn myArena`
    - **Note**: The layers will generate relative to this location. Ensure that the area is clear, 20 blocks in each direction.
 
-7. You're done! You can now join the game ```/tmbl join myArena mixed```.
+7. You're done! You can now join the game ```/tumble join myArena mixed```.
 
 Scroll down for more options to configure your game.  
 
 ## Commands / Permissions
 
-| Command                             | Description                                                                        | Permission              |
-|-------------------------------------|------------------------------------------------------------------------------------|-------------------------|
-| `/tmbl join <arenaName> [gameType]` | Join a Tumble match. Can infer game type if a game is already started in the arena | `tumble.join`           |
-| `/tmbl leave`                       | Quit a Tumble match                                                                | `tumble.leave`          |
-| `/tmbl forcestart [arenaName]`      | Force start a Tumble match. Can infer arena if you are in one                      | `tumble.forcestart`     |
-| `/tmbl forcestop [arenaName]`       | Force stop a Tumble match. Can infer arena if you are in one                       | `tumble.forcestop`      |
-| `/tmbl reload`                      | Reload the plugin's configs.                                                       | `tumble.reload`         |
-| `/tmbl create <arenaName>`          | Create a new arena                                                                 | `tumble.create`         |
-| `/tmbl remove <arenaName>`          | Remove an arena                                                                    | `tumble.remove`         |
-| `/tmbl setgamespawn <arenaName>`    | Set game spawn to your current position                                            | `tumble.setgamespawn`   |
-| `/tmbl setkillylevel <arenaName>`   | Set the arena's Y-level to kill players at to current Y coordinate                 | `tumble.setkillylevel`  |
-| `/tmbl setlobby <arenaName>`        | Set the arena's lobby to current location                                          | `tumble.setlobby`       |
-| `/tmbl setwaitarea <arenaName>`     | Set the arena's wait area to the current location                                  | `tumble.setwaitarea`    |
-| `/tmbl setwinnerlobby <arenaName>`  | Set the arena's lobby to the current location                                      | `tumble.setwinnerlobby` |
+| Command                               | Description                                                                         | Permission              |
+|---------------------------------------|-------------------------------------------------------------------------------------|-------------------------|
+| `/tumble join <arenaName> [gameType]` | Join a Tumble match. Can infer game type if a game is already started in the arena. | `tumble.join`           |
+| `/tumble leave`                       | Leave a Tumble match.                                                               | `tumble.leave`          |
+| `/tumble forcestart [arenaName]`      | Force start a Tumble match. Can infer arena if you are in one.                      | `tumble.forcestart`     |
+| `/tumble forcestop [arenaName]`       | Force stop a Tumble match. Can infer arena if you are in one.                       | `tumble.forcestop`      |
+| `/tumble reload`                      | Reload the plugin's configuration.                                                  | `tumble.reload`         |
+| `/tumble create <arenaName>`          | Create a new arena.                                                                 | `tumble.create`         |
+| `/tumble remove <arenaName>`          | Remove an arena.                                                                    | `tumble.remove`         |
+| `/tumble setgamespawn <arenaName>`    | Set the arena's game spawn to your current position.                                | `tumble.setgamespawn`   |
+| `/tumble setkillylevel <arenaName>`   | Set the arena's Y-level to kill players at to current Y coordinate.                 | `tumble.setkillylevel`  |
+| `/tumble setlobby <arenaName>`        | Set the arena's lobby to current location.                                          | `tumble.setlobby`       |
+| `/tumble setwaitarea <arenaName>`     | Set the arena's wait area to the current location.                                  | `tumble.setwaitarea`    |
+| `/tumble setwinnerlobby <arenaName>`  | Set the arena's lobby to the current location.                                      | `tumble.setwinnerlobby` |
 
+Note that the `/tmbl` command can be used as a shorter alias to `/tumble`.
 
 ## Configuration  
-Configuration for this plugin is stored in three files.
+Configuration for this plugin is stored in three files:
 
 ### config.yml
-Stores common settings
+Stores general settings.
 
-| Option                     | Type              | Default value |
-|----------------------------|-------------------|---------------|
-| `hide-join-leave-messages` | Boolean           | `false`       |
-| `wait-duration`            | Integer (seconds) | `15`          |
-
+| Option                     | Type    | Description                                                                    | Default value |
+|----------------------------|---------|--------------------------------------------------------------------------------|---------------|
+| `hide-join-leave-messages` | Boolean | Hides player join and leave messages in public chat.                           | `false`       |
+| `wait-duration`            | Integer | Duration (in seconds) to wait for more players to join a game before starting. | `15`          |
 
 ### arenas.yml
-Stores data for each arena. You may add and remove arenas as you wish.
+Stores data about each arena.
+Arenas may be added and removed as you wish, either via the commands detailed above or by editing the `arenas.yml` file directly.
 
 Each arena can contain the following locations:
 
 | Location                 | Description                                                                         |
 |--------------------------|-------------------------------------------------------------------------------------|
 | `game-spawn` **Required* | The location where players will be teleported, and the layers will generate around. |
-| `wait-area`              | The location where players will be teleported to before the game begins             |
-| `lobby`                  | The location where players will be teleported to after the game                     |
-| `winner-lobby`           | The location where the winner will be teleported after the game                     |
+| `wait-area`              | The location where players will be teleported to before the game begins.            |
+| `lobby`                  | The location where players will be teleported to after the game.                    |
+| `winner-lobby`           | The location where the winner will be teleported after the game.                    |
 
 Locations are stored using the following format:
 ```yaml
@@ -90,21 +90,17 @@ Locations are stored using the following format:
 
 Each arena can also contain the following option:
 
-| Option      | Type    | Description                                                     |
-|-------------|---------|-----------------------------------------------------------------|
-| `kill-at-y` | Integer | When a player falls below this Y-level, they will be eliminated |
+| Option      | Type    | Description                                                      |
+|-------------|---------|------------------------------------------------------------------|
+| `kill-at-y` | Integer | When a player falls below this Y-level, they will be eliminated. |
 
 ### language.yml
-Most of this plugin's strings are configurable through this file. (Excluding from some console errors)
+Most of this plugin's messages are configurable through this file (excluding some console errors).
 
 All plugin chat messages will have the `prefix` prepended to them. 
 
-Colors can be added using alternate color codes:
-```
-&cRed Text
-```
-
+Colors can be added using alternate color codes; for example, `&cRed Text` will appear red in-game.
 
 ## Issues & Feedback  
 
-Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on our [GitHub issues page](https://github.com/MylesAndMore/tmbl/issues/new)!  
+Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on the Tumble [GitHub issues page](https://github.com/MylesAndMore/tumble/issues/new)!  

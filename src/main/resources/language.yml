@@ -1,5 +1,7 @@
+# All plugin chat messages will have this message prepended to them
 prefix: "&f[&eTumble&f] "
 
+# Error messages
 unknown-command: "&4Unknown command '%command%'"
 no-permission: "&4You do not have permission to perform this command! &7Required permission: '%permission%.'"
 missing-arena-parameter: "&4Missing arena name!"
@@ -9,13 +11,14 @@ no-game-in-arena: "&4No game is currently running in this arena!"
 player-not-in-game: "&4You are not in a game!"
 not-for-console: "&4This cannot be run by the console!"
 game-in-progress: "&4This game is still in progress!&7 wait until it finishes or join another game."
-another-type-in-arena: "A game of %type% is currently taking place in this arena!&7 choose another arena or join it with '/tmbl join %arena% %type%'."
+another-type-in-arena: "A game of %type% is currently taking place in this arena!&7 choose another arena or join it with '/tumble join %arena% %type%'."
 already-in-game: "&4You are already in a game! Leave it to join another one."
 arena-not-ready: "&4This arena is not finished being set up!"
-arena-not-ready-op: "&4Incomplete arena. &7Set a game spawn with '/tmbl setGameSpawn'."
+arena-not-ready-op: "&4Incomplete arena. &7Set a game spawn with '/tumble setGameSpawn'."
 specify-game-type: "&4No game is currently taking place in this arena! &7Provide the game type to start one."
 
-create-success: "&aArena created successfully! &eBefore you can join, you must set a game spawn location with '/tmbl setgamespawn'."
+# Success messages
+create-success: "&aArena created successfully! &eBefore you can join, you must set a game spawn location with '/tumble setgamespawn'."
 forcestart-success: "&aStarting game."
 forcestop-success: "&aGame stopped."
 join-success: "&aJoined game &d%arena% - %type%"
@@ -24,6 +27,7 @@ reload-success: "&aConfig files reloaded. &eCheck console for errors."
 remove-success: "&aArena removed."
 set-success: "&aLocation set."
 
+# Game messages
 showdown: "&4Showdown!"
 lobby-in-10: "&9Returning to lobby in ten seconds..."
 waiting-for-players: "&aWaiting for players"

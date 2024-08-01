@@ -16,7 +16,7 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
 
     Tip: set a specific directory to store your worlds in with the `world-container` setting in `bukkit.yml`
 
-3. Set `level-name` in server.properities to `lobby`
+3. Set `level-name` in server.properties to `lobby`
 4. Take note of the names of the world folders, we will need this in a moment.
 5. Start and join your server.
 6. Import your arena worlds. This can be done with the multiverse command `/mv import <your-world-name> normal`
@@ -93,25 +93,25 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
          z: -340.5
          world: lobby
    ```
-8. Reload the plugin with `/tmbl reload`.
+8. Reload the plugin with `/tumble reload`.
 
-9. Join the game using `/tmbl join basic mixed`
+9. Join the game using `/tumble join basic mixed`
 (swap the arena and game type for whichever one you want to play).
 
 You're done! Happy playing!
 
 ## Recommended plugins
 
+These plugins, while not required, can help to provide a more thorough minigame experience.
+
 - [WorldGuard](https://dev.bukkit.org/projects/worldguard) and [CyberWorldReset](https://www.spigotmc.org/resources/cyberworldreset-standard-%E2%9C%A8-regenerate-worlds-scheduled-resets-lag-optimized%E3%80%8C1-8-1-19%E3%80%8D.96834/)
-Protect players from breaking blocks in the lobby and reset any redstone they activated.
+   - Protect players from breaking blocks in the lobby and reset any redstone they activated.
 
 - [ViaVersion](https://www.spigotmc.org/resources/viaversion.19254/) and [ViaBackwards](https://www.spigotmc.org/resources/viabackwards.27448/)
-Allow older and newer clients to connect to your server.
+   - Allow older and newer players to connect to your server.
 
 - [Geyser](https://geysermc.org/download#geyser) and [Floodgate](https://geysermc.org/download#floodgate)
-Allow Bedrock clients to connect to your server.
+   - Allow Bedrock clients to connect to your server.
 
-- [ProtectEnviromnemt](https://www.spigotmc.org/resources/protectenvironment.82736/)
-Stop water and lava flow (useful for Halloween map)
-
-
+- [ProtectEnvironment](https://www.spigotmc.org/resources/protectenvironment.82736/)
+   - Stop water and lava flow (useful for Halloween map).

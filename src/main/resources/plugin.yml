@@ -1,6 +1,6 @@
 main: com.MylesAndMore.Tumble.Main
 name: Tumble
-version: 1.0.4
+version: 2.0.0
 description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
 api-version: 1.16
 load: POSTWORLD
@@ -10,8 +10,8 @@ softdepend: [Multiverse-Core]
 
 commands:
   tumble:
-    description: Base command for Rumble
-    usage: "/tmbl <subCommand> ..."
+    description: Base command for Tumble
+    usage: "/tumble <subCommand> ..."
     aliases: tmbl
 
 permissions:
@@ -22,23 +22,33 @@ permissions:
     description: Allows you to leave a Tumble match.
     default: true
   tumble.forcestart:
+    description: Allows you to forcibly start a Tumble match.
     default: op
   tumble.forcestop:
+    description: Allows you to forcibly stop a Tumble match.
     default: op
   tumble.reload:
+    description: Allows you to reload the Tumble configuration.
     default: op
   tumble.create:
+    description: Allows you to create Tumble arenas.
     default: op
   tumble.remove:
+    description: Allows you to remove Tumble arenas.
     default: op
   tumble.setgamespawn:
+    description: Allows you to set the game spawn location for Tumble arenas.
     default: op
   tumble.setkillylevel:
+    description: Allows you to set the kill Y-level for Tumble arenas.
     default: op
   tumble.setlobby:
+    description: Allows you to set the lobby location for Tumble arenas.
     default: op
   tumble.setwaitarea:
+    description: Allows you to set the wait area location for Tumble arenas.
     default: op
   tumble.setwinnerlobby:
+    description: Allows you to set the winner lobby location for Tumble arenas.
     default: op
 

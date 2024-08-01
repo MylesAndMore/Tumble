@@ -6,6 +6,8 @@ import org.bukkit.block.BlockFace;
 
 import java.util.*;
 
+// TODO: clean up generator (when layers refactor is done)
+
 /**
  * Holds the methods that generate blocks in-game such as cylinders, cuboids, and block clumps.
  */
@@ -24,12 +26,10 @@ public class Generator {
         if (random.nextInt(4) == 0) {
             // Circular layer
             Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), layers.getSafeMaterialList());
-        }
-        else if (random.nextInt(4) == 1) {
+        } else if (random.nextInt(4) == 1) {
             // Square layer
             Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.SNOW_BLOCK), layers.getSafeMaterialList());
-        }
-        else if (random.nextInt(4) == 2) {
+        } else if (random.nextInt(4) == 2) {
             // Multi-tiered circle
             Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.SNOW_BLOCK), layers.getSafeMaterialList());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
@@ -38,8 +38,7 @@ public class Generator {
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.PODZOL), layers.getMaterialList());
-        }
-        else {
+        } else {
             // Multi-tiered square
             Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.SNOW_BLOCK), layers.getSafeMaterialList());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
@@ -68,16 +67,14 @@ public class Generator {
             Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getMaterialList());
             layer.setY(layer.getY() - 6);
             Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getMaterialList());
-        }
-        else if (random.nextInt(4) == 1) {
+        } else if (random.nextInt(4) == 1) {
             // Square layer
             Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getSafeMaterialList());
             layer.setY(layer.getY() - 6);
             Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getMaterialList());
             layer.setY(layer.getY() - 6);
             Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getMaterialList());
-        }
-        else if (random.nextInt(4) == 2) {
+        } else if (random.nextInt(4) == 2) {
             // Multi-tiered circle
             Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.STONE), layers.getSafeMaterialList());
             Generator.generateLayer(layer, 13, 1, Material.AIR);
@@ -104,8 +101,7 @@ public class Generator {
             Generator.generateLayer(layer, 4, 1, Material.AIR);
             layer.setY(layer.getY() - 1);
             Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.LIME_GLAZED_TERRACOTTA), layers.getMaterialList());
-        }
-        else {
+        } else {
             // Multi-tiered square
             Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.STONE), layers.getSafeMaterialList());
             Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);

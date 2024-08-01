@@ -1,2 +1,2 @@
-# NOTE: Coordinates cannot be zero! Use something like 0.5
+# NOTE: No coordinate can be equal to zero! Use 0.5 instead if needed.
 arenas: {}

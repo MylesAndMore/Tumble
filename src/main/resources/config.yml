@@ -1,7 +1,5 @@
-# Hides player join/leave messages in public chat
+# Hides player join and leave messages in public chat
 hide-join-leave-messages: false
 
-# Duration in seconds to wait for more players to join
+# Duration (in seconds) to wait for more players to join a game before starting
 wait-duration: 15
-
-

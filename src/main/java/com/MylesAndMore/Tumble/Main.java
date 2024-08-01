@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 
-public class Main extends JavaPlugin{
+public class Main extends JavaPlugin {
     public static Main plugin;
 
     @Override
@@ -32,7 +32,7 @@ public class Main extends JavaPlugin{
 
     @Override
     public void onDisable() {
-        // stop running games
+        // Stop any running games
         for (Arena a : ArenaManager.arenas.values()) {
             if (a.game != null) {
                 a.game.stopGame();

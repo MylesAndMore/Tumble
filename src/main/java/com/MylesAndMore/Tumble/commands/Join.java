@@ -50,8 +50,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             return false;
         }
         String arenaName = args[0];
-        if (!ArenaManager.arenas.containsKey(arenaName))
-        {
+        if (!ArenaManager.arenas.containsKey(arenaName)) {
             sender.sendMessage(LanguageManager.fromKey("invalid-arena").replace("%arena%", arenaName));
             return false;
         }
@@ -59,17 +58,16 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
 
         Game game;
         if (args.length < 2 || args[1] == null) {
-            // no type specified: try to infer game type from game taking place in the arena
+            // No type specified: try to infer game type from game taking place in the arena
             if (arena.game == null) {
-                // cant infer if no game is taking place
+                // Can't infer if no game is taking place
                 sender.sendMessage(LanguageManager.fromKey("specify-game-type"));
                 return false;
             }
 
             game = arena.game;
-        }
-        else {
-            // type specified
+        } else {
+            // Game type specified
             GameType type;
             switch (args[1]) {
                 case "shovels", "shovel"     -> type = GameType.SHOVELS;
@@ -84,9 +82,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             if (arena.game == null) {
                 // no game is taking place in this arena, start one
                 game = arena.game = new Game(arena, type);
-            }
-            else
-            {
+            } else {
                 // a game is taking place in this arena, check that it is the right type
                 if (arena.game.type == type) {
                     game = arena.game;
@@ -100,7 +96,7 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             }
         }
 
-        // check to make sure the arena has a game spawn
+        // Check to make sure the arena has a game spawn
         if (game.arena.gameSpawn == null) {
             if (p.isOp()) {
                 sender.sendMessage(LanguageManager.fromKey("arena-not-ready-op"));

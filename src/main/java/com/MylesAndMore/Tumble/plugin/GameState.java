@@ -4,5 +4,5 @@ public enum GameState {
     WAITING,
     STARTING,
     RUNNING,
-    ENDING
+    ENDING,
 }

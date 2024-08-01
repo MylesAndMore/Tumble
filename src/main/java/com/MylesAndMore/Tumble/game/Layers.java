@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+// TODO: make layers user-configurable through a LayerManager and a yaml
+
 /**
  * Stores the different types of layers that can be generated
  */
@@ -284,8 +286,7 @@ public class Layers {
         safeMatList.add(gen11); // Troll glass layer
     }
 
-    // Define Random class
-    Random random = new Random();
+    final Random random = new Random();
     /**
      * @return A random predefined List of Materials that are okay to use in the clump generator
      */

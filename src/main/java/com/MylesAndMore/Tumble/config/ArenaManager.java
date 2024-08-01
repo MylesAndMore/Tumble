@@ -58,12 +58,12 @@ public class ArenaManager {
                 arena.waitArea = readWorld("arenas." + arenaName + ".wait-area");
             }
 
-            // validate
+            // Validate arena locations
             if (arena.gameSpawn == null) {
-                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a game spawn, before you can join you must set it with '/tmbl setgamespawn'.");
+                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a game spawn, before you can join you must set it with '/tumble setgamespawn'.");
             }
-            if (arena.gameSpawn == null) {
-                plugin.getLogger().severe("arenas.yml: Arena " + arenaName + " is missing a lobby location. The spawn point of the default world will be used.");
+            if (arena.lobby == null) {
+                plugin.getLogger().warning("arenas.yml: Arena " + arenaName + " is missing a lobby location. The spawn point of the default world will be used.");
             }
 
             arenas.put(arena.name, arena);
