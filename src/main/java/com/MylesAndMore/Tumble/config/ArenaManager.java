@@ -120,9 +120,7 @@ public class ArenaManager {
      *   z:
      *   world:
      * @param path The section in the yaml with x, y, z, and world as its children
-     * @return Result of either:
-     *   Result#success = true and Result#value OR
-     *   Result#success = false and Result#error
+     * @return The location specified by the section, or null if the location is not valid
      */
     private static Location readWorld(String path) {
 

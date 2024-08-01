@@ -5,6 +5,7 @@ import com.MylesAndMore.Tumble.config.ArenaManager;
 
 import com.MylesAndMore.Tumble.config.ConfigManager;
 import com.MylesAndMore.Tumble.config.LanguageManager;
+import com.MylesAndMore.Tumble.config.LayerManager;
 import com.MylesAndMore.Tumble.game.Arena;
 import org.bstats.bukkit.Metrics;
 
@@ -23,6 +24,7 @@ public class Main extends JavaPlugin{
         LanguageManager.readConfig();
         ConfigManager.readConfig();
         ArenaManager.readConfig();
+        LayerManager.readConfig();
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);
