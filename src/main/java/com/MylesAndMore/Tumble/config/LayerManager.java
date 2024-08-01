@@ -44,10 +44,7 @@ public class LayerManager {
      * @return The list of materials for the layer to be composed of
      */
     public static List<Material> readLayer(String path) {
-        List<String> list = (List<String>) config.getList(path);
-        if (list == null) {
-            return null;
-        }
+        List<String> list = config.getStringList(path);
         List<Material> layer = new ArrayList<>();
         for (String entry : list) {
             Material tmp = Material.getMaterial(entry);
