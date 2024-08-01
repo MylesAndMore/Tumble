@@ -56,7 +56,6 @@ public class Generator {
      */
     public static void generateLayersSnowballs(Location layer) {
         Random random = new Random();
-        Layers layers = new Layers();
 
         layer.setY(layer.getY() - 1);
         // Similar generation to shovels, except there are three layers
