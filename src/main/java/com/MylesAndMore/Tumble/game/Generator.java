@@ -1,152 +1,62 @@
 package com.MylesAndMore.Tumble.game;
 
 import com.MylesAndMore.Tumble.config.LayerManager;
+import com.MylesAndMore.Tumble.plugin.GameType;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import java.util.*;
 
-// TODO: clean up generator (when layers refactor is done)
-
 /**
- * Holds the methods that generate blocks in-game such as cylinders, cuboids, and block clumps.
+ * The Generator can generate basic shapes and layers for the game
  */
 public class Generator {
 
-    /**
-     * Generates layers for a round of type shovels
-     * @param layer Location where the layers should start
-     */
-    public static void generateLayersShovels(Location layer) {
-        Random random = new Random();
+    private static final int CIRCLE_RADIUS = 17;
+    private static final int SQUARE_RADIUS = 17;
+    private static final int MULTI_TIER_RADIUS1 = 17;
+    private static final int MULTI_TIER_RADIUS2 = 13;
+    private static final int MULTI_TIER_RADIUS3_CIRCULAR = 4;
+    private static final int MULTI_TIER_RADIUS3_SQUARE = 7;
+    private static final int LAYER_DROP_HEIGHT = 6; // How far down the next layer should be generated in multi-layer generation
 
+    /**
+     * Generates layers for a round
+     * @param center The center of the layers
+     * @param type The type of the round (either shovels or snowballs)
+     */
+    public static void generateLayers(Location center, GameType type) {
+        if (type == GameType.MIXED) { return; } // Cannot infer generation type from mixed
+        Random random = new Random();
+        Location layer = center.clone();
+        // The only difference between shovel and snowball generation is the amount of layers
+        int numLayers = type == GameType.SNOWBALLS ? 3 : 1;
+        // Move down one block before generating
         layer.setY(layer.getY() - 1);
-        // Choose a random type of generation; a circular layer, a square layer, or a multi-tiered layer of either variety
-        if (random.nextInt(4) == 0) {
-            // Circular layer
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-        } else if (random.nextInt(4) == 1) {
-            // Square layer
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-        } else if (random.nextInt(4) == 2) {
-            // Multi-tiered circle
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 13, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 4, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
-        } else {
-            // Multi-tiered square
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
+        switch (random.nextInt(4)) {
+            case 0 -> generateCircularLayers(layer, new int[]{CIRCLE_RADIUS}, numLayers); // Single circular layer
+            case 1 -> generateSquareLayers(layer, new int[]{SQUARE_RADIUS}, numLayers); // Single square layer
+            case 2 -> generateCircularLayers(layer, new int[]{MULTI_TIER_RADIUS1, MULTI_TIER_RADIUS2, MULTI_TIER_RADIUS3_CIRCULAR}, numLayers); // Multi-tiered circular layer
+            case 3 -> generateSquareLayers(layer, new int[]{MULTI_TIER_RADIUS1, MULTI_TIER_RADIUS2, MULTI_TIER_RADIUS3_SQUARE}, numLayers); // Multi-tiered square layer
         }
     }
 
     /**
-     * Generates layers for round of type snowballs
-     * @param layer Location where the layers should start
-     */
-    public static void generateLayersSnowballs(Location layer) {
-        Random random = new Random();
-
-        layer.setY(layer.getY() - 1);
-        // Similar generation to shovels, except there are three layers
-        if (random.nextInt(4) == 0) {
-            // Circular layer
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-        } else if (random.nextInt(4) == 1) {
-            // Square layer
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-        } else if (random.nextInt(4) == 2) {
-            // Multi-tiered circle
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 13, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 4, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 13, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 4, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-
-            Generator.generateClumps(Generator.generateLayer(layer, 17, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 13, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 13, 1, Material.AIR), LayerManager.getRandom());
-            Generator.generateLayer(layer, 4, 1, Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateLayer(layer, 4, 1, Material.AIR), LayerManager.getRandom());
-        } else {
-            // Multi-tiered square
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
-            layer.setY(layer.getY() - 6);
-
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 17, layer.getY(), layer.getZ() - 17), new Location(layer.getWorld(), layer.getX() + 17, layer.getY(), layer.getZ() + 17), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 13, layer.getY(), layer.getZ() - 13), new Location(layer.getWorld(), layer.getX() + 13, layer.getY(), layer.getZ() + 13), Material.AIR), LayerManager.getRandom());
-            Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR);
-            layer.setY(layer.getY() - 1);
-            Generator.generateClumps(Generator.generateCuboid(new Location(layer.getWorld(), layer.getX() - 7, layer.getY(), layer.getZ() - 7), new Location(layer.getWorld(), layer.getX() + 7, layer.getY(), layer.getZ() + 7), Material.AIR), LayerManager.getRandom());
-        }
-    }
-
-    /**
-     * Generates a layer (basically just a cylinder) as good as possible with blocks
+     * Generates a cylinder
      * @param center The center of the layer (Location)
-     * @param radius The whole number radius of the circle
-     * @param height The whole number height of the circle (1 for a flat layer)
+     * @param radius The radius of the layer
+     * @param height The height of the layer (1 for a flat layer)
      * @param material The Material to use for generation
-     *
-     * @return A list of Blocks containing all the blocks it just changed
+     * @return A list containing all changed blocks
      */
-    private static List<Block> generateLayer(Location center, int radius, int height, Material material) {
+    public static List<Block> generateCylinder(Location center, int radius, int height, Material material) {
         int Cx = center.getBlockX();
         int Cy = center.getBlockY();
         int Cz = center.getBlockZ();
+        int rSq = radius * radius;
         World world = center.getWorld();
         List<Block> blocks = new ArrayList<>();
-
-        int rSq = radius * radius;
 
         for (int y = Cy; y < Cy + height; y++) {
             for (int x = Cx - radius; x <= Cx + radius; x++) {
@@ -162,10 +72,11 @@ public class Generator {
     }
 
     /**
-     * Generates a cuboid (literally just a ripoff fill command)
-     * @param firstPos The first Location to fill (first three coords in a fill command)
+     * Generates a cuboid
+     * @param firstPos The first Location to fill from (first three coords in a fill command)
      * @param secondPos The second Location to fill to (second three coords)
      * @param material The Material to fill
+     * @return A list containing all changed blocks
      */
     public static List<Block> generateCuboid(Location firstPos, Location secondPos, Material material) {
         World world = firstPos.getWorld();
@@ -189,8 +100,8 @@ public class Generator {
     }
 
     /**
-     * Generates clumps in a pre-generated layer.
-     * @param blockList A list of block Locations that this method is allowed to edit
+     * Generates clumps in a pre-generated layer
+     * @param blockList A list of Blocks that this method is allowed to edit
      * @param materialList A list of Materials for the generator to randomly choose from.
      * Keep in mind that not all Materials may be used, the amount used depends on the size of the layer.
      * More Materials = more randomization
@@ -203,26 +114,93 @@ public class Generator {
         Collections.shuffle(materials);
         while (!blocks.isEmpty()) {
             Material randomMaterial = materials.get(random.nextInt(materials.size()));
-            Block aBlock = blocks.get(0);
-            aBlock.setType(randomMaterial);
-            // Get the blocks around that and change it to that same material (this is the basis of "clumps")
-            if (blocks.contains(aBlock.getRelative(BlockFace.NORTH))) {
-                aBlock.getRelative(BlockFace.NORTH).setType(randomMaterial);
-                blocks.remove(aBlock.getRelative(BlockFace.NORTH));
+            Block block = blocks.get(random.nextInt(blocks.size()));
+            block.setType(randomMaterial);
+            setRelativeBlocks(blocks, block);
+        }
+    }
+
+    /**
+     * Sets all Blocks adjacent to `block` in `blocks` to the same Material as `block`.
+     * All modified blocks are removed from `blocks`.
+     * @param blocks The list of blocks to modify
+     * @param block The reference block
+     */
+    private static void setRelativeBlocks(List<Block> blocks, Block block) {
+        BlockFace[] faces = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
+        for (BlockFace face : faces) {
+            Block relativeBlock = block.getRelative(face);
+            if (blocks.contains(relativeBlock)) {
+                relativeBlock.setType(block.getBlockData().getMaterial());
+                blocks.remove(relativeBlock);
             }
-            if (blocks.contains(aBlock.getRelative(BlockFace.SOUTH))) {
-                aBlock.getRelative(BlockFace.SOUTH).setType(randomMaterial);
-                blocks.remove(aBlock.getRelative(BlockFace.SOUTH));
+        }
+        blocks.remove(block);
+    }
+
+    /**
+     * Generates a (optionally multi-tiered) circular layer
+     * @param center The center of the layer
+     * @param radii The radii of the layer(s)
+     */
+    private static void generateCircularLayer(Location center, int[] radii) {
+        for (int i = 0; i < radii.length; i++) {
+            // First generate the basic shape (in this case a circle),
+            // then fill that shape with clumps from a randomly selected Material list
+            generateClumps(generateCylinder(center, radii[i], 1, Material.AIR), LayerManager.getRandom());
+            if (i < radii.length - 1) {
+                // Another layer will be generated below the current one
+                // Set that area to AIR on the current level...
+                generateCylinder(center, radii[i + 1], 1, Material.AIR);
+                // ...then move down one block to prepare for the next layer
+                center.setY(center.getY() - 1);
             }
-            if (blocks.contains(aBlock.getRelative(BlockFace.EAST))) {
-                aBlock.getRelative(BlockFace.EAST).setType(randomMaterial);
-                blocks.remove(aBlock.getRelative(BlockFace.EAST));
+        }
+    }
+
+    /**
+     * Generates a (optionally multi-tiered) square layer
+     * @param center The center of the layer
+     * @param radii The radii of the layer(s)
+     */
+    private static void generateSquareLayer(Location center, int[] radii) {
+        for (int i = 0; i < radii.length; i++) {
+            // Square generation is similar to circle generation, just with a bit more math
+            Location pos1 = new Location(center.getWorld(), center.getX() - radii[i], center.getY(), center.getZ() - radii[i]);
+            Location pos2 = new Location(center.getWorld(), center.getX() + radii[i], center.getY(), center.getZ() + radii[i]);
+            generateClumps(generateCuboid(pos1, pos2, Material.AIR), LayerManager.getRandom());
+            if (i < radii.length - 1) {
+                pos1 = new Location(center.getWorld(), center.getX() - radii[i + 1], center.getY(), center.getZ() - radii[i + 1]);
+                pos2 = new Location(center.getWorld(), center.getX() + radii[i + 1], center.getY(), center.getZ() + radii[i + 1]);
+                generateCuboid(pos1, pos2, Material.AIR);
+                center.setY(center.getY() - 1);
             }
-            if (blocks.contains(aBlock.getRelative(BlockFace.WEST))) {
-                aBlock.getRelative(BlockFace.WEST).setType(randomMaterial);
-                blocks.remove(aBlock.getRelative(BlockFace.WEST));
-            }
-            blocks.remove(aBlock);
+        }
+    }
+
+    /**
+     * Generates multiple circular layer(s), each seperated by `LAYER_DROP_HEIGHT`
+     * @param center The center of the layer(s)
+     * @param radii The radii of the layer(s)
+     * @param layers The amount of layers to generate
+     */
+    private static void generateCircularLayers(Location center, int[] radii, int layers) {
+        for (int i = 0; i < layers; i++) {
+            generateCircularLayer(center, radii);
+            center.setY(center.getY() - Generator.LAYER_DROP_HEIGHT);
+        }
+    }
+
+    /**
+     * Generates multiple square layer(s), each seperated by `LAYER_DROP_HEIGHT`
+     * @param center The center of the layer(s)
+     * @param radii The radii of the layer(s)
+     * @param layers The amount of layers to generate
+     */
+    private static void generateSquareLayers(Location center, int[] radii, int layers) {
+        for (int i = 0; i < layers; i++) {
+            generateSquareLayer(center, radii);
+            center.setY(center.getY() - Generator.LAYER_DROP_HEIGHT);
         }
     }
 }

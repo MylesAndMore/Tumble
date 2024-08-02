@@ -122,14 +122,12 @@ public class Game {
 
     /**
      * Type specific setup: Generating layers and giving items
-     * @param type game type,
+     * @param type Game type
      */
     private void prepareGameType(GameType type) {
         roundType = type;
         switch (type) {
             case SHOVELS -> {
-                Generator.generateLayersShovels(gameSpawn.clone());
-
                 ItemStack shovel = new ItemStack(Material.IRON_SHOVEL);
                 shovel.addEnchantment(Enchantment.SILK_TOUCH, 1);
                 giveItems(gamePlayers, shovel);
@@ -139,6 +137,7 @@ public class Game {
                 gameID = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
                     clearInventories(gamePlayers);
                     giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
+                    roundType = GameType.SNOWBALLS;
                     displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("showdown"));
                     playSound(gamePlayers, Sound.ENTITY_ELDER_GUARDIAN_CURSE, SoundCategory.HOSTILE, 1, 1);
 
@@ -147,8 +146,6 @@ public class Game {
                 }, 3160);
             }
             case SNOWBALLS -> {
-                Generator.generateLayersSnowballs(gameSpawn.clone());
-
                 giveItems(gamePlayers, new ItemStack(Material.SNOWBALL));
 
                 // End the round in 5m
@@ -160,8 +157,10 @@ public class Game {
                     case 0 -> prepareGameType(GameType.SHOVELS);
                     case 1 -> prepareGameType(GameType.SNOWBALLS);
                 }
+                return;
             }
         }
+        Generator.generateLayers(gameSpawn, type);
     }
 
     /**
@@ -237,6 +236,7 @@ public class Game {
         // A new list must be created to avoid removing elements while iterating
         List<Player> players = new ArrayList<>(gamePlayers);
         players.forEach(this::removePlayer);
+        clearArena();
 
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
