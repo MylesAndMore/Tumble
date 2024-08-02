@@ -22,7 +22,7 @@ But in Tumble, you play on randomly generated layers of blocks, using shovels, s
 
 ## Setup
 
-1. [Download](https://github.com/MylesAndMore/tumble/releases) the plugin's JAR file and place it in your server's plugins directory.
+1. [Download](https://github.com/MylesAndMore/Tumble/releases) the plugin's JAR file and place it in your server's plugins directory.
 2. Place the worlds for your lobby and arenas in your server's worlds directory.
     - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.  
 
@@ -81,11 +81,11 @@ Each arena can contain the following locations:
 
 Locations are stored using the following format:
 ```yaml
-    location:
-      x: 0.5
-      y: 100
-      z: 0.5
-      world: worldName
+location:
+   x: 0.5
+   y: 100
+   z: 0.5
+   world: worldName
 ```
 If a location is not specified, players will not be teleported by the plugin.
 
@@ -101,6 +101,23 @@ Most of this plugin's messages are configurable through this file (excluding som
 All plugin chat messages will have the `prefix` prepended to them. 
 
 Colors can be added using alternate color codes; for example, `&cRed Text` will appear red in-game.
+
+### layers.yml
+Stores data about the layers that will be generated in the game.
+
+Layers are stored using the following format:
+```yaml
+ores: # User-specified name of the layer
+   weight: 5 # Optional integer weight of the layer (1-...), used to determine how often it will be selected
+   materials: # List of materials (blocks) that will be used to generate the layer
+      - material: COBBLESTONE
+        weight: 5 # Optional integer weight of the material (1-...), used to determine how often it will be selected within the layer
+      - material: COAL_ORE
+        weight: 3
+      - material: IRON_ORE
+        # No weight specified, defaults to 1
+      # More materials...
+```
 
 ## Issues & Feedback  
 

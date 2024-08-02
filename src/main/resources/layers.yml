@@ -1,202 +1,232 @@
 layers:
-  1:
-    - YELLOW_GLAZED_TERRACOTTA
-    - LIGHT_BLUE_GLAZED_TERRACOTTA
-    - GRAY_GLAZED_TERRACOTTA
-    - PODZOL
-    - PODZOL
-    - PODZOL
-    - ORANGE_GLAZED_TERRACOTTA
-  2:
-    - PINK_TERRACOTTA
-    - PURPLE_TERRACOTTA
-    - GRAY_TERRACOTTA
-    - BLUE_TERRACOTTA
-    - LIGHT_BLUE_TERRACOTTA
-    - WHITE_TERRACOTTA
-    - BROWN_TERRACOTTA
-    - GREEN_TERRACOTTA
-    - YELLOW_TERRACOTTA
-    - PINK_TERRACOTTA
-    - PURPLE_TERRACOTTA
-    - GRAY_TERRACOTTA
-    - BLUE_TERRACOTTA
-    - LIGHT_BLUE_TERRACOTTA
-    - WHITE_TERRACOTTA
-    - BROWN_TERRACOTTA
-    - GREEN_TERRACOTTA
-    - YELLOW_TERRACOTTA
-    - WHITE_STAINED_GLASS
-    - HONEYCOMB_BLOCK
-    - HONEYCOMB_BLOCK
-  3:
-    - DIAMOND_BLOCK
-    - GOLD_BLOCK
-    - REDSTONE_BLOCK
-    - REDSTONE_BLOCK
-    - LAPIS_BLOCK
-    - LAPIS_BLOCK
-    - IRON_BLOCK
-    - COAL_BLOCK
-    - IRON_BLOCK
-    - COAL_BLOCK
-    - IRON_BLOCK
-    - COAL_BLOCK
-    - COAL_BLOCK
-  4:
-    - WHITE_TERRACOTTA
-    - BLUE_ICE
-    - SOUL_SAND
-    - STONE_SLAB
-    - WHITE_TERRACOTTA
-    - BLUE_ICE
-    - SOUL_SAND
-    - STONE_SLAB
-    - WHITE_TERRACOTTA
-    - BLUE_ICE
-    - SOUL_SAND
-    - STONE_SLAB
-    - GLOWSTONE
-    - GLOWSTONE
-    - HONEY_BLOCK
-    - SLIME_BLOCK
-  5:
-    - END_STONE
-    - END_STONE_BRICKS
-    - END_STONE
-    - END_STONE_BRICKS
-    - END_STONE
-    - END_STONE_BRICKS
-    - END_STONE
-    - END_STONE_BRICKS
-    - OBSIDIAN
-    - PURPUR_BLOCK
-    - PURPUR_PILLAR
-    - COBBLESTONE
-  6:
-    - PRISMARINE
-    - DARK_PRISMARINE
-    - BLUE_STAINED_GLASS
-    - WET_SPONGE
-    - PRISMARINE_BRICKS
-    - PRISMARINE_BRICK_SLAB
-    - DARK_PRISMARINE
-    - SEA_LANTERN
-    - TUBE_CORAL_BLOCK
-    - BRAIN_CORAL_BLOCK
-    - BUBBLE_CORAL_BLOCK
-  7:
-    - OAK_LOG
-    - SPRUCE_LOG
-    - ACACIA_LOG
-    - STRIPPED_OAK_LOG
-    - STRIPPED_SPRUCE_LOG
-    - STRIPPED_ACACIA_LOG
-    - OAK_WOOD
-    - SPRUCE_WOOD
-    - ACACIA_WOOD
-    - OAK_LEAVES
-    - SPRUCE_LEAVES
-    - ACACIA_LEAVES
-    - OAK_LEAVES
-    - SPRUCE_LEAVES
-    - ACACIA_LEAVES
-  8:
-    - YELLOW_GLAZED_TERRACOTTA
-    - LIGHT_BLUE_GLAZED_TERRACOTTA
-    - GRAY_GLAZED_TERRACOTTA
-    - PODZOL
-    - PODZOL
-    - PODZOL
-    - ORANGE_GLAZED_TERRACOTTA
-  9:
-    - COAL_ORE
-    - COAL_ORE
-    - COAL_ORE
-    - COAL_ORE
-    - COAL_ORE
-    - IRON_ORE
-    - REDSTONE_ORE
-    - EMERALD_ORE
-    - GOLD_ORE
-    - LAPIS_ORE
-    - DIAMOND_ORE
-    - GRASS_BLOCK
-    - GRASS_BLOCK
-    - GRASS_BLOCK
-    - GRASS_BLOCK
-    - COBWEB
-  10:
-    - PACKED_ICE
-    - PACKED_ICE
-    - JUKEBOX
-    - TNT
-    - LIGHT_BLUE_CONCRETE
-    - GLASS
-    - PACKED_ICE
-    - PACKED_ICE
-    - JUKEBOX
-    - TNT
-    - LIGHT_BLUE_CONCRETE
-    - GLASS
-    - SOUL_SAND
-  11:
-    - NETHERRACK
-    - NETHERRACK
-    - NETHERRACK
-    - NETHER_BRICKS
-    - NETHER_BRICKS
-    - NETHERRACK
-    - NETHERRACK
-    - NETHERRACK
-    - NETHER_BRICKS
-    - NETHER_BRICKS
-    - NETHER_GOLD_ORE
-    - NETHER_GOLD_ORE
-    - CRIMSON_NYLIUM
-    - WARPED_NYLIUM
-    - SOUL_SOIL
-    - CRACKED_NETHER_BRICKS
-    - RED_NETHER_BRICKS
-    - NETHER_WART_BLOCK
-    - CRYING_OBSIDIAN
-    - MAGMA_BLOCK
-  12:
-    - REDSTONE_BLOCK
-    - REDSTONE_BLOCK
-    - REDSTONE_LAMP
-    - TARGET
-    - SLIME_BLOCK
-    - OBSERVER
-  13:
-    - DIRT
-    - GRASS_PATH
-    - GRASS_BLOCK
-    - OAK_SLAB
-    - BRICK_WALL
-    - BRICK_STAIRS
-  14:
-    - OAK_PLANKS
-    - OBSIDIAN
-    - SPONGE
-    - BEEHIVE
-    - DRIED_KELP_BLOCK
-  15:
-    - SANDSTONE
-    - SANDSTONE_SLAB
-    - RED_SANDSTONE
-    - RED_SANDSTONE_SLAB
-    - RED_TERRACOTTA
-    - TERRACOTTA
-    - YELLOW_TERRACOTTA
-  16:
-    - JUNGLE_LOG
-    - STRIPPED_JUNGLE_LOG
-    - JUNGLE_WOOD
-    - STRIPPED_JUNGLE_WOOD
-    - MOSSY_COBBLESTONE
-    - MOSSY_COBBLESTONE
-    - MOSSY_COBBLESTONE
-    - JUNGLE_LEAVES
-    - JUNGLE_SLAB
-    - JUNGLE_TRAPDOOR
+  ores:
+    weight: 5
+    materials:
+      - material: COBBLESTONE
+        weight: 5
+      - material: COAL_ORE
+        weight: 3
+      - material: GRASS_BLOCK
+        weight: 2
+      - material: IRON_ORE
+      - material: GOLD_ORE
+      - material: REDSTONE_ORE
+      - material: EMERALD_ORE
+      - material: LAPIS_ORE
+      - material: DIAMOND_ORE
+      - material: COBWEB
+  ore_blocks:
+    weight: 5
+    materials:
+      - material: COAL_BLOCK
+        weight: 4
+      - material: IRON_BLOCK
+        weight: 3
+      - material: GOLD_BLOCK
+        weight: 2
+      - material: REDSTONE_BLOCK
+        weight: 2
+      - material: LAPIS_BLOCK
+      - material: DIAMOND_BLOCK
+  nether:
+    weight: 5
+    materials:
+      - material: NETHERRACK
+        weight: 6
+      - material: NETHER_BRICKS
+        weight: 4
+      - material: NETHER_GOLD_ORE
+        weight: 2
+      - material: NETHER_QUARTZ_ORE
+        weight: 2
+      - material: CRIMSON_NYLIUM
+      - material: WARPED_NYLIUM
+      - material: CRACKED_NETHER_BRICKS
+      - material: RED_NETHER_BRICKS
+      - material: NETHER_WART_BLOCK
+      - material: CRYING_OBSIDIAN
+      - material: SHROOMLIGHT
+      - material: BLACKSTONE
+      - material: BASALT
+      - material: SOUL_SAND
+  end:
+    weight: 5
+    materials:
+      - material: END_STONE
+        weight: 4
+      - material: END_STONE_BRICKS
+        weight: 2
+      - material: PURPUR_BLOCK
+        weight: 2
+      - material: PURPUR_PILLAR
+      - material: OBSIDIAN
+      - material: COBBLESTONE
+  redstone:
+    weight: 4
+    materials:
+      - material: REDSTONE_BLOCK
+        weight: 2
+      - material: REDSTONE_LAMP
+      - material: TARGET
+      - material: SLIME_BLOCK
+      - material: OBSERVER
+      - material: DAYLIGHT_DETECTOR
+  ocean:
+    weight: 4
+    materials:
+      - material: PRISMARINE
+        weight: 2
+      - material: DARK_PRISMARINE
+      - material: PRISMARINE_BRICKS
+      - material: PRISMARINE_BRICK_SLAB
+      - material: BLUE_STAINED_GLASS
+      - material: SEA_LANTERN
+      - material: SPONGE
+      - material: TUBE_CORAL_BLOCK
+      - material: BRAIN_CORAL_BLOCK
+      - material: BUBBLE_CORAL_BLOCK
+  desert:
+    weight: 4
+    materials:
+      - material: SANDSTONE
+        weight: 2
+      - material: RED_SANDSTONE
+        weight: 2
+      - material: CHISELED_SANDSTONE
+      - material: SMOOTH_SANDSTONE
+      - material: CUT_SANDSTONE
+      - material: SANDSTONE_SLAB
+      - material: RED_SANDSTONE_SLAB
+      - material: RED_TERRACOTTA
+      - material: ORANGE_TERRACOTTA
+      - material: YELLOW_TERRACOTTA
+      - material: TERRACOTTA
+  forest:
+    weight: 4
+    materials:
+      - material: OAK_LEAVES
+        weight: 2
+      - material: SPRUCE_LEAVES
+        weight: 2
+      - material: ACACIA_LEAVES
+        weight: 2
+      - material: OAK_LOG
+      - material: SPRUCE_LOG
+      - material: ACACIA_LOG
+      - material: STRIPPED_OAK_LOG
+      - material: STRIPPED_SPRUCE_LOG
+      - material: STRIPPED_ACACIA_LOG
+      - material: OAK_WOOD
+      - material: SPRUCE_WOOD
+      - material: ACACIA_WOOD
+  jungle:
+    weight: 3
+    materials:
+      - material: MOSSY_COBBLESTONE
+        weight: 3
+      - material: COBBLESTONE
+        weight: 2
+      - material: JUNGLE_LEAVES
+        weight: 2
+      - material: JUNGLE_LOG
+        weight: 2
+      - material: STRIPPED_JUNGLE_LOG
+      - material: JUNGLE_WOOD
+      - material: STRIPPED_JUNGLE_WOOD
+      - material: JUNGLE_PLANKS
+      - material: JUNGLE_SLAB
+  overworld:
+    weight: 3
+    materials:
+      - material: DIRT
+      - material: COARSE_DIRT
+      - material: GRASS_BLOCK
+      - material: DIRT_PATH
+      - material: MYCELIUM
+      - material: PODZOL
+      - material: OAK_SLAB
+      - material: BRICK_WALL
+      - material: BRICK_STAIRS
+  terracotta:
+    weight: 3
+    materials:
+      - material: PINK_TERRACOTTA
+        weight: 2
+      - material: PURPLE_TERRACOTTA
+        weight: 2
+      - material: GRAY_TERRACOTTA
+        weight: 2
+      - material: BLUE_TERRACOTTA
+        weight: 2
+      - material: LIGHT_BLUE_TERRACOTTA
+        weight: 2
+      - material: WHITE_TERRACOTTA
+        weight: 2
+      - material: BROWN_TERRACOTTA
+        weight: 2
+      - material: GREEN_TERRACOTTA
+        weight: 2
+      - material: YELLOW_TERRACOTTA
+        weight: 2
+      - material: HONEYCOMB_BLOCK
+        weight: 2
+      - material: WHITE_STAINED_GLASS
+  glazed_terracotta:
+    weight: 3
+    materials:
+      - material: PODZOL
+        weight: 3
+      - material: YELLOW_GLAZED_TERRACOTTA
+      - material: LIGHT_BLUE_GLAZED_TERRACOTTA
+      - material: GRAY_GLAZED_TERRACOTTA
+  sticky:
+    weight: 3
+    materials:
+      - material: WHITE_TERRACOTTA
+        weight: 3
+      - material: BLUE_ICE
+        weight: 3
+      - material: STONE_SLAB
+        weight: 3
+      - material: SOUL_SOIL
+        weight: 2
+      - material: GLOWSTONE
+        weight: 2
+      - material: SLIME_BLOCK
+      - material: HONEY_BLOCK
+  annoying_movement:
+    weight: 2
+    materials:
+      - material: PACKED_ICE
+        weight: 4
+      - material: JUKEBOX
+        weight: 2
+      - material: TNT
+        weight: 2
+      - material: LIGHT_BLUE_CONCRETE
+        weight: 2
+      - material: GLASS
+        weight: 2
+      - material: SMOOTH_STONE_SLAB
+        weight: 2
+      - material: SOUL_SAND
+  insanity:
+    weight: 2
+    materials:
+      - material: OAK_PLANKS
+      - material: OBSIDIAN
+      - material: SPONGE
+      - material: BEEHIVE
+      - material: DRIED_KELP_BLOCK
+  glass:
+    weight: 1
+    materials:
+      - material: GLASS
+        weight: 30
+      - material: WHITE_STAINED_GLASS
+
+#  <NAME>:
+#    weight:
+#    materials:
+#      - material:
+#        weight:

@@ -10,6 +10,7 @@ import com.MylesAndMore.Tumble.game.Arena;
 import org.bstats.bukkit.Metrics;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -24,12 +25,18 @@ public class Main extends JavaPlugin {
         LanguageManager.readConfig();
         ConfigManager.readConfig();
         ArenaManager.readConfig();
-        LayerManager.readConfig();
+        try {
+            LayerManager.readConfig();
+        } catch (InvalidConfigurationException e) {
+            this.getLogger().severe(e.getMessage());
+            Bukkit.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         Objects.requireNonNull(this.getCommand("tumble")).setExecutor(new Tumble());
         new Metrics(this, 16940);
 
-        Bukkit.getServer().getLogger().info("[Tumble] Tumble successfully enabled!");
+        this.getLogger().info("Tumble successfully enabled!");
     }
 
     @Override

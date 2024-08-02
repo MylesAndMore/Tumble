@@ -61,6 +61,7 @@ public class ArenaManager {
             arenas.put(arena.name, arena);
         }
         validate(); // Validate arenas
+        plugin.getLogger().info("arenas.yml: Loaded " + arenas.size() + (arenas.size() > 1 ? " arenas" : " arena"));
     }
 
     /**
