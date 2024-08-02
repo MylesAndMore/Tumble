@@ -16,24 +16,24 @@ import java.util.Map;
 public class Tumble implements CommandExecutor, TabCompleter {
 
     private static final Map<String, SubCommand> subCommands = Map.ofEntries(
-            CmdNameAsKey(new Create()),
-            CmdNameAsKey(new ForceStart()),
-            CmdNameAsKey(new ForceStop()),
-            CmdNameAsKey(new Join()),
-            CmdNameAsKey(new Leave()),
-            CmdNameAsKey(new Reload()),
-            CmdNameAsKey(new Remove()),
-            CmdNameAsKey(new SetGameSpawn()),
-            CmdNameAsKey(new SetKillYLevel()),
-            CmdNameAsKey(new SetLobby()),
-            CmdNameAsKey(new SetWaitArea()),
-            CmdNameAsKey(new SetWinnerLobby())
+            cmdNameAsKey(new Create()),
+            cmdNameAsKey(new ForceStart()),
+            cmdNameAsKey(new ForceStop()),
+            cmdNameAsKey(new Join()),
+            cmdNameAsKey(new Leave()),
+            cmdNameAsKey(new Reload()),
+            cmdNameAsKey(new Remove()),
+            cmdNameAsKey(new SetGameSpawn()),
+            cmdNameAsKey(new SetKillYLevel()),
+            cmdNameAsKey(new SetLobby()),
+            cmdNameAsKey(new SetWaitArea()),
+            cmdNameAsKey(new SetWinnerLobby())
     );
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!subCommands.containsKey(args[0])) {
-            sender.sendMessage(LanguageManager.fromKey("unknown-command"));
+            sender.sendMessage(LanguageManager.fromKey("unknown-command").replace("%command%", args[0]));
             return true;
         }
 
@@ -94,7 +94,7 @@ public class Tumble implements CommandExecutor, TabCompleter {
      * @param cmd The subCommand to use
      * @return A map entry from the subCommand
      */
-    private static Map.Entry<String, SubCommand> CmdNameAsKey(SubCommand cmd) {
+    private static Map.Entry<String, SubCommand> cmdNameAsKey(SubCommand cmd) {
         return Map.entry(cmd.getCommandName(),cmd);
     }
 }
