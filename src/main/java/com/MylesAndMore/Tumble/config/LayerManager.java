@@ -2,14 +2,10 @@ package com.MylesAndMore.Tumble.config;
 
 import com.MylesAndMore.Tumble.plugin.CustomConfig;
 import org.bukkit.Material;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static com.MylesAndMore.Tumble.Main.plugin;
 
@@ -17,82 +13,98 @@ public class LayerManager {
     public static List<List<Material>> layers = new ArrayList<>();
 
     private static final CustomConfig layersYml = new CustomConfig("layers.yml");
-    private static final FileConfiguration config = layersYml.getConfig();
+    private static final Configuration config = layersYml.getConfig();
+    private static final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
+    private static int layerCount = 0;
 
     /**
      * Read layers from layers.yml and populate this.layers
      */
-    public static void readConfig() throws InvalidConfigurationException {
+    public static void readConfig() {
         layersYml.saveDefaultConfig();
 
-        ConfigurationSection layersSection = config.getConfigurationSection("layers");
-        if (layersSection == null) {
-            throw new InvalidConfigurationException("layers.yml is missing section 'layers'");
-        }
-        for (String layerPath : layersSection.getKeys(false)) {
-            List<Material> layer = readLayer(layerPath);
-            if (layer == null) {
-                plugin.getLogger().warning("layers.yml: Failed to load layer '" + layerPath + "'");
-            } else {
-                int weight = getLayerWeight(layerPath);
-                for (int i = 0; i < weight; i++) {
-                    layers.add(layer);
-                }
-            }
+        readLayers(config.getConfigurationSection("layers"));
+        if (layers.isEmpty()) {
+            plugin.getLogger().warning("layers.yml: No layers were found, using defaults");
+            readLayers(defaultConfig.getConfigurationSection("layers"));
         }
 
-        if (layers.isEmpty()) {
-            throw new InvalidConfigurationException("No layers were found in layers.yml");
+        // Don't use layers.size() because it includes duplicates for weighted layers
+        plugin.getLogger().info("layers.yml: Loaded " + layerCount + (layerCount == 1 ? " layer" : " layers"));
+    }
+
+    public static void readLayers(ConfigurationSection section) {
+
+        if (section == null) {
+            plugin.getLogger().warning("layers.yml is missing section 'layers', using defaults");
+            return;
         }
-        int numLayers = layersSection.getKeys(false).size(); // Don't use layers.size() because it includes duplicates for weighted layers
-        plugin.getLogger().info("layers.yml: Loaded " + numLayers + (numLayers > 1 ? " layers" : " layer"));
+
+        for (String layerPath : section.getKeys(false)) {
+            ConfigurationSection layerSection = section.getConfigurationSection(layerPath);
+            if (layerSection == null) {
+                plugin.getLogger().warning("layers.yml: Layer '" + layerPath + "' is null");
+                continue;
+            }
+            List<Material> layer = readLayer(layerSection);
+            if (layer == null) {
+                plugin.getLogger().warning("layers.yml: Failed to load layer '" + layerPath + "'");
+                continue;
+            }
+
+            int weight = layerSection.getInt("layers." + layerPath + ".weight", 1);
+            layerCount++;
+            for (int i = 0; i < weight; i++) {
+                layers.add(layer);
+            }
+        }
     }
 
     /**
      * Read the list of materials for a layer.
-     * @param path The path of the layer in the config
+     * @param section The path of the layer in the config
      * @return The list of materials for the layer to be composed of
      */
-    public static List<Material> readLayer(String path) {
-        List<Map<?, ?>> materialsSection = config.getMapList("layers." + path + ".materials");
-        if (materialsSection.isEmpty()) {
-            plugin.getLogger().warning("layers.yml: Layer '" + path + "' is missing section 'materials'");
+    public static List<Material> readLayer(ConfigurationSection section) {
+
+        List<String> materialsList = section.getStringList("materials");
+        if (materialsList.isEmpty()) {
+            plugin.getLogger().warning("layers.yml: Layer '" + section.getCurrentPath() + "' is missing section 'materials'");
             return null;
         }
+
         List<Material> materials = new ArrayList<>();
+        for (String s : materialsList) {
+            String[] sp = s.split(" ");
 
-        for (Map<?, ?> materialMap : materialsSection) {
-            String matName = (String)materialMap.get("material");
+            if (sp.length < 1) {
+                plugin.getLogger().warning("layers.yml: Invalid format in layer '" + section.getCurrentPath() + "'");
+                continue;
+            }
+            String matName = sp[0];
             Material mat = Material.getMaterial(matName);
+            if (mat == null) {
+                plugin.getLogger().warning("layers.yml: Invalid material '" + matName + "' in layer '" + section.getCurrentPath() + "'");
+                continue;
+            }
 
-            Object weightObj = materialMap.get("weight");
-            int weight = 1;
-            if (weightObj != null) {
-                if (weightObj instanceof Integer) {
-                    weight = (Integer)weightObj;
-                } else {
-                    plugin.getLogger().warning("layers.yml: Invalid weight in layer '" + path + "'");
-                    return null;
+            int matWeight;
+            if (sp.length < 2) {
+                matWeight = 1;
+            } else {
+                try {
+                    matWeight = Integer.parseInt(sp[1]);
+                } catch (NumberFormatException e) {
+                    plugin.getLogger().warning("layers.yml: Invalid weight '" + sp[1] + "' in layer '" + section.getCurrentPath() + "'");
+                    matWeight = 1;
                 }
             }
 
-            if (mat == null) {
-                plugin.getLogger().warning("layers.yml: Invalid material '" + matName + "' in layer '" + path + "'");
-                return null;
-            }
-            if (weight < 1) {
-                plugin.getLogger().warning("layers.yml: Invalid weight '" + weight + "' in layer '" + path + "'");
-                return null;
-            }
-            for (int i = 0; i < weight; i++) {
+            for (int i = 0; i < matWeight; i++) {
                 materials.add(mat);
             }
         }
         return materials;
-    }
-
-    public static int getLayerWeight(String path) {
-        return config.getInt("layers." + path + ".weight", 1);
     }
 
     public static List<Material> getRandom() {
