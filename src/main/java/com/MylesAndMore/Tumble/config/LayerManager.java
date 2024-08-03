@@ -17,6 +17,14 @@ public class LayerManager {
     private static final Configuration config = layersYml.getConfig();
     private static final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
 
+    private static final List<Material> unsafeMaterials = List.of(
+            Material.COBWEB,
+            Material.MAGMA_BLOCK,
+            Material.CAMPFIRE,
+            Material.VINE,
+            Material.AIR
+    );
+
     /**
      * Read layers from layers.yml and populate this.layers
      */
@@ -111,7 +119,21 @@ public class LayerManager {
         return materials;
     }
 
-    public static List<Material> getRandom() {
+    /**
+     * Selects a random layer for use in the generator.
+     * @return A random layer
+     */
+    public static List<Material> getRandomLayer() {
         return layers.get(new Random().nextInt(layers.size()));
+    }
+
+    /**
+     * Selects a random layer and removes materials that are unsafe for players to stand on.
+     * @return A random safe layer
+     */
+    public static List<Material> getRandomLayerSafe() {
+        List<Material> ret = new ArrayList<>(getRandomLayer()); // deep copy
+        ret.removeAll(unsafeMaterials);
+        return ret;
     }
 }
