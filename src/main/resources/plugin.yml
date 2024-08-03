@@ -1,53 +1,54 @@
 main: com.MylesAndMore.Tumble.Main
 name: Tumble
-version: 1.0.4
+version: 2.0.0
 description: 'A Minecraft: Java Edition plugin recreating the Tumble minigame from Minecraft Legacy Console Edition.'
-api-version: 1.19
-load: STARTUP
+api-version: 1.16
+load: POSTWORLD
 author: MylesAndMore
 website: https://github.com/MylesAndMore/Tumble
-depend:
-  - Multiverse-Core
+softdepend: [Multiverse-Core]
+
 commands:
-  reload:
-    description: Reloads the plugin's config.
-    usage: '§cUsage: /tumble:reload'
-    permission: tumble.reload
-  link:
-    description: Links a world on the server as a lobby/game world.
-    usage: '§cUsage: /tumble:link <world> (lobby|game)'
-    permission: tumble.link
-    aliases: [linkworld, link-world]
-  start:
-    description: Force starts a Tumble match with an optional game type.
-    usage: '§cUsage: /tumble:start [gameType]'
-    permission: tumble.start
-  winlocation:
-    description: Links the location to teleport the winning player of a game.
-    usage: '§cUsage: /tumble:winlocation [x] [y] [z]'
-    permission: tumble.winlocation
-    aliases: [win-location, winloc, win-loc]
-  autostart:
-    description: Configures the auto start functions of Tumble.
-    usage: '§cUsage: /tumble:autostart <playerAmount> [enable|disable]'
-    permission: tumble.autostart
-    aliases: [auto-start]
+  tumble:
+    description: Base command for Tumble
+    usage: "/tumble <subCommand> ..."
+    aliases: tmbl
+
 permissions:
+  tumble.join:
+    description: Allows you to join a Tumble match.
+    default: true
+  tumble.leave:
+    description: Allows you to leave a Tumble match.
+    default: true
+  tumble.forcestart:
+    description: Allows you to forcibly start a Tumble match.
+    default: op
+  tumble.forcestop:
+    description: Allows you to forcibly stop a Tumble match.
+    default: op
   tumble.reload:
-    description: Allows you to reload the plugin's config.
+    description: Allows you to reload the Tumble configuration.
     default: op
-  tumble.link:
-    description: Allows you to link a world on the server as a lobby/game world.
+  tumble.create:
+    description: Allows you to create Tumble arenas.
     default: op
-  tumble.start:
-    description: Allows you to start a Tumble match.
+  tumble.remove:
+    description: Allows you to remove Tumble arenas.
     default: op
-  tumble.winlocation:
-    description: Allows you to link a win location.
+  tumble.setgamespawn:
+    description: Allows you to set the game spawn location for Tumble arenas.
     default: op
-  tumble.autostart:
-    description: Allows you to set the autostart details of Tumble.
+  tumble.setkillylevel:
+    description: Allows you to set the kill Y-level for Tumble arenas.
     default: op
-  tumble.update:
-    description: Allows you to get a notification if Tumble is out of date.
+  tumble.setlobby:
+    description: Allows you to set the lobby location for Tumble arenas.
     default: op
+  tumble.setwaitarea:
+    description: Allows you to set the wait area location for Tumble arenas.
+    default: op
+  tumble.setwinnerlobby:
+    description: Allows you to set the winner lobby location for Tumble arenas.
+    default: op
+

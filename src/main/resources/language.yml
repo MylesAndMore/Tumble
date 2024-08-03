@@ -1,0 +1,43 @@
+# All plugin chat messages will have this message prepended to them
+prefix: "&f[&eTumble&f] "
+
+# Error messages
+unknown-command: "&cUnknown command '%command%'"
+no-permission: "&cYou do not have permission to perform this command! &7Required permission: '%permission%.'"
+missing-arena-parameter: "&cMissing arena name!"
+invalid-arena: "&carena '%arena%' does not exist!"
+invalid-type: "&cInvalid game type!"
+no-game-in-arena: "&cNo game is currently running in this arena!"
+player-not-in-game: "&cYou are not in a game!"
+not-for-console: "&cThis cannot be run by the console!"
+game-in-progress: "&cThis game is still in progress!&7 wait until it finishes or join another game."
+another-type-in-arena: "A game of %type% is currently taking place in this arena!&7 choose another arena or join it with '/tumble join %arena% %type%'."
+already-in-game: "&cYou are already in a game! Leave it to join another one."
+arena-not-ready: "&cThis arena is not yet set up!"
+arena-not-ready-op: "&cIncomplete arena. &7Set a game spawn with '/tumble setGameSpawn'."
+specify-game-type: "&cNo game is currently taking place in this arena! &7Provide the game type to start one."
+
+# Success messages
+create-success: "&aArena created successfully! &eBefore this arena is usable, you must set a game spawn location with '/tumble setgamespawn'."
+forcestart-success: "&aStarting game..."
+forcestop-success: "&aGame stopped."
+join-success: "&aJoined game &d%arena% - %type%"
+leave-success: "&aLeft game &d%arena% - %type%"
+reload-success: "&aConfig files reloaded. &eCheck console for possible errors."
+remove-success: "&aArena removed."
+set-success: "&aLocation set."
+
+# Game messages
+showdown: "&4Showdown!"
+lobby-in-10: "&9Returning to lobby in ten seconds..."
+waiting-for-players: "&aWaiting for players..."
+time-till-start: "&aGame will begin in %wait% seconds!"
+round-over: "&cRound over!"
+round-winner: "&6%winner% has won the round!"
+round-draw: "&6Draw!"
+game-over: "&6Game over!"
+game-winner: "&6%winner% has won the game!"
+count-3: "&23"
+count-2: "&e2"
+count-1: "&41"
+count-go: "&aGo!"

@@ -6,76 +6,116 @@ Tumble is a Spigot/Paper plugin that aims to recreate the Tumble minigame from t
 
 ## What *is* Tumble?
 
-If you've never heard of it, [Tumble](https://minecraft-archive.fandom.com/wiki/Tumble_Mode) is a twist on the classic Minecraft minigame of spleef, where the objective is to break the blocks under your opponents. But in Tumble, you play on randomly generated layers of blocks, using shovels, snowballs, or both to try and eliminate your opponents.
+If you've never heard of it, [Tumble](https://minecraft.wiki/w/tumble) is a twist on the classic Minecraft minigame of spleef, where the objective is to break the blocks under your opponents. 
+But in Tumble, you play on randomly generated layers of blocks, using shovels, snowballs, or both to try and eliminate your opponents.
 
 ## Features  
 
-- Choose from three different game modes present in the original game--shovels, snowballs, and mixed  
-- Four types of random layer generation  
+- Choose from three different game modes present in the original game: shovels, snowballs, and mixed
+- Four types of random layer generation
 - 15 unique, themed layer varieties
 - Quick and easy setup and use
-- Support for 2-8 players  
-- Highly customizable  
-- Open-source codebase  
+- Support for 2-8 players
+- Multiple arenas and concurrent games
+- Highly customizable, heavily configurable
+- Open-source codebase
 
 ## Setup
 
-1. Simply [download](https://github.com/MylesAndMore/Tumble/releases) the plugin's JAR file and place it in your server's plugins directory.  
+1. [Download](https://github.com/MylesAndMore/Tumble/releases) the plugin's JAR file and place it in your server's plugins directory.
+2. Place the worlds for your lobby and arenas in your server's worlds directory.
+    - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.  
 
-    - *Note: Multiverse is also required for the plugin to run, you may download it [here](https://www.spigotmc.org/resources/multiverse-core.390/).*  
+3. Start your server.
+4. Import your worlds using a plugin like Multiverse. ```/mv import myWorld normal```.
+5. Create your first arena `/tumble create myArena`
+6. Set the spawn point of the arena `/tumble setgamespawn myArena`
+   - **Note**: The layers will generate relative to this location. Ensure that the area is clear, 20 blocks in each direction.
 
-2. Make sure that you have at least two worlds in your world directory! One is for your lobby world, and the other is for your game arena.  
-
-    - If you would like an experience similar to the original game, see [my guide](https://github.com/MylesAndMore/tumble/blob/main/og-guide.md) for using the original worlds.  
-
-3. Start your server. The plugin will generate a couple of warnings, these are normal.
-4. Ensure that you have imported your worlds into Multiverse. This can be done with the command ```/mv import <your-world-name> normal```.
-5. Now you need to tell Tumble which world is your lobby and which world is your game arena. You can do this with  ```/tumble:link <your-lobby-world> lobby``` and ```/tumble:link <your-game-world> game``` respectively.
-6. **VERY IMPORTANT:** The plugin will teleport players to the world spawn point of each world, and generate the game's blocks around the spawn point of the game world. Ensure that your spawn points are clear of any obstructions, and that a 20x20x20 cube is cleared out from the spawn of whatever game world you are using. **Any blocks in this area will be destroyed when the game begins.**
-7. You're done! You can now start games with the command ```/tumble:start```.
+7. You're done! You can now join the game ```/tumble join myArena mixed```.
 
 Scroll down for more options to configure your game.  
 
-## Commands/Permissions
+## Commands / Permissions
 
-- ```/tumble:reload```
+| Command                               | Description                                                                         | Permission              |
+|---------------------------------------|-------------------------------------------------------------------------------------|-------------------------|
+| `/tumble join <arenaName> [gameType]` | Join a Tumble match. Can infer game type if a game is already started in the arena. | `tumble.join`           |
+| `/tumble leave`                       | Leave a Tumble match.                                                               | `tumble.leave`          |
+| `/tumble forcestart [arenaName]`      | Force start a Tumble match. Can infer arena if you are in one.                      | `tumble.forcestart`     |
+| `/tumble forcestop [arenaName]`       | Force stop a Tumble match. Can infer arena if you are in one.                       | `tumble.forcestop`      |
+| `/tumble reload`                      | Reload the plugin's configuration.                                                  | `tumble.reload`         |
+| `/tumble create <arenaName>`          | Create a new arena.                                                                 | `tumble.create`         |
+| `/tumble remove <arenaName>`          | Remove an arena.                                                                    | `tumble.remove`         |
+| `/tumble setgamespawn <arenaName>`    | Set the arena's game spawn to your current position.                                | `tumble.setgamespawn`   |
+| `/tumble setkillylevel <arenaName>`   | Set the arena's Y-level to kill players at to current Y coordinate.                 | `tumble.setkillylevel`  |
+| `/tumble setlobby <arenaName>`        | Set the arena's lobby to current location.                                          | `tumble.setlobby`       |
+| `/tumble setwaitarea <arenaName>`     | Set the arena's wait area to the current location.                                  | `tumble.setwaitarea`    |
+| `/tumble setwinnerlobby <arenaName>`  | Set the arena's lobby to the current location.                                      | `tumble.setwinnerlobby` |
 
-  - *Description:* Reloads the plugin's configuration.
-  - *Usage:* ```/tumble:reload```
-  - *Permission:* ```tumble.reload```
-- ```/tumble:link```
-  - *Description:* Links a world on the server as a lobby or game world.
-  - *Usage:* ```/tumble:link <world> (lobby|game)```
-  - *Permission:* ```tumble.link```
-- ```/tumble:start```
-  - *Description:* Force starts a Tumble match (with an optional game type).
-  - *Usage:* ```/tumble:start [game-type]```
-  - *Permission:* ```tumble.start```
-- ```/tumble:winlocation```
-  - *Description:* Sets the location to teleport the winning player of a game. Uses the player's location if no arguments are specified.
-  - *Usage:* ```/tumble:winlocation [x] [y] [z]```
-  - *Permission:* ```tumble.winlocation```
-- ```/tumble:autostart```
-  - *Description:* Configures the auto start functions of Tumble.
-  - *Usage:* ```/tumble:autostart <playerAmount> [enable|disable]```
-  - *Permission:* ```tumble.autostart```
-- *Permission:* ```tumble.update```
-  - Players with this permission will receive a notification upon joining if Tumble is out of date.
+Note that the `/tmbl` command can be used as a shorter alias to `/tumble`.
 
 ## Configuration  
+Configuration for this plugin is stored in three files:
 
-- ```gameMode```  
-  - Customize the default game mode of Tumble.  
-  - Acceptable options include: shovels, snowballs, mixed  
-  - *Default:* ```mixed```  
+### config.yml
+Stores general settings.
 
-- ```hideJoinLeaveMessages```  
-  - Hides join/leave messages in public chat.  
-  - *Default:* ```false```  
+| Option                     | Type    | Description                                                                    | Default value |
+|----------------------------|---------|--------------------------------------------------------------------------------|---------------|
+| `hide-join-leave-messages` | Boolean | Hides player join and leave messages in public chat.                           | `false`       |
+| `wait-duration`            | Integer | Duration (in seconds) to wait for more players to join a game before starting. | `15`          |
 
-- ```permissionMessage```  
-  - Customize the message that displays when the player does not have permission to execute a command from this plugin.  
+### arenas.yml
+Stores data about each arena.
+Arenas may be added and removed as you wish, either via the commands detailed above or by editing the `arenas.yml` file directly.
+
+Each arena can contain the following locations:
+
+| Location                 | Description                                                                         |
+|--------------------------|-------------------------------------------------------------------------------------|
+| `game-spawn` **Required* | The location where players will be teleported, and the layers will generate around. |
+| `wait-area`              | The location where players will be teleported to before the game begins.            |
+| `lobby`                  | The location where players will be teleported to after the game.                    |
+| `winner-lobby`           | The location where the winner will be teleported after the game.                    |
+
+Locations are stored using the following format:
+```yaml
+location:
+   x: 0.5
+   y: 100
+   z: 0.5
+   world: worldName
+```
+If a location is not specified, players will not be teleported by the plugin.
+
+Each arena can also contain the following option:
+
+| Option      | Type    | Description                                                      |
+|-------------|---------|------------------------------------------------------------------|
+| `kill-at-y` | Integer | When a player falls below this Y-level, they will be eliminated. |
+
+### language.yml
+Most of this plugin's messages are configurable through this file (excluding some console errors).
+
+All plugin chat messages will have the `prefix` prepended to them. 
+
+Colors can be added using alternate color codes; for example, `&cRed Text` will appear red in-game.
+
+### layers.yml
+Stores data about the layers that will be generated in the game.
+
+Layers are stored using the following format:
+```yaml
+ores: # User-specified name of the layer
+    weight: 5 # Optional integer weight of the layer (1-...), used to determine how often it will be selected
+    materials: # List of materials (blocks) that will be used to generate the layer
+      - COBBLESTONE 6 # Optional integer weight of the material (1-...), used to determine how often it will be selected within the layer
+      - COAL_ORE 3
+      - IRON_ORE # No weight specified, defaults to 1
+      # More materials...
+```
 
 ## Issues & Feedback  
 
-Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on our [GitHub issues page](https://github.com/MylesAndMore/tumble/issues/new)!  
+Feel free to report any bugs, leave feedback, ask questions, or submit ideas for new features on the Tumble [GitHub issues page](https://github.com/MylesAndMore/tumble/issues/new)!  

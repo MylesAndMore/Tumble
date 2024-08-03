@@ -10,38 +10,36 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static com.MylesAndMore.Tumble.Main.plugin;
-
-public class Reload implements SubCommand, CommandExecutor, TabCompleter {
-
+public class Create implements SubCommand, CommandExecutor, TabCompleter {
     @Override
     public String getCommandName() {
-        return "reload";
+        return "create";
     }
 
     @Override
     public String getPermission() {
-        return "tumble.reload";
+        return "tumble.create";
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        for (Arena a : ArenaManager.arenas.values()) {
-            if (a.game != null) {
-                a.game.stopGame();
-            }
+        if (args.length == 0 || args[0] == null || args[0].isEmpty()) {
+            sender.sendMessage(LanguageManager.fromKey("missing-arena-parameter"));
+            return false;
         }
 
-        plugin.onEnable();
-        sender.sendMessage(LanguageManager.fromKey("reload-success"));
+        String arenaName = args[0];
+        ArenaManager.arenas.put(arenaName, new Arena(arenaName));
+        ArenaManager.writeConfig();
+        sender.sendMessage(LanguageManager.fromKey("create-success"));
         return true;
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 }

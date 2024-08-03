@@ -1,24 +1,9 @@
-# Customize the default game mode; options include: shovels, snowballs, mixed
-gameMode: mixed
+# Hides player join and leave messages in public chat during games
+hide-join-leave-messages: false
 
-# Customize the auto start feature of Tumble; players can be up to 8
-autoStart:
-  enabled: false
-  players: 2
+# Hides player death messages in public chat during games
+hide-death-messages: false
 
-# Hides player join/leave messages in public chat
-hideJoinLeaveMessages: false
-
-# Customize the message that displays when the player does not have permission to execute a command from this plugin
-permissionMessage: You do not have permission to perform this command!
-
-# Customize the place that the winner is teleported after a game ends
-# Keep in mind that these coordinates cannot be zero! The teleport will fail if any of them are; use something like 0.5 instead
-winnerTeleport: 
-  x: 
-  y: 
-  z: 
-
-# The plugin will populate these fields automatically
-lobbyWorld: 
-gameWorld:
+# Duration (in seconds) to wait for more players to join a game before starting
+# Set to 0 to disable
+wait-duration: 15
