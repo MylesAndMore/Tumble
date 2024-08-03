@@ -108,10 +108,10 @@ public class EventListener implements Listener {
         if (game.roundType == GameType.SNOWBALLS && event.getEntity() instanceof Snowball) {
             if (event.getHitBlock() != null) {
                 if (event.getHitBlock().getLocation().distanceSquared(game.arena.gameSpawn) < 579) {
-                    p.playEffect(
+                    game.gamePlayers.forEach(pl -> pl.playEffect(
                             event.getHitBlock().getLocation(),
                             Effect.STEP_SOUND,
-                            event.getHitBlock().getType());
+                            event.getHitBlock().getType()));
                     event.getHitBlock().setType(Material.AIR);
                 }
             } else if (event.getHitEntity() != null) {
