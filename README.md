@@ -103,18 +103,15 @@ All plugin chat messages will have the `prefix` prepended to them.
 Colors can be added using alternate color codes; for example, `&cRed Text` will appear red in-game.
 
 ### layers.yml
-Stores data about the layers that will be generated in the game.
+Stores data about the layers that will be generated during gameplay.
 
-Layers are stored using the following format:
-```yaml
-ores: # User-specified name of the layer
-    weight: 5 # Optional integer weight of the layer (1-...), used to determine how often it will be selected
-    materials: # List of materials (blocks) that will be used to generate the layer
-      - COBBLESTONE 6 # Optional integer weight of the material (1-...), used to determine how often it will be selected within the layer
-      - COAL_ORE 3
-      - IRON_ORE # No weight specified, defaults to 1
-      # More materials...
-```
+Each layer contains a weight and a list of materials (blocks).
+
+| Option                  | Type              | Description                                                                                                                                                                                                                                |
+|-------------------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `weight`                | Integer           | A weight to influence how often the layer is randomly chosen. Default: 1                                                                                                                                                                   |
+| `materials` **Required* | List of Materials | The palette of blocks that the layer will be composed of. Use the block names [listed here](https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html). Optionally, a weight can be added after the block name like so: `STONE 5`. |`
+
 
 ## Issues & Feedback  
 
