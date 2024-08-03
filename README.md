@@ -58,7 +58,7 @@ Note that the `/tmbl` command can be used as a shorter alias to `/tumble`.
 ## Configuration  
 Configuration for this plugin is stored in three files:
 
-### config.yml
+### settings.yml
 Stores general settings.
 
 | Option                     | Type    | Description                                                                    | Default value |

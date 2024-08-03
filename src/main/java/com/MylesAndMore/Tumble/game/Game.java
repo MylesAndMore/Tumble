@@ -1,6 +1,6 @@
 package com.MylesAndMore.Tumble.game;
 
-import com.MylesAndMore.Tumble.config.ConfigManager;
+import com.MylesAndMore.Tumble.config.SettingsManager;
 import com.MylesAndMore.Tumble.config.LanguageManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
@@ -276,7 +276,7 @@ public class Game {
      * Attempts to initiate an automatic start of a Tumble game
      */
     public void autoStart() {
-        int waitDuration = ConfigManager.waitDuration;
+        int waitDuration = SettingsManager.waitDuration;
         if (waitDuration <= 0) { return; }
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             displayActionbar(gamePlayers, LanguageManager.fromKeyNoPrefix("time-till-start").replace("%wait%",waitDuration+""));

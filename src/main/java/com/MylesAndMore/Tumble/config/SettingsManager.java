@@ -8,9 +8,9 @@ import java.util.Objects;
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 /**
- * Manages config.yml and stores its options
+ * Manages settings.yml and stores its options
  */
-public class ConfigManager {
+public class SettingsManager {
     public static boolean hideLeaveJoin;
     public static boolean hideDeathMessages;
     public static int waitDuration;
@@ -19,12 +19,12 @@ public class ConfigManager {
     private static Configuration defaultConfig;
 
     /**
-     * Reads options in from config.yml
+     * Reads options in from settings.yml
      */
     public static void readConfig() {
-        CustomConfig configYml = new CustomConfig("config.yml");
-        configYml.saveDefaultConfig();
-        config = configYml.getConfig();
+        CustomConfig settingsYml = new CustomConfig("settings.yml");
+        settingsYml.saveDefaultConfig();
+        config = settingsYml.getConfig();
         defaultConfig = Objects.requireNonNull(config.getDefaults());
         hideLeaveJoin = config.getBoolean("hide-join-leave-messages", false);
         hideDeathMessages = config.getBoolean("hide-death-messages", false);
@@ -34,18 +34,18 @@ public class ConfigManager {
     }
 
     /**
-     * Check keys of config.yml against the defaults
+     * Check keys of settings.yml against the defaults
      */
     public static void validate() {
         boolean invalid = false;
         for (String key : defaultConfig.getKeys(true)) {
             if (!config.contains(key,true)) {
-                plugin.getLogger().warning("config.yml is missing key '" + key + "'.");
+                plugin.getLogger().warning("settings.yml is missing key '" + key + "'.");
                 invalid = true;
             }
         }
         if (invalid) {
-            plugin.getLogger().severe("Errors were found in config.yml, default values will be used.");
+            plugin.getLogger().severe("Errors were found in settings.yml, default values will be used.");
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.MylesAndMore.Tumble.game;
 
-import com.MylesAndMore.Tumble.config.ConfigManager;
+import com.MylesAndMore.Tumble.config.SettingsManager;
 import com.MylesAndMore.Tumble.plugin.GameState;
 import com.MylesAndMore.Tumble.plugin.GameType;
 import org.bukkit.Bukkit;
@@ -43,7 +43,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerJoinEvent(PlayerJoinEvent event) {
         // Hide/show join message accordingly
-        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideLeaveJoin) {
+        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && SettingsManager.hideLeaveJoin) {
             event.setJoinMessage(null);
         }
     }
@@ -51,7 +51,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerQuitEvent(PlayerQuitEvent event) {
         // Hide/show leave message accordingly
-        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideLeaveJoin) {
+        if (event.getPlayer().getWorld() == game.arena.gameSpawn.getWorld() && SettingsManager.hideLeaveJoin) {
             event.setQuitMessage(null);
         }
 
@@ -64,7 +64,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void PlayerDeathEvent(PlayerDeathEvent event) {
         // Hide death messages if configured
-        if (event.getEntity().getWorld() == game.arena.gameSpawn.getWorld() && ConfigManager.hideDeathMessages) {
+        if (event.getEntity().getWorld() == game.arena.gameSpawn.getWorld() && SettingsManager.hideDeathMessages) {
             event.setDeathMessage(null);
         }
 
