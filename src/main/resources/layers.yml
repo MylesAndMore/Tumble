@@ -116,7 +116,7 @@ layers:
       - DIRT
       - COARSE_DIRT
       - GRASS_BLOCK
-      - GRASS_PATH
+      - DIRT_PATH # On 1.16.x this must be changed to GRASS_PATH
       - MYCELIUM
       - PODZOL
       - OAK_SLAB

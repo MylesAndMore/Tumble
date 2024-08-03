@@ -108,14 +108,11 @@ Stores data about the layers that will be generated in the game.
 Layers are stored using the following format:
 ```yaml
 ores: # User-specified name of the layer
-   weight: 5 # Optional integer weight of the layer (1-...), used to determine how often it will be selected
-   materials: # List of materials (blocks) that will be used to generate the layer
-      - material: COBBLESTONE
-        weight: 5 # Optional integer weight of the material (1-...), used to determine how often it will be selected within the layer
-      - material: COAL_ORE
-        weight: 3
-      - material: IRON_ORE
-        # No weight specified, defaults to 1
+    weight: 5 # Optional integer weight of the layer (1-...), used to determine how often it will be selected
+    materials: # List of materials (blocks) that will be used to generate the layer
+      - COBBLESTONE 6 # Optional integer weight of the material (1-...), used to determine how often it will be selected within the layer
+      - COAL_ORE 3
+      - IRON_ORE # No weight specified, defaults to 1
       # More materials...
 ```
 

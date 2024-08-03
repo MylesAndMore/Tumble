@@ -108,34 +108,46 @@ public class Generator {
      */
     private static void generateClumps(List<Block> blockList, List<Material> materialList) {
         Random random = new Random();
-        // Make new lists so we can manipulate them
         List<Block> blocks = new ArrayList<>(blockList);
         List<Material> materials = new ArrayList<>(materialList);
         Collections.shuffle(materials);
+
         while (!blocks.isEmpty()) {
             Material randomMaterial = materials.get(random.nextInt(materials.size()));
             Block block = blocks.get(random.nextInt(blocks.size()));
             block.setType(randomMaterial);
-            setRelativeBlocks(blocks, block);
+            List<Block> modifiedBlocks = setRelativeBlocks(blocks, block);
+            blocks.removeAll(modifiedBlocks);
+            // There is a 50% (then 25%, 12.5%, ...) chance to continue modifying blocks aka growing the clump
+            double probability = 0.5;
+            while (!modifiedBlocks.isEmpty() && random.nextDouble() < probability) {
+                Block nextBlock = modifiedBlocks.get(random.nextInt(modifiedBlocks.size()));
+                nextBlock.setType(randomMaterial);
+                modifiedBlocks = setRelativeBlocks(blocks, nextBlock);
+                blocks.removeAll(modifiedBlocks);
+                probability /= 2;
+            }
         }
     }
 
     /**
-     * Sets all Blocks adjacent to `block` in `blocks` to the same Material as `block`.
-     * All modified blocks are removed from `blocks`.
+     * Sets all Blocks adjacent to `block` in `blocks` to the same Material as `block`
      * @param blocks The list of blocks to modify
      * @param block The reference block
+     * @return A list of all modified blocks, including `block`
      */
-    private static void setRelativeBlocks(List<Block> blocks, Block block) {
+    private static List<Block> setRelativeBlocks(List<Block> blocks, Block block) {
+        List<Block> modifiedBlocks = new ArrayList<>();
         BlockFace[] faces = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST};
         for (BlockFace face : faces) {
             Block relativeBlock = block.getRelative(face);
             if (blocks.contains(relativeBlock)) {
                 relativeBlock.setType(block.getBlockData().getMaterial());
-                blocks.remove(relativeBlock);
+                modifiedBlocks.add(relativeBlock);
             }
         }
-        blocks.remove(block);
+        modifiedBlocks.add(block);
+        return modifiedBlocks;
     }
 
     /**

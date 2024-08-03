@@ -10,17 +10,19 @@ import java.util.*;
 import static com.MylesAndMore.Tumble.Main.plugin;
 
 public class LayerManager {
-    public static List<List<Material>> layers = new ArrayList<>();
+    public static List<List<Material>> layers;
+    private static int layerCount;
 
     private static final CustomConfig layersYml = new CustomConfig("layers.yml");
     private static final Configuration config = layersYml.getConfig();
     private static final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
-    private static int layerCount = 0;
 
     /**
      * Read layers from layers.yml and populate this.layers
      */
     public static void readConfig() {
+        layers = new ArrayList<>();
+        layerCount = 0;
         layersYml.saveDefaultConfig();
 
         readLayers(config.getConfigurationSection("layers"));
@@ -33,8 +35,11 @@ public class LayerManager {
         plugin.getLogger().info("layers.yml: Loaded " + layerCount + (layerCount == 1 ? " layer" : " layers"));
     }
 
+    /**
+     * Read the layers from the layers.yml file
+     * @param section The 'layers' section of the config
+     */
     public static void readLayers(ConfigurationSection section) {
-
         if (section == null) {
             plugin.getLogger().warning("layers.yml is missing section 'layers', using defaults");
             return;
@@ -52,7 +57,7 @@ public class LayerManager {
                 continue;
             }
 
-            int weight = layerSection.getInt("layers." + layerPath + ".weight", 1);
+            int weight = layerSection.getInt("weight", 1);
             layerCount++;
             for (int i = 0; i < weight; i++) {
                 layers.add(layer);
@@ -61,12 +66,11 @@ public class LayerManager {
     }
 
     /**
-     * Read the list of materials for a layer.
+     * Read the list of materials for a layer
      * @param section The path of the layer in the config
      * @return The list of materials for the layer to be composed of
      */
     public static List<Material> readLayer(ConfigurationSection section) {
-
         List<String> materialsList = section.getStringList("materials");
         if (materialsList.isEmpty()) {
             plugin.getLogger().warning("layers.yml: Layer '" + section.getCurrentPath() + "' is missing section 'materials'");

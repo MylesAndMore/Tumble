@@ -96,11 +96,10 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
                 // A game is taking place in this arena, check that it is the right type
                 if (arena.game.type == type) {
                     game = arena.game;
-                }
-                else {
+                } else {
                     sender.sendMessage(LanguageManager.fromKey("another-type-in-arena")
-                            .replace("%type%",type.toString())
-                            .replace("%arena%",arenaName));
+                            .replace("%type%", arena.game.type.toString())
+                            .replace("%arena%", arenaName));
                     return false;
                 }
             }
