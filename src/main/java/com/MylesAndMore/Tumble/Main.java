@@ -98,7 +98,7 @@ public class Main extends JavaPlugin {
             languagesYml.saveConfig();
         }
 
-        // wipe config and re-add hide-join-leave-messages under new its new name
+        // move hide-join-leave-messages to settings.yml
         if (hideJoinLeaveMessages) {
             CustomConfig settingsYml = new CustomConfig("settings.yml");
             settingsYml.saveDefaultConfig();
