@@ -30,7 +30,9 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * An event listener for a game of Tumble.
  */
 public class EventListener implements Listener {
-    final Game game;
+
+    private final static int ARENA_SIZE_SQ = 579; // The size of the arena squared (used for distance checks)
+    private final Game game;
 
     /**
      * Create a new EventListener for a game.
@@ -108,7 +110,7 @@ public class EventListener implements Listener {
         // Removes blocks that snowballs thrown by players have hit in the game world
         if (game.roundType == GameType.SNOWBALLS && event.getEntity() instanceof Snowball) {
             if (event.getHitBlock() != null) {
-                if (event.getHitBlock().getLocation().distanceSquared(game.arena.gameSpawn) < 579) {
+                if (event.getHitBlock().getLocation().distanceSquared(game.arena.gameSpawn) < ARENA_SIZE_SQ) {
                     game.gamePlayers.forEach(pl -> pl.playEffect(
                             event.getHitBlock().getLocation(),
                             Effect.STEP_SOUND,
@@ -226,8 +228,9 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void LeavesDecayEvent(LeavesDecayEvent event) {
+        if (event.getBlock().getWorld() != game.arena.gameSpawn.getWorld()) { return; }
         // Prevent leaves from decaying in the game world (edge case moment)
-        if (event.getBlock().getWorld() == game.arena.gameSpawn.getWorld()) {
+        if (event.getBlock().getLocation().distanceSquared(game.arena.gameSpawn) < ARENA_SIZE_SQ) {
             event.setCancelled(true);
         }
     }
