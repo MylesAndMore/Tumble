@@ -225,7 +225,7 @@ public class Game {
             }, 200);
         }
 
-        cleanup();
+        cleanup(false);
     }
 
     /**
@@ -237,7 +237,7 @@ public class Game {
         List<Player> players = new ArrayList<>(gamePlayers);
         players.forEach(this::removePlayer);
         clearArena();
-        cleanup();
+        cleanup(true);
     }
 
     /**
@@ -465,14 +465,19 @@ public class Game {
 
     /**
      * Cleans up the game's server resources
+     * @param fast Whether to clean up quickly (avoid a graceful cleanup)
      */
-    private void cleanup() {
+    private void cleanup(boolean fast) {
         Bukkit.getServer().getScheduler().cancelTask(gameID);
         gameID = -1;
         Bukkit.getServer().getScheduler().cancelTask(autoStartID);
         autoStartID = -1;
         arena.game = null;
-        // Delay the unregistering of the event listener to prevent issues like players respawning in the wrong location, etc.
-        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> HandlerList.unregisterAll(eventListener), 20);
+        if (fast) {
+            HandlerList.unregisterAll(eventListener);
+        } else {
+            // Delay the unregistering of the event listener to prevent issues like players respawning in the wrong location, etc.
+            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> HandlerList.unregisterAll(eventListener), 20);
+        }
     }
 }
