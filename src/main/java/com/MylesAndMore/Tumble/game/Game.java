@@ -72,7 +72,6 @@ public class Game {
      * Called from /tumble forceStart or after the wait counter finishes
      */
     public void gameStart() {
-
         // Check if the game is starting or running
         if (gameState != GameState.WAITING) {
             return;
@@ -92,6 +91,12 @@ public class Game {
                 inventories.put(p, p.getInventory().getContents());
             }
         }
+
+        // Give everyone full hunger and health
+        gamePlayers.forEach(p -> {
+            p.setHealth(20);
+            p.setFoodLevel(20);
+        });
 
         roundStart();
     }
@@ -175,7 +180,7 @@ public class Game {
         playSound(gamePlayers, Sound.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 5, 0);
 
         // Check if there was a definite winner or not
-        if (!playersAlive.isEmpty()) {
+        if (playersAlive.size() == 1) {
             Player winner = playersAlive.get(0);
             // Set the wins of the player to their current # of wins + 1
             if (!gameWins.containsKey(winner)) {
@@ -220,12 +225,7 @@ public class Game {
             }, 200);
         }
 
-        Bukkit.getServer().getScheduler().cancelTask(gameID);
-        gameID = -1;
-        Bukkit.getServer().getScheduler().cancelTask(autoStartID);
-        autoStartID = -1;
-        HandlerList.unregisterAll(eventListener);
-        arena.game = null;
+        cleanup();
     }
 
     /**
@@ -237,13 +237,7 @@ public class Game {
         List<Player> players = new ArrayList<>(gamePlayers);
         players.forEach(this::removePlayer);
         clearArena();
-
-        Bukkit.getServer().getScheduler().cancelTask(gameID);
-        gameID = -1;
-        Bukkit.getServer().getScheduler().cancelTask(autoStartID);
-        autoStartID = -1;
-        HandlerList.unregisterAll(eventListener);
-        arena.game = null;
+        cleanup();
     }
 
     /**
@@ -292,9 +286,9 @@ public class Game {
      */
     public void playerDeath(Player player) {
         player.setGameMode(GameMode.SPECTATOR);
-        // Remove that player (who just died) from the alive players, effectively eliminating them,
+        // Remove that player (who just died) from the alive players, effectively eliminating them
         playersAlive.remove(player);
-        // If there are less than 2 players in the game (1 just died),
+        // If there are less than 2 players in the game (1 just died), end the round
         if (playersAlive.size() < 2 && gameState == GameState.RUNNING) {
             roundEnd();
         }
@@ -467,5 +461,18 @@ public class Game {
         if (inventories.containsKey(p)) {
             p.getInventory().setContents(inventories.get(p));
         }
+    }
+
+    /**
+     * Cleans up the game's server resources
+     */
+    private void cleanup() {
+        Bukkit.getServer().getScheduler().cancelTask(gameID);
+        gameID = -1;
+        Bukkit.getServer().getScheduler().cancelTask(autoStartID);
+        autoStartID = -1;
+        arena.game = null;
+        // Delay the unregistering of the event listener to prevent issues like players respawning in the wrong location, etc.
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> HandlerList.unregisterAll(eventListener), 20);
     }
 }

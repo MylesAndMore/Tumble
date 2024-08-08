@@ -51,4 +51,3 @@ permissions:
   tumble.setwinnerlobby:
     description: Allows you to set the winner lobby location for Tumble arenas.
     default: op
-

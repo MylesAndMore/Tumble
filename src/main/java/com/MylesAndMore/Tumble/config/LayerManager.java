@@ -18,11 +18,11 @@ public class LayerManager {
     private static final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
 
     private static final List<Material> unsafeMaterials = List.of(
-            Material.COBWEB,
-            Material.MAGMA_BLOCK,
-            Material.CAMPFIRE,
-            Material.VINE,
-            Material.AIR
+        Material.COBWEB,
+        Material.MAGMA_BLOCK,
+        Material.CAMPFIRE,
+        Material.VINE,
+        Material.AIR
     );
 
     /**
@@ -132,7 +132,7 @@ public class LayerManager {
      * @return A random safe layer
      */
     public static List<Material> getRandomLayerSafe() {
-        List<Material> ret = new ArrayList<>(getRandomLayer()); // deep copy
+        List<Material> ret = new ArrayList<>(getRandomLayer()); // Deep copy
         ret.removeAll(unsafeMaterials);
         return ret;
     }

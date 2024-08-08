@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.*;
@@ -200,6 +201,14 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
+    public void EntityPickupItemEvent(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player p)) { return; }
+        if (!game.gamePlayers.contains(p)) { return; }
+        // Disable picking up items during the game
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void InventoryDragEvent(InventoryDragEvent event) {
         if (!(event.getWhoClicked() instanceof Player p)) { return; }
         if (!game.gamePlayers.contains(p)) { return; }
@@ -212,6 +221,14 @@ public class EventListener implements Listener {
         // Make sure players respawn in the correct location
         if (game.gamePlayers.contains(event.getPlayer())) {
             event.setRespawnLocation(game.arena.gameSpawn);
+        }
+    }
+
+    @EventHandler
+    public void LeavesDecayEvent(LeavesDecayEvent event) {
+        // Prevent leaves from decaying in the game world (edge case moment)
+        if (event.getBlock().getWorld() == game.arena.gameSpawn.getWorld()) {
+            event.setCancelled(true);
         }
     }
 

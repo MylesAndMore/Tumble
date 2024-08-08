@@ -154,12 +154,14 @@ public class Generator {
      * Generates a (optionally multi-tiered) circular layer
      * @param center The center of the layer
      * @param radii The radii of the layer(s)
+     * @param safe Whether the layer should be generated without unsafe materials
      */
-    private static void generateCircularLayer(Location center, int[] radii) {
+    private static void generateCircularLayer(Location center, int[] radii, boolean safe) {
         for (int i = 0; i < radii.length; i++) {
             // First generate the basic shape (in this case a circle),
             // then fill that shape with clumps from a randomly selected Material list
-            generateClumps(generateCylinder(center, radii[i], 1, Material.AIR), LayerManager.getRandomLayer());
+            generateClumps(generateCylinder(center, radii[i], 1, Material.AIR),
+                           safe ? LayerManager.getRandomLayerSafe() : LayerManager.getRandomLayer());
             if (i < radii.length - 1) {
                 // Another layer will be generated below the current one
                 // Set that area to AIR on the current level...
@@ -174,13 +176,15 @@ public class Generator {
      * Generates a (optionally multi-tiered) square layer
      * @param center The center of the layer
      * @param radii The radii of the layer(s)
+     * @param safe Whether the layer should be generated without unsafe materials
      */
-    private static void generateSquareLayer(Location center, int[] radii) {
+    private static void generateSquareLayer(Location center, int[] radii, boolean safe) {
         for (int i = 0; i < radii.length; i++) {
             // Square generation is similar to circle generation, just with a bit more math
             Location pos1 = new Location(center.getWorld(), center.getX() - radii[i], center.getY(), center.getZ() - radii[i]);
             Location pos2 = new Location(center.getWorld(), center.getX() + radii[i], center.getY(), center.getZ() + radii[i]);
-            generateClumps(generateCuboid(pos1, pos2, Material.AIR), LayerManager.getRandomLayer());
+            generateClumps(generateCuboid(pos1, pos2, Material.AIR),
+                           safe ? LayerManager.getRandomLayerSafe() : LayerManager.getRandomLayer());
             if (i < radii.length - 1) {
                 pos1 = new Location(center.getWorld(), center.getX() - radii[i + 1], center.getY(), center.getZ() - radii[i + 1]);
                 pos2 = new Location(center.getWorld(), center.getX() + radii[i + 1], center.getY(), center.getZ() + radii[i + 1]);
@@ -198,7 +202,8 @@ public class Generator {
      */
     private static void generateCircularLayers(Location center, int[] radii, int layers) {
         for (int i = 0; i < layers; i++) {
-            generateCircularLayer(center, radii);
+            // First layer should always be safe so player can spawn on it
+            generateCircularLayer(center, radii, i == 0);
             center.setY(center.getY() - Generator.LAYER_DROP_HEIGHT);
         }
     }
@@ -211,7 +216,7 @@ public class Generator {
      */
     private static void generateSquareLayers(Location center, int[] radii, int layers) {
         for (int i = 0; i < layers; i++) {
-            generateSquareLayer(center, radii);
+            generateSquareLayer(center, radii, i == 0);
             center.setY(center.getY() - Generator.LAYER_DROP_HEIGHT);
         }
     }

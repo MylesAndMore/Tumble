@@ -49,7 +49,7 @@ public class Main extends JavaPlugin {
     }
 
     /**
-     * Populate the new configs with the data from the old config.yml and rename to config_old.yml
+     * Populate the new configs with the data from the old (v1.x) config.yml and rename to config_old.yml if necessary
      */
     private void migrateConfig() {
         boolean needsMigration = new File(plugin.getDataFolder(), "config.yml").exists() && !new File(plugin.getDataFolder(), "arenas.yml").exists();
@@ -61,7 +61,8 @@ public class Main extends JavaPlugin {
         CustomConfig configYml = new CustomConfig("config.yml");
         FileConfiguration oldConfig = configYml.getConfig();
 
-        //collect data from old config
+        // Collect data from old config
+        boolean autoStartEnabled = oldConfig.getBoolean("autoStart.enabled");
         boolean hideJoinLeaveMessages = oldConfig.getBoolean("hideJoinLeaveMessages");
         String permissionMessage = oldConfig.getString("permissionMessage");
         double winnerTeleportX = oldConfig.getDouble("winnerTeleport.x");
@@ -73,42 +74,60 @@ public class Main extends JavaPlugin {
         World lobbyWorld = lobbyWorldName == null ? null : Bukkit.getWorld(lobbyWorldName);
         World gameWorld = gameWorldName == null ? null : Bukkit.getWorld(gameWorldName);
 
-        // create arena with info from config
+        // Create arena with info from config
         Arena a = new Arena("default");
         if (lobbyWorld != null) {
-            a.lobby = new Location(lobbyWorld, lobbyWorld.getSpawnLocation().getX(), lobbyWorld.getSpawnLocation().getY(), lobbyWorld.getSpawnLocation().getZ());
+            a.lobby = normalizeLocation(new Location(lobbyWorld, lobbyWorld.getSpawnLocation().getX(), lobbyWorld.getSpawnLocation().getY(), lobbyWorld.getSpawnLocation().getZ()));
             if (winnerTeleportX != 0 || winnerTeleportY != 0 || winnerTeleportZ != 0) {
-                a.winnerLobby = new Location(lobbyWorld, winnerTeleportX, winnerTeleportY, winnerTeleportZ);
+                a.winnerLobby = normalizeLocation(new Location(lobbyWorld, winnerTeleportX, winnerTeleportY, winnerTeleportZ));
             }
         }
         if (gameWorld != null) {
-            a.gameSpawn = new Location(gameWorld, gameWorld.getSpawnLocation().getX(), gameWorld.getSpawnLocation().getY(), gameWorld.getSpawnLocation().getZ());
-            // game world is required so the arena will only be added in this case
+            a.gameSpawn = normalizeLocation(new Location(gameWorld, gameWorld.getSpawnLocation().getX(), gameWorld.getSpawnLocation().getY(), gameWorld.getSpawnLocation().getZ()));
+            // Game world is required so the arena will only be added in this case
             ArenaManager.readConfig();
             ArenaManager.arenas.put(a.name, a);
             ArenaManager.writeConfig();
         }
 
-        // move permission message to language.yml
-        if (permissionMessage != null && !permissionMessage.equals("You do not have permission to perform this command!")) { // skip migration if they left it at the old default
-            CustomConfig languagesYml = new CustomConfig("languages.yml");
+        // Move permission message to language.yml
+        // Skip migration if they left the message as the (old) default
+        if (permissionMessage != null && !permissionMessage.equals("You do not have permission to perform this command!")) {
+            CustomConfig languagesYml = new CustomConfig("language.yml");
             languagesYml.saveDefaultConfig();
             FileConfiguration languagesConfig = languagesYml.getConfig();
             languagesConfig.set("no-permission", permissionMessage);
             languagesYml.saveConfig();
         }
 
-        // move hide-join-leave-messages to settings.yml
-        if (hideJoinLeaveMessages) {
+        // Move hide-join-leave-messages and autostart to settings.yml
+        if (hideJoinLeaveMessages || autoStartEnabled) {
             CustomConfig settingsYml = new CustomConfig("settings.yml");
             settingsYml.saveDefaultConfig();
             FileConfiguration settingsConfig = settingsYml.getConfig();
             settingsConfig.set("hide-join-leave-messages", true);
+            // wait-duration should stay as default unless autostart was disabled
+            if (!autoStartEnabled) {
+                settingsConfig.set("wait-duration", 0);
+            }
             settingsYml.saveConfig();
         }
 
-        if (!new File("config.yml").renameTo(new File(plugin.getDataFolder(), "config_old.yml"))) {
-            plugin.getLogger().severe("Failed to rename config.yml to config_old.yml. Please manually rename this to avoid data loss");
+        if (!new File(plugin.getDataFolder(), "config.yml").renameTo(new File(plugin.getDataFolder(), "config_old.yml"))) {
+            plugin.getLogger().severe("Failed to rename config.yml to config_old.yml. Please manually rename this to avoid data loss.");
         }
+        plugin.getLogger().info("Conversion complete! Please restart the server to apply changes.");
+    }
+
+    /**
+     * Normalize a location to allow it to be saved to a config
+     * @param loc The location to normalize
+     * @return The normalized location
+     */
+    private Location normalizeLocation(Location loc) {
+        return new Location(loc.getWorld(),
+            loc.getX() == 0.0 ? 0.5 : loc.getX(),
+            loc.getY() == 0.0 ? 0.5 : loc.getY(),
+            loc.getZ() == 0.0 ? 0.5 : loc.getZ());
     }
 }

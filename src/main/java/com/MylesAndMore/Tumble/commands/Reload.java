@@ -1,8 +1,6 @@
 package com.MylesAndMore.Tumble.commands;
 
-import com.MylesAndMore.Tumble.config.ArenaManager;
 import com.MylesAndMore.Tumble.config.LanguageManager;
-import com.MylesAndMore.Tumble.game.Arena;
 import com.MylesAndMore.Tumble.plugin.SubCommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,12 +27,7 @@ public class Reload implements SubCommand, CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        for (Arena a : ArenaManager.arenas.values()) {
-            if (a.game != null) {
-                a.game.stopGame();
-            }
-        }
-
+        plugin.onDisable();
         plugin.onEnable();
         sender.sendMessage(LanguageManager.fromKey("reload-success"));
         return true;
