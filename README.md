@@ -13,7 +13,7 @@ But in Tumble, you play on randomly generated layers of blocks, using shovels, s
 
 - Choose from three different game modes present in the original game: shovels, snowballs, and mixed
 - Four types of random layer generation
-- 15 unique, themed layer varieties
+- 16 unique, themed layer varieties, and the ability to add your own
 - Quick and easy setup and use
 - Support for 2-8 players
 - Multiple arenas and concurrent games
@@ -23,16 +23,16 @@ But in Tumble, you play on randomly generated layers of blocks, using shovels, s
 ## Setup
 
 1. [Download](https://github.com/MylesAndMore/Tumble/releases) the plugin's JAR file and place it in your server's plugins directory.
-2. Place the worlds for your lobby and arenas in your server's worlds directory.
-    - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.  
-
+2. If you'd like to have your lobby and arena(s) in separate worlds...
+    - Place the worlds for your lobby and arena(s) in your server's worlds directory.
+    - Import your worlds using a plugin like Multiverse ```/mv import myWorld normal```.
+    - If you would like an experience similar to the original game, see [my guide](OG_GUIDE.md) for using the original worlds.
 3. Start your server.
-4. Import your worlds using a plugin like Multiverse. ```/mv import myWorld normal```.
-5. Create your first arena `/tumble create myArena`
-6. Set the spawn point of the arena `/tumble setgamespawn myArena`
+4. Create your first arena `/tumble create myArena`.
+5. Set the spawn point of the arena `/tumble setgamespawn myArena`.
    - **Note**: The layers will generate relative to this location. Ensure that the area is clear, 20 blocks in each direction.
 
-7. You're done! You can now join the game ```/tumble join myArena mixed```.
+6. You're done! You can now join the game ```/tumble join myArena mixed```.
 
 Scroll down for more options to configure your game.  
 
@@ -64,7 +64,7 @@ Stores general settings.
 | Option                     | Type    | Description                                                                    | Default value |
 |----------------------------|---------|--------------------------------------------------------------------------------|---------------|
 | `hide-join-leave-messages` | Boolean | Hides player join and leave messages in public chat.                           | `false`       |
-| `hide-death-messages`      | Boolean | Hides player death messages in the public chat                                 |               |
+| `hide-death-messages`      | Boolean | Hides player death messages in public chat.                                    | `false`       |
 | `wait-duration`            | Integer | Duration (in seconds) to wait for more players to join a game before starting. | `15`          |
 
 ### arenas.yml

@@ -16,18 +16,18 @@ import java.util.Map;
 public class Tumble implements CommandExecutor, TabCompleter {
 
     private static final Map<String, SubCommand> subCommands = Map.ofEntries(
-            cmdNameAsKey(new Create()),
-            cmdNameAsKey(new ForceStart()),
-            cmdNameAsKey(new ForceStop()),
-            cmdNameAsKey(new Join()),
-            cmdNameAsKey(new Leave()),
-            cmdNameAsKey(new Reload()),
-            cmdNameAsKey(new Remove()),
-            cmdNameAsKey(new SetGameSpawn()),
-            cmdNameAsKey(new SetKillYLevel()),
-            cmdNameAsKey(new SetLobby()),
-            cmdNameAsKey(new SetWaitArea()),
-            cmdNameAsKey(new SetWinnerLobby())
+        cmdNameAsKey(new Create()),
+        cmdNameAsKey(new ForceStart()),
+        cmdNameAsKey(new ForceStop()),
+        cmdNameAsKey(new Join()),
+        cmdNameAsKey(new Leave()),
+        cmdNameAsKey(new Reload()),
+        cmdNameAsKey(new Remove()),
+        cmdNameAsKey(new SetGameSpawn()),
+        cmdNameAsKey(new SetKillYLevel()),
+        cmdNameAsKey(new SetLobby()),
+        cmdNameAsKey(new SetWaitArea()),
+        cmdNameAsKey(new SetWinnerLobby())
     );
 
     @Override

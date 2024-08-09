@@ -14,14 +14,14 @@ In this guide, I'll go over how to set up the Tumble plugin with the original ga
     - [Halloween Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
     - [Birthday Arena](https://publicfiles.sowgro.net/console-minigame-maps/java/tumble/)
 
-    Tip: set a specific directory to store your worlds in with the `world-container` setting in `bukkit.yml`
+    *Tip: set a specific directory to store your worlds in with the `world-container` setting in `bukkit.yml`.*
 
 3. Set `level-name` in server.properties to `lobby`
-4. Take note of the names of the world folders, we will need this in a moment.
+4. Take note of the names of the world folders, we will need these in step six.
 5. Start and join your server.
 6. Import your arena worlds. This can be done with the multiverse command `/mv import <your-world-name> normal`
 
-7. Paste the arena config below into `plugins/tumble/arenas.yml`:
+7. Paste the following arena config below into `plugins/Tumble/arenas.yml`:
    ```yaml
    arenas:
      basic:
