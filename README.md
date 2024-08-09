@@ -64,6 +64,7 @@ Stores general settings.
 | Option                     | Type    | Description                                                                    | Default value |
 |----------------------------|---------|--------------------------------------------------------------------------------|---------------|
 | `hide-join-leave-messages` | Boolean | Hides player join and leave messages in public chat.                           | `false`       |
+| `hide-death-messages`      | Boolean | Hides player death messages in the public chat                                 |               |
 | `wait-duration`            | Integer | Duration (in seconds) to wait for more players to join a game before starting. | `15`          |
 
 ### arenas.yml
