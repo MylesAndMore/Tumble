@@ -51,8 +51,10 @@ public class Game {
      * Adds a player to the wait area. Called from /tumble join
      * Precondition: the game is in state WAITING
      * @param p Player to add
+     * @return Whether the player was successfully added
      */
-    public void addPlayer(Player p) {
+    public boolean addPlayer(Player p) {
+        if (gamePlayers.size() > 8) { return false; }
         gamePlayers.add(p);
 
         if (arena.waitArea != null) {
@@ -65,6 +67,7 @@ public class Game {
         } else {
             displayActionbar(Collections.singletonList(p), LanguageManager.fromKeyNoPrefix("waiting-for-players"));
         }
+        return true;
     }
 
     /**

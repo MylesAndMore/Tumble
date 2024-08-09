@@ -51,7 +51,7 @@ Scroll down for more options to configure your game.
 | `/tumble setkillylevel <arenaName>`   | Set the arena's Y-level to kill players at to current Y coordinate.                 | `tumble.setkillylevel`  |
 | `/tumble setlobby <arenaName>`        | Set the arena's lobby to current location.                                          | `tumble.setlobby`       |
 | `/tumble setwaitarea <arenaName>`     | Set the arena's wait area to the current location.                                  | `tumble.setwaitarea`    |
-| `/tumble setwinnerlobby <arenaName>`  | Set the arena's lobby to the current location.                                      | `tumble.setwinnerlobby` |
+| `/tumble setwinnerlobby <arenaName>`  | Set the arena's winner lobby to the current location.                               | `tumble.setwinnerlobby` |
 
 Note that the `/tmbl` command can be used as a shorter alias to `/tumble`.
 
@@ -77,8 +77,8 @@ Each arena can contain the following locations:
 |--------------------------|-------------------------------------------------------------------------------------|
 | `game-spawn` **Required* | The location where players will be teleported, and the layers will generate around. |
 | `wait-area`              | The location where players will be teleported to before the game begins.            |
-| `lobby`                  | The location where players will be teleported to after the game.                    |
-| `winner-lobby`           | The location where the winner will be teleported after the game.                    |
+| `lobby`                  | The location where players will be teleported to after the game ends.               |
+| `winner-lobby`           | The location where the winner will be teleported after the game ends.               |
 
 Locations are stored using the following format:
 ```yaml

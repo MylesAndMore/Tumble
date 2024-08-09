@@ -111,7 +111,10 @@ public class Join implements SubCommand, CommandExecutor, TabCompleter {
             return false;
         }
 
-        game.addPlayer((Player)sender);
+        if (!game.addPlayer((Player)sender)) {
+            p.sendMessage(LanguageManager.fromKey("game-full"));
+            return false;
+        }
         sender.sendMessage(LanguageManager.fromKey("join-success")
                 .replace("%type%", game.type.toString())
                 .replace("%arena%", arena.name));
