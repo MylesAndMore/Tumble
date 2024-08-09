@@ -32,20 +32,26 @@ public class Tumble implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!subCommands.containsKey(args[0])) {
-            sender.sendMessage(LanguageManager.fromKey("unknown-command").replace("%command%", args[0]));
+        if (args.length == 0 || args[0] == null || args[0].isEmpty()) {
+            sender.sendMessage(LanguageManager.fromKey("missing-subcommand"));
+            return true;
+        }
+        String subCmdName = args[0];
+
+        if (!subCommands.containsKey(subCmdName)) {
+            sender.sendMessage(LanguageManager.fromKey("unknown-command").replace("%command%", subCmdName));
             return true;
         }
 
-        var subCmd = subCommands.get(args[0]);
+        var subCmd = subCommands.get(subCmdName);
 
         if (!sender.hasPermission(subCmd.getPermission())) {
             sender.sendMessage(LanguageManager.fromKey("no-permission").replace("%permission%", subCmd.getPermission()));
-            return false;
+            return true;
         }
 
         // Pass command action through to subCommand
-        subCmd.onCommand(sender, command, args[0], removeFirst(args));
+        subCmd.onCommand(sender, command, subCmdName, removeFirst(args));
         return true;
     }
 

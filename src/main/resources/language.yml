@@ -4,6 +4,7 @@ prefix: "&f[&eTumble&f] "
 # Error messages
 unknown-command: "&cUnknown command '%command%'"
 no-permission: "&cYou do not have permission to perform this command! &7Required permission: '%permission%.'"
+missing-subcommand: "&cMissing sub-command! &7Usage: '/tumble <subCommand> ...'"
 missing-arena-parameter: "&cMissing arena name!"
 invalid-arena: "&cArena '%arena%' does not exist!"
 invalid-type: "&cInvalid game type!"

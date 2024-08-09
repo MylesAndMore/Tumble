@@ -12,11 +12,11 @@ import static com.MylesAndMore.Tumble.Main.plugin;
  * Manages language.yml and allows retrieval of keys
  */
 public class LanguageManager {
-    private static final CustomConfig languageYml = new CustomConfig("language.yml");
     private static Configuration config;
     private static Configuration defaultConfig;
 
     public static void readConfig() {
+        CustomConfig languageYml = new CustomConfig("language.yml");
         languageYml.saveDefaultConfig();
         config = languageYml.getConfig();
         defaultConfig = Objects.requireNonNull(config.getDefaults());

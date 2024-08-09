@@ -13,10 +13,6 @@ public class LayerManager {
     public static List<List<Material>> layers;
     private static int layerCount;
 
-    private static final CustomConfig layersYml = new CustomConfig("layers.yml");
-    private static final Configuration config = layersYml.getConfig();
-    private static final Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
-
     private static final List<Material> unsafeMaterials = List.of(
         Material.COBWEB,
         Material.MAGMA_BLOCK,
@@ -29,6 +25,10 @@ public class LayerManager {
      * Read layers from layers.yml and populate this.layers
      */
     public static void readConfig() {
+        CustomConfig layersYml = new CustomConfig("layers.yml");
+        Configuration config = layersYml.getConfig();
+        Configuration defaultConfig = Objects.requireNonNull(config.getDefaults());
+
         layers = new ArrayList<>();
         layerCount = 0;
         layersYml.saveDefaultConfig();
